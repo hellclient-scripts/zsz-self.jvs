@@ -1,0 +1,9 @@
+血魔：大宝石多多。转世轻松。
+list_boss：加上xuemo
+注意事项:  
+                1、武功要求一般600、700+ skills以上吧。
+	2、记得alias pfm_lich       = yong kuang skeleton lich and finger.gui skeleton lich
+ 		专门用来杀血魔里面巫妖的pfm。
+		可以使用秒杀pfm。比如魔教圆月的ting。或者使用 第一招连招 and 第二招busy的办法。
+	3、再强武功。也有可能被lich秒（几百分之一吧）。所以杀怪流程应该是进副本第一步杀巫妖，
+		但是懒，一直没调整。有想改的话自己调整。
