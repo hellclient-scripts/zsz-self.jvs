@@ -54,8 +54,8 @@ var dg_maze      = new MyMaze(10);
 //--------------------------------------------------------------------------------
 eval( Include( "Static_Data.h" ) );	
 eval( Include( "queue.js" ));
-eval( Include( "loc.js" ));
-eval( Include( "quickstart.js" ));
+eval( Include( "data.js" ));
+eval( Include( "assistant.js" ));
 
 //--------------------------------------------------------------------------------
 function Include( FileName ) {

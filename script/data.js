@@ -179,9 +179,14 @@ var data_npcs = {
     "tong tuo"				: {"name" : "铜驼",			"loc" : 2744,	"id" : "tong tuo"},
     "tie yan"				: {"name" : "铁燕",			"loc" : 2737,	"id" : "tie yan"},
     "liu ruosong"			: {"name" : "柳若松",		"loc" : 2725,	"id" : "liu ruosong"}, 
-    "fu hongxue"			: {"name" : "傅红雪",		"loc" : 2734,	"id" : "fu hongxue"}
+    "fu hongxue"			: {"name" : "傅红雪",		"loc" : 2734,	"id" : "fu hongxue"},
+    "nan xian":{"name":"南贤","loc":1551,"id":"nan xian"}
    };
 
+var data_locations=[
+    {name:"聊天室",id:"chatroom","loc":2045},
+    {name:"武庙三楼",id:"fuben","loc":2765},
+]
    function alias_npc(name, line, wildcards){
     var wcs = VBArray(wildcards).toArray();
     var id=wcs[0]
@@ -191,4 +196,22 @@ var data_npcs = {
     }else{
         world.Note("NPC "+id +" 没找到。")
     }
+   }
+
+   function list_loc(){
+        var list=Userinput.newlist("请选择你的目标","选择你要前往的目标,可以进行模糊搜索",true)
+        for (var key in data_npcs) {
+            var npc=data_npcs[key]
+            list.append(npc.loc,npc.name+"("+npc.id+") @"+npc.loc+" NPC")
+        }
+        for (var key in data_locations) {
+            var loc=data_locations[key]
+            list.append(loc.loc,loc.name+"("+loc.id+")  @"+loc.loc+" LOC")
+        }
+        list.send("callback_list_loc")
+   }
+   function callback_list_loc(name,id,code,data){
+       if (code===0){
+            goto(data);
+       }
    }

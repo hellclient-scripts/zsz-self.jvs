@@ -52,7 +52,7 @@ OnOpen = ""
 OnClose = ""
 OnConnect = "at_connect"
 OnDisconnect = "at_disconnect"
-
+OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2kjb373fgcs2k"
   Name = "bs_sea"
@@ -6683,4 +6683,3 @@ Desc = "武器装备英文名（必须填）"
   Name = "passw"
   Desc = "密码"
   Intro = "游戏密码"
-
