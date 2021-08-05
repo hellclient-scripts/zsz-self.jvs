@@ -1,6 +1,6 @@
 var data_familys = {
     "桃花岛"   : {"masterid" : "huang yaoshi",		"mastername" : "黄药师",	"masterloc" : 1990, "sleeploc" : 1995, "id_family" : "th",	"dazuoloc" : 1994},
-    "关外胡家" : {"masterid" : "hu fei",			"mastername" : "胡斐",		"masterloc" : 2356, "sleeploc" : 2359, "id_family" : "hu",	"dazuoloc" : 2361},
+    "关外胡家" : {"masterid" : "hu fei",			"mastername" : "胡斐",		"masterloc" : 2355, "sleeploc" : 2359, "id_family" : "hu",	"dazuoloc" : 2361},
     "雪山寺"   : {"masterid" : "jiumo zhi",		"mastername" : "鸠摩智",	"masterloc" : 2139, "sleeploc" : 2364, "id_family" : "xs",	"dazuoloc" : 2140},
     "神龙教"   : {"masterid" : "pang toutuo",		"mastername" : "胖头陀",	"masterloc" :   41, "sleeploc" : 2477, "id_family" : "sld",	"dazuoloc" : 40},
     "欧阳世家" : {"masterid" : "ouyang feng",		"mastername" : "欧阳锋",	"masterloc" : 2275, "sleeploc" : 2278, "id_family" : "bt",	"dazuoloc" : 2273},
@@ -166,7 +166,7 @@ function quick_start(){
         "bool_miss":"f",
         "cmd_kill":"yun recover;wield "+weapon+";wear "+weapon,
         "cmd_mache":"drop head;dazuo 100",
-        "cmd_pfm":"yun recover;"+pfm,
+        "cmd_pfm":pfm=="shot"?"shot":"yun recover;"+pfm,
         "cmd_studying":"yun regenerate;dazuo 100",
         "cmd_wait":"yun recover;dazuo 50",
         "id_weapon":weapon,
