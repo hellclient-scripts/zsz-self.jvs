@@ -56,6 +56,7 @@ eval( Include( "Static_Data.h" ) );
 eval( Include( "queue.js" ));
 eval( Include( "data.js" ));
 eval( Include( "assistant.js" ));
+eval( Include( "weak.js" ));
 
 //--------------------------------------------------------------------------------
 function Include( FileName ) {
@@ -532,6 +533,9 @@ function send(str)
 
 						do_lian(num);
 						break;
+					case "#roomid":
+						if (cmd[1] != null && cmd[1] != "") set("room/id",cmd[1]-0)
+						break
 				}
 			} else {
 				var dy = get_cmd_delay();
@@ -1230,6 +1234,9 @@ function can_jiqu()
 
 function can_fuben(bs)
 {
+	if (check_in_3boss()&& query("boss/kill")==bs){
+		return true
+	}
 	var time = (new Date()).getTime();
 	var time1;
 	if (get_var("list_boss").indexOf(bs) == -1) return false;
@@ -1624,7 +1631,7 @@ function do_prepare()
 		tl = get_var("loc_study");
 	} else
 	if (query("hp/neili") < get_var("min_neili") && get_var("loc_sleep") != "") {
-		if (can_sleep()) {
+		if (can_sleep() && !check_in_3boss()) {
 			set("nextstep/cmds", "#t+ pe_sleep;sleep");
 			tl = get_var("loc_sleep");
 		} else {
@@ -1645,17 +1652,17 @@ function do_prepare()
 		if (query("quest/flag") == "kill") {
 			if (can_fuben("seadragon") && get_var("list_boss").indexOf("seadragon") != -1 ) {
 				set("boss/kill", "seadragon");
-				set("nextstep/cmds", get_var("cmd_3boss")+";kill sea dragon king;" + get_var("cmd_pfm"));
+				set("nextstep/cmds", get_var("cmd_3boss")+";kill sea dragon king;" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
 				tl = 2767;
 			} else
 			if (can_fuben("dongfang") && get_var("list_boss").indexOf("dongfang") != -1) {
 				set("boss/kill", "dongfang");
-				set("nextstep/cmds", get_var("cmd_3boss")+";kill dongfang bubai;" + get_var("cmd_pfm"));
+				set("nextstep/cmds", get_var("cmd_3boss")+";kill dongfang bubai;" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
 				tl = 2769;
 			} else
 			if (can_fuben("jiangshi") && get_var("list_boss").indexOf("jiangshi") != -1 ) {
 				set("boss/kill", "jiangshi");
-				set("nextstep/cmds", get_var("cmd_3boss")+";kill jiangshi daozhang;" + get_var("cmd_pfm"));
+				set("nextstep/cmds", get_var("cmd_3boss")+";kill jiangshi daozhang;" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
 				tl = 2771;
 			} else 
 			if (can_fuben("juxianzhuang") == 1 && get_var("list_boss").indexOf("juxianzhuang") != -1) {
@@ -1687,7 +1694,12 @@ function do_prepare()
 			return;
 		}
 	}
-
+	if (check_in_3boss()&& (tl==get_var("loc_dazuo"))){
+		var cmd=query("nextstep/cmds");
+		set("nextstep/cmds", "");
+		send(cmd)
+		return
+	}
 	goto(tl);
 }
 
@@ -2034,7 +2046,7 @@ function on_walk(name, output, wildcards)
 			break;
 		case "wk_bar":		// ^(> )*(摘星子|虚通|虚明)(喝道：这位|伸手拦住你白眼一翻说道|拦住你说道|迈步挡在你身前)
 			var elt = {"亲兵" : 5, "衙役" : 5, "官兵" : 5, "宋兵" : 5, "虚通" : 5, "虚明" : 5, "道一" : 5,
-				"大汉" : 10, "拓跋" : 30, "摘星子" : 40, "劳德诺" : 40, "空见" : 500};
+				"大汉" : 10, "拓跋" : 30, "摘星子" : 40, "劳德诺" : 70, "空见" : 500};
 
 			var npc = wcs[1];
 			var num = elt[npc];
@@ -2954,8 +2966,7 @@ function on_global(name, output, wildcards)
 					set("room/id", -1);
 					goto(query("nextstep/loc"));
 				}
-			}
-			else if (wcs[0] == "heal") {
+			}else if (wcs[0] == "heal") {
 				stop_all();
 				var eq = query("hp/eff_qi");
 				if (eq < 21) send("eat jiuhua wan;hp");
@@ -3103,7 +3114,7 @@ function on_global(name, output, wildcards)
 			set("connect/cmds", "");
 			set("hp/faint", "null");
 			
-			if (output.indexOf("连线进入") != -1) {
+			if (output.indexOf("连线进入") != -1 && !check_in_3boss()) {
 				set("boss/start",false);
 				send(get_var("cmd_pre"));
 				close_fb();
@@ -3683,7 +3694,8 @@ function on_boss(name, output, wildcards)
 			world.EnableTrigger("wk_busy", false);
 			world.EnableTrigger("bs_sea", false);
 			world.EnableTrigger("bs_sea1", true);
-			send("kill " + wcs[2] + ";" + get_var("cmd_pfm"));
+			send("kill " + wcs[2] + ";" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
+			open_pfm();
 			break;
 
 		case "bs_nobusy":	//^(> )*你要往这上面镶嵌什么物品？

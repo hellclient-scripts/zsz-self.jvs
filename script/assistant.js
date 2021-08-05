@@ -135,7 +135,7 @@ function quick_start_fam(fam){
         if (key==fam){
             world.Note("门派:"+key)
             var initdata={
-                "id_pass":fam.id_family,
+                "id_pass":f.id_family,
                 "id_master":f.masterid,
                 "loc_master":f.masterloc,
                 "loc_sleep":f.sleeploc,
@@ -164,7 +164,7 @@ function quick_start(){
         "bool_accept":"t",
         "bool_echo":"t",
         "bool_miss":"f",
-        "cmd_kill":"wield "+weapon+";wear "+weapon,
+        "cmd_kill":"yun recover;wield "+weapon+";wear "+weapon,
         "cmd_mache":"drop head;dazuo 100",
         "cmd_pfm":"yun recover;"+pfm,
         "cmd_studying":"yun regenerate;dazuo 100",

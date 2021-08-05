@@ -1,62 +1,18 @@
 Type = "jscript"
+Intro = "由zsz开发，self接手的终极地狱高效率quest+副本 mushclient jvs机器人，由bao迁移。\n变量和别名设置说明和建议由老牛提供\n感谢老牛提供测试ID\n\nalias设置:\n\nalias menter0 enter dong      enter聊天室设置，这个应该可以在地图里面设置自己的聊天室\t\nalias mdz0 dazuo 100          打坐设置\t\nalias mdan1 eat jiuhua wan    ①精力小于500；②精力小于设置的最小精力值min_jingli；③miss的时候精力不够；④散兵器的时候\t\nalias mdan2 eat jiuhua wan    ①气血受伤小于20%（吃丹顺序mdan4;mdan2）；精气受伤小于70%（吃丹顺序yun inspire;mdan2;mdan3;mdan4）\t\nalias mdan3 touch xxx         加内力的药（没有10级兵器就设置alias mdan3 eat xxx，有10级兵器就alias mdan3 touch xxx，如果不设置吃药，就打坐alias mdan3 dazuo xxx）\t\nalias mdan4 eat jiuhua wan    精气受伤，治疗精气的药。（没有通二脉的情况下使用）\t\nalias mdan5 dazuo 500         过沙漠内里不够\t\nalias gdan0 qu xxx jiuhua wan 取多少九花丸\t\nalias mtc0 touch xxx          touch武器\t\nalias mtc touch xxx          touch武器\t\n\n基本set:\n\nset auto_regenerate yes;\nset auto_drinkout yes;\nset brief yes;\nset combatd brief;\nset no_more yes;\nunset prompt;\nset wimpy 0\n\n*******身上物品，数量大于一定时，自动存到房子里\t\t\t\n\t\t\t\n****血魔必须设置，副本通过率极高(新手不用设置600+再设置这个)：\t\t\t（以狂风剑+不败神功为例，攻击性连招+busy）\nalias pfm_lich yong sword.kuang skeleton lich and throwing.tianhua skeleton lich\t\t\t\n\t\t\t\n**聚贤庄副本取少林令设置：\t\t\t\nalias takeling fetch xx xx\t\t\t\n\t\t\t\n****副本结束后，有时候PFM会变更不过来，这是自动PFM设置：\t\t（以狂风剑+不败神功为例）\t\nalias mpf yong sword.kuang and throwing.yuce\t\t\t\n\t\t\t\n***QM时候如果yuce,需要这个设置，自动捡取NPC身上玉峰针，自动控制数量\t\t\t\nalias gzhen get yufeng zhen from $*\t\t\t\n\nbao添加:\n\n快速初始化命令，仅在第一次设置id时使用，然后自行进行精细化调整\n\nalias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan3 touch xxx;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu xxx jiuhua wan;alias mtc0 touch xxx;alias mtc touch xxx;alias mjq jiqu\n\n"
 Desc = "zsz/self 的终极地狱 QM+副本机器人"
-Intro="""由zsz开发，self接手的终极地狱高效率quest+副本 mushclient jvs机器人，由bao迁移。
-变量和别名设置说明和建议由老牛提供
-感谢老牛提供测试ID
-
-alias设置:
-
-alias menter0 enter dong      enter聊天室设置，这个应该可以在地图里面设置自己的聊天室	
-alias mdz0 dazuo 100          打坐设置	
-alias mdan1 eat jiuhua wan    ①精力小于500；②精力小于设置的最小精力值min_jingli；③miss的时候精力不够；④散兵器的时候	
-alias mdan2 eat jiuhua wan    ①气血受伤小于20%（吃丹顺序mdan4;mdan2）；精气受伤小于70%（吃丹顺序yun inspire;mdan2;mdan3;mdan4）	
-alias mdan3 touch xxx         加内力的药（没有10级兵器就设置alias mdan3 eat xxx，有10级兵器就alias mdan3 touch xxx，如果不设置吃药，就打坐alias mdan3 dazuo xxx）	
-alias mdan4 eat jiuhua wan    精气受伤，治疗精气的药。（没有通二脉的情况下使用）	
-alias mdan5 dazuo 500         过沙漠内里不够	
-alias gdan0 qu xxx jiuhua wan 取多少九花丸	
-alias mtc0 touch xxx          touch武器	
-alias mtc touch xxx          touch武器	
-
-基本set:
-
-set auto_regenerate yes;
-set auto_drinkout yes;
-set brief yes;
-set combatd brief;
-set no_more yes;
-unset prompt;
-set wimpy 0
-
-*******身上物品，数量大于一定时，自动存到房子里			
-			
-****血魔必须设置，副本通过率极高(新手不用设置600+再设置这个)：			（以狂风剑+不败神功为例，攻击性连招+busy）
-alias pfm_lich yong sword.kuang skeleton lich and throwing.tianhua skeleton lich			
-			
-**聚贤庄副本取少林令设置：			
-alias takeling fetch xx xx			
-			
-****副本结束后，有时候PFM会变更不过来，这是自动PFM设置：		（以狂风剑+不败神功为例）	
-alias mpf yong sword.kuang and throwing.yuce			
-			
-***QM时候如果yuce,需要这个设置，自动捡取NPC身上玉峰针，自动控制数量			
-alias gzhen get yufeng zhen from $*			
-
-bao添加:
-
-快速初始化命令，仅在第一次设置id时使用，然后自行进行精细化调整
-
-alias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan3 touch xxx;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu xxx jiuhua wan;alias mtc0 touch xxx;alias mtc touch xxx;alias mjq jiqu
-
-"""
 OnOpen = ""
 OnClose = ""
 OnConnect = "at_connect"
 OnDisconnect = "at_disconnect"
-OnAssist="on_script_asssist"
+OnBroadcast = ""
+OnAssist = "on_script_asssist"
+Channel = ""
+
 [[Triggers]]
   ID = "d1d5cnq4t2kjb373fgcs2k"
   Name = "bs_sea"
-  Enabled = false
+  Enabled = true
   Match = "^  (.*)(海怪|水怪|水巨灵|海巨灵)\\((.*)\\)"
   Send = ""
   ColourChangeType = 0
@@ -211,7 +167,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2l31273fgcs2p"
   Name = "bs_sea1"
-  Enabled = false
+  Enabled = true
   Match = "^[> ]*(水怪|海怪|水巨灵|海巨灵)扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！"
   Send = ""
   ColourChangeType = 0
@@ -242,7 +198,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2l3aa73fgcs2q"
   Name = "bs_end0"
-  Enabled = false
+  Enabled = true
   Match = "^[> ]*(一阵时空的扭曲将你传送到另一个地方|虚空$)"
   Send = ""
   ColourChangeType = 0
@@ -273,7 +229,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2l3iq73fgcs2r"
   Name = "bs_end"
-  Enabled = false
+  Enabled = true
   Match = "^[> ]*(镇海神龙|僵尸道长|东方不败|血战聚贤庄|秦陵地宫|诡异墓园)(.*)副本将在30秒后消失。"
   Send = ""
   ColourChangeType = 0
@@ -304,7 +260,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2l3qv73fgcs2s"
   Name = "bs_drop"
-  Enabled = false
+  Enabled = true
   Match = "^[> ]*当(.*)一声，一(只|个|块|粒|根|颗|枚|锭|片|束|些|份)(.*)从天而降，掉落在你面前。"
   Send = ""
   ColourChangeType = 0
@@ -397,7 +353,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2l4l673fgcs2v"
   Name = "bs_kill"
-  Enabled = false
+  Enabled = true
   Match = "^[> ]*看起来(镇海神龙|东方不败|僵尸道长|少林僧人|江湖豪杰|丐帮弟子|西域刀客|逍遥护法|市井帮众|武当剑客|单正|游骥|游驹|玄难大师|玄寂大师|徐长老|丁一|秦始皇僵尸)想杀死你！"
   Send = ""
   ColourChangeType = 0
@@ -459,7 +415,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2l58073fgcs31"
   Name = "bs_nobusy"
-  Enabled = false
+  Enabled = true
   Match = "^[> ]*你要往这上面镶嵌什么物品？"
   Send = ""
   ColourChangeType = 0
@@ -645,7 +601,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2l6ro73fgcs37"
   Name = "step"
-  Enabled = false
+  Enabled = true
   Match = "^    这里(唯一的出口是|明显的出口是|没有任何明显的出路)(.*)"
   Send = ""
   ColourChangeType = 0
@@ -3001,7 +2957,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2ltsj73fgcs5j"
   Name = "bs_target"
-  Enabled = false
+  Enabled = true
   Match = "^杀死\\s+(.*) :\\s+(\\d+)\\/(\\d+)。"
   Send = "hp"
   ColourChangeType = 0
@@ -4489,7 +4445,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2mckd73fgcs73"
   Name = "connected"
-  Enabled = false
+  Enabled = true
   Match = "(你连线进入|重新连线完毕。)"
   Send = ""
   ColourChangeType = 0
@@ -5264,7 +5220,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2mppt73fgcs7s"
   Name = "condelay"
-  Enabled = false
+  Enabled = true
   Match = "你不能在(.*)秒钟之内连续重新连线。"
   Send = ""
   ColourChangeType = 0
@@ -5323,6 +5279,96 @@ OnAssist="on_script_asssist"
   Italic = false
   Variable = ""
 
+[[Triggers]]
+  ID = "d1d5cnq4t5mgs273fgcs78"
+  Name = "3boss_recon"
+  Enabled = true
+  Match = "^(> )*\\( 你(已经陷入半昏迷状态，随时都可能摔倒晕去。|看起来已经力不从心了。)\\)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_3boss_recon"
+  SendTo = 0
+  Sequence = 130
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+[[Triggers]]
+  ID = "d1d5cnq4t6mgs273fgcs78"
+  Name = "on_jiangshi_room"
+  Enabled = true
+  Match = "^[> ]*僵尸道长\\(jiangshi daozhang\\)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_jiangshi_room"
+  SendTo = 0
+  Sequence = 130
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+[[Triggers]]
+  ID = "d1d5cnq4t6mgs373fgcs78"
+  Name = "on_seadragon_room"
+  Enabled = true
+  Match = "^[> ]* 镇海神龙\\(sea dragon king\\)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_seadragon_room"
+  SendTo = 0
+  Sequence = 130
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
 [[Triggers]]
   ID = "d1d5cnq4t2ncts73fgcs7u"
   Name = "yh_busy"
@@ -5760,7 +5806,7 @@ OnAssist="on_script_asssist"
 [[Triggers]]
   ID = "d1d5cnq4t2nir473fgcs8c"
   Name = "ga"
-  Enabled = false
+  Enabled = true
   Match = "(游客|古定剑|紫骝马|黄骠马|枣红马|马夫|武将|官兵|趟子手|流氓|男孩|女孩|看起来好多|装备效果|装备类型|装备品级|炼制而成|上面镶嵌着|⊙|一道道|一道光圈|一道火光|一面|一串|成了蜂窝|一圈|无法自拔|摇晃不定|兹兹作响|托付些重任|飞沙走石|四下飞舞|神情恍惚|难以醒目|不住的点头|金钱撒地|凶险的紧|枯木回春|山石之雨|赞许|山摇地动|一阵强风|强风破|金黄耀目|翡翠梦境|无数枝干|刮出一阵|跳了下来|─────≡)"
   Send = ""
   ColourChangeType = 0
@@ -6232,7 +6278,7 @@ OnAssist="on_script_asssist"
 [[Timers]]
   ID = "d1d5cnq4t2nsc173fgcs91"
   Name = "timer1"
-  Enabled = false
+  Enabled = true
   Hour = 0
   Minute = 0
   Second = 1.0
@@ -6331,28 +6377,6 @@ OnAssist="on_script_asssist"
   ReverseSpeedwalk = false
   OmitFromOutput = false
   OmitFromCommandHistory = false
-[[Aliases]]
-  ID = "d1d5cnq4tnp403fgcs8r"
-  Name = "npc"
-  Enabled = true
-  Match = "#npc *"
-  Send = ""
-  Script = "alias_npc"
-  SendTo = 0
-  Sequence = 0
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = false
-  Menu = false
-  OmitFromLog = false
-  Variable = ""
-  ReverseSpeedwalk = false
-  OmitFromOutput = false
-  OmitFromCommandHistory = false
 
 [[Aliases]]
   ID = "d1d5cnq4t2npef73fgcs8s"
@@ -6423,6 +6447,29 @@ OnAssist="on_script_asssist"
   OmitFromOutput = false
   OmitFromCommandHistory = false
 
+[[Aliases]]
+  ID = "d1d5cnq4tnp403fgcs8r"
+  Name = "npc"
+  Enabled = true
+  Match = "#npc *"
+  Send = ""
+  Script = "alias_npc"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
 [[RequiredParams]]
   Name = "bool_accept"
   Desc = "接信开关"
@@ -6437,10 +6484,12 @@ OnAssist="on_script_asssist"
   Name = "bool_miss"
   Desc = "miss武器开关"
   Intro = "是非使用MISS 武器（F否T是）"
+
 [[RequiredParams]]
   Name = "house"
   Desc = "房屋信息"
   Intro = "设置后会将1933-1949设置为对应的房屋信息\n格式为'包子铺 bzp 1558'"
+
 [[RequiredParams]]
   Name = "cmd_3boss"
   Desc = "3小副本准备命令"
@@ -6535,28 +6584,26 @@ OnAssist="on_script_asssist"
   Name = "id_pass"
   Desc = "门派缩写"
   Intro = "门派缩写（有密道的门派要填）"
-  
 
 [[RequiredParams]]
   Name = "id_weapon"
   Desc = "武器装备英文名（必须填）"
   Intro = "必须填，可以和其他武器一样，不然修理会发呆"
+
 [[RequiredParams]]
   Name = "id_weapon2"
-Desc = "武器装备英文名（必须填）"
+  Desc = "武器装备英文名（必须填）"
   Intro = "必须填，可以和其他武器一样，不然修理会发呆"
 
 [[RequiredParams]]
   Name = "id_weapon3"
-Desc = "武器装备英文名（必须填）"
+  Desc = "武器装备英文名（必须填）"
   Intro = "必须填，可以和其他武器一样，不然修理会发呆"
 
 [[RequiredParams]]
   Name = "list_boss"
   Desc = "副本列表"
-  Intro = """需要打的副本名字
-  seadragon,dongfang,digong,jiangshi,juxianzhuang,xuemo
-  新手初期空着不要填写"""
+  Intro = "需要打的副本名字\n  seadragon,dongfang,digong,jiangshi,juxianzhuang,xuemo\n  新手初期空着不要填写"
 
 [[RequiredParams]]
   Name = "list_control"
@@ -6568,15 +6615,10 @@ Desc = "武器装备英文名（必须填）"
   Desc = "练习列表"
   Intro = "#lian对应需要练习的武功名字（dodge|sword|parry,支持多种武功轮换练习，具体格式请到群里咨询）"
 
-
-
 [[RequiredParams]]
   Name = "list_mloc"
   Desc = "Miss坐标列表"
-  Intro = """
-  MISS武器的坐标（举例：yyyy:1150,oooo:1956,zwca:1202）
-  会自动添加到地图内，地图内不需要设置
-  """
+  Intro = "  MISS武器的坐标（举例：yyyy:1150,oooo:1956,zwca:1202）\n  会自动添加到地图内，地图内不需要设置\n  "
 
 [[RequiredParams]]
   Name = "list_qask"
@@ -6587,7 +6629,6 @@ Desc = "武器装备英文名（必须填）"
   Name = "list_skill"
   Desc = "学习列表"
   Intro = "需要学习或者研究武功名字"
-
 
 [[RequiredParams]]
   Name = "loc_dazuo"
@@ -6683,3 +6724,8 @@ Desc = "武器装备英文名（必须填）"
   Name = "passw"
   Desc = "密码"
   Intro = "游戏密码"
+
+[[RequiredParams]]
+  Name = "bool_3boss_recon"
+  Desc = "三小boss重连"
+  Intro = "打3小boss时时候重连开关，适用于较弱的id"

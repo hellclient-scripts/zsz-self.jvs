@@ -184,7 +184,7 @@ var data_npcs = {
    };
 
 var data_locations=[
-    {name:"聊天室",id:"chatroom","loc":2045},
+    {name:"聊天室",id:"chatroom","loc":2046},
     {name:"武庙三楼",id:"fuben","loc":2765},
 ]
    function alias_npc(name, line, wildcards){
@@ -200,6 +200,11 @@ var data_locations=[
 
    function list_loc(){
         var list=Userinput.newlist("请选择你的目标","选择你要前往的目标,可以进行模糊搜索",true)
+        var loc_gift=world.GetVariable("loc_gift")
+        if (loc_gift){
+            list.append(loc_gift,"储藏室(gift) @"+loc_gift+" LOC")
+
+        }
         for (var key in data_npcs) {
             var npc=data_npcs[key]
             list.append(npc.loc,npc.name+"("+npc.id+") @"+npc.loc+" NPC")
