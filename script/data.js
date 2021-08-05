@@ -186,6 +186,7 @@ var data_npcs = {
 var data_locations=[
     {name:"聊天室",id:"chatroom","loc":2046},
     {name:"武庙三楼",id:"fuben","loc":2765},
+    {name:"鳌拜 鳌府大厅",id:"aobai","loc":1418},
 ]
    function alias_npc(name, line, wildcards){
     var wcs = VBArray(wildcards).toArray();
