@@ -57,17 +57,22 @@ function callback_list_fam(name,id,code,data){
    }
 }
 function prompt_weapon(){
-    Userinput.prompt("callback_weapon","设置武器ID","如baihongjian",_assist_init_data["weapon"]||"")
+    Userinput.prompt("callback_weapon","设置武器ID","如wield long sword 或wear weaponid",_assist_init_data["weapon"]||"")
   }
 
   function callback_weapon(name,id,code,data){
    if (code==0){
+        var cmd=SplitN(data," ",2)
+        if ((cmd[0]!="wield" && cmd[0]!="wear") || cmd[1]==""){
+            Userinput.alert("check_assist_next","格式错误","武器格式错误")
+            return
+        }
         _assist_init_data["weapon"]=data
         check_assist_init()
    }
 }
 function prompt_pfm(){
-    Userinput.prompt("callback_pfm","设置绝招","如 yong sword.qixing",_assist_init_data["pfm"]||"")
+    Userinput.prompt("callback_pfm","设置绝招","如 yong sword.qixing或shot",_assist_init_data["pfm"]||"")
 }
 
   function callback_pfm(name,id,code,data){
@@ -134,13 +139,18 @@ function quick_start_fam(fam){
         var f=data_familys[key]
         if (key==fam){
             world.Note("门派:"+key)
+            var cmd_fuben=f.nopowerup?"wp2off;wp1on":"wp2off;yun powerup;yun shield;wp1on"
             var initdata={
                 "id_pass":f.id_family,
                 "id_master":f.masterid,
                 "loc_master":f.masterloc,
                 "loc_sleep":f.sleeploc,
                 "loc_dazuo":f.dazuoloc,
-                cmd_npcdie:f.nopowerup?"":"yun powrup;yun shield",
+                "cmd_npcdie":f.nopowerup?"wp2off;wp1on":"wp2off;wp1on;yun powrup;yun shield",
+                "cmd_3boss":cmd_fuben,
+                "cmd_digong":cmd_fuben,
+                "cmd_jxz":cmd_fuben,
+                "cmd_xm":cmd_fuben,
             }
             for (var key in initdata) {
                 world.Note("设置变量 "+key+" 为 " +initdata[key])
@@ -157,18 +167,28 @@ function quick_start_fam(fam){
 }
 function quick_start(){
     var fam=_assist_init_data["fam"]
-    var weapon=_assist_init_data["weapon"]
+    var cmd=SplitN(_assist_init_data["weapon"]," ",2)
+    var wieldcmd="wield "
+    var unwieldcmd="unwield "
+    if (cmd[0]=="wear"){
+        wieldcmd="wear "
+        unwieldcmd="remove "
+    }
+    var weapon=cmd[1]
     var pfm=_assist_init_data["pfm"]
     quick_start_fam(fam)
     var initdata={
         "bool_accept":"t",
         "bool_echo":"t",
         "bool_miss":"f",
-        "cmd_kill":"yun recover;wield "+weapon+";wear "+weapon,
-        "cmd_mache":"drop head;dazuo 100",
+        "cmd_kill":"yun recover;wp2off;wp1on;mjq",
+        "cmd_mache":"mjq",
+        "cmd_aquest":"mjq",
+        "cmd_bquest":"mjq",
         "cmd_pfm":pfm=="shot"?"shot":"yun recover;"+pfm,
-        "cmd_studying":"yun regenerate;dazuo 100",
-        "cmd_wait":"yun recover;dazuo 50",
+        "cmd_studying":"mjq",
+        "cmd_wait":"yun recover;mjq",
+        "cmd_npcfaint":"wp1off;wp2on",
         "id_weapon":weapon,
         "id_weapon2":weapon,
         "id_weapon3":weapon,
@@ -193,7 +213,8 @@ function quick_start(){
     send(GetVariable("passw"))
     send("y")
     send("alias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan3 touch xxx;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu xxx jiuhua wan;alias mtc0 touch xxx;alias mtc touch xxx;alias mjq jiqu")
-    send("alias")
+    send("alias wp1on "+wieldcmd+weapon+";alias wp1off "+unwieldcmd+weapon)
+    send("alias wp2on "+wieldcmd+weapon+";alias wp2off "+unwieldcmd+weapon)
     world.Note("初始化完毕，请根据实际情况调整变量和别名")
    }
 
@@ -213,6 +234,12 @@ function quick_start(){
         list.append("expmax","设置最大EXP")
         list.append("cmdstudy","设置学习指令")
         list.append("listskill","设置学习内容")
+        list.append("prompt_weapon1","设置主武器")
+        list.append("prompt_weapon2","设置副武器")
+        list.append("prompt_min_neili","设置内力")
+        list.append("prompt_house","设置房屋")
+
+        
     }
     list.send("do_script_assist")
    }
@@ -244,6 +271,18 @@ function quick_start(){
             break
         case "assist_init":
             assist_init()
+            break
+        case "prompt_weapon1":
+            prompt_weapon1()
+            break
+        case "prompt_weapon2":
+                prompt_weapon1()
+                break            
+        case "prompt_min_neili":
+            prompt_min_neili()
+            break
+        case "prompt_house":
+            prompt_house()
             break
     }
    }
@@ -324,3 +363,87 @@ function quick_start(){
         Userinput.alert("","学习内容修改成功","list_skill已经设置为: "+GetVariable("list_skill"))
     }
    }
+
+function prompt_weapon1(){
+    Userinput.prompt("callback_weapon1","设置主武器","格式为 wield weapon 或 wear weapon","")
+}
+function callback_weapon1(name,id,code,data){
+    if (code==0){
+        var cmd=SplitN(data," ",2)
+        if ((cmd[0]!="wield" && cmd[0]!="wear") || cmd[1]==""){
+            Userinput.alert("","格式错误","武器格式错误")
+            return
+        }
+        var wieldcmd="wield "
+        var unwieldcmd="unwield "
+        if (cmd[0]=="wear"){
+            wieldcmd="wear "
+            unwieldcmd="remove "
+        }
+        SetVariable("id_weapon",cmd[1])
+        send("alias wp1on "+wieldcmd+cmd[1])
+        send("alias wp1off "+unwieldcmd+cmd[1])
+        send("alias")
+        Userinput.alert("","主武器设置成功","id_weapon设置为 "+cmd[1]+"别名 wp1on和wp1off 更新")
+    }
+}
+function prompt_weapon1(){
+    Userinput.prompt("callback_weapon2","设置副武器","格式为 wield weapon 或 wear weapon","")
+}
+function callback_weapon2(name,id,code,data){
+    if (code==0){
+        var cmd=SplitN(data," ",2)
+        if ((cmd[0]!="wield" && cmd[0]!="wear") || cmd[1]==""){
+            Userinput.alert("","格式错误","武器格式错误")
+            return
+        }
+        var wieldcmd="wield "
+        var unwieldcmd="unwield "
+        if (cmd[0]=="wear"){
+            wieldcmd="wear "
+            unwieldcmd="remove "
+        }
+        SetVariable("id_weapon2",cmd[1])
+        send("alias wp2on "+wieldcmd+cmd[1])
+        send("alias wp2off "+unwieldcmd+cmd[1])
+        send("alias")
+        Userinput.alert("","主武器设置成功","id_weapon2设置为 "+cmd[1]+"别名 wp2on和wp2off 更新")
+    }
+}
+
+function prompt_min_neili(){
+    Userinput.prompt("callback_min_neili","设置最小内力","",GetVariable("min_neili"))
+  }
+
+  function callback_min_neili(name,id,code,data){
+   if (code==0){
+       SetVariable("min_neili",data)
+       Userinput.alert("","最小内力修改成功","min_neili已经设置为: "+GetVariable("min_neili"))
+   }
+}
+
+function prompt_house(){
+    Userinput.prompt("callback_house","设置房屋信息","设置后会将1933-1949设置为对应的房屋信息\n格式为'包子铺 bzp 1558'",GetVariable("house"))
+  }
+
+  function callback_house(name,id,code,data){
+   if (code==0){
+       var cmd=SplitN(data," ",3)
+       if (cmd[0]==""||cmd[1]==""||cmd[2]==""||isNaN(cmd[2])){
+            Userinput.alert("","错误","房屋信息格式错误")
+            return
+       }
+       var rname=Mapper.getroomname(cmd[2])
+       if (!rname){
+        Userinput.alert("","错误","地址 "+cmd[2]+" 未找到")
+        return
+       }
+       SetVariable("house",data)
+       SetVariable("loc_gift","2682")
+       Userinput.alert("callback_shoud_reload","房屋信息修改成功","house已经设置为: "+GetVariable("house")+"\nloc_gift已经设置为: "+GetVariable("loc_gift"))
+   }
+}
+
+function callback_shoud_reload(name,id,code,data){
+        Userinput.alert("","需要刷新","设置需要重新加载脚本后才能生效")
+}

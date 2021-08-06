@@ -1553,17 +1553,17 @@ function do_prepare()
 		tl = 23;
 	} else
 
-	if (query("item/weapon") < 35 || ((query("item/weapon") < 98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))) {
+	if (query("item/weapon") < 35 || ((query("item/weapon") < 98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
 		var wp = get_var("id_weapon");
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
 		tl = 66;
 	} else
-	if (query("item/weapon2") < 30) {
+	if ((!check_in_3boss()) && query("item/weapon2") < 30) {
 		var wp = get_var("id_weapon2");
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
 		tl = 66;
 	} else
-	if (query("item/weapon3") < 30) {
+	if ((!check_in_3boss()) && query("item/weapon3") < 30) {
 		var wp = get_var("id_weapon3");
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
 		tl = 66;
@@ -1588,18 +1588,18 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy 100 gangbiao from tie jiang");
 		tl = 66;
 	} else
-	if (query("item/shuidai") < 3) {
+	if ((!check_in_3boss()) && query("item/shuidai") < 3) {
 		set("item/buy", "shui dai from xiao er");
 		set("nextstep/cmds", "#t+ pe_buy;buy shui dai from xiao er");
 		tl = 27;
 	} else
-	if (query("item/food") < 5) {
+	if ((!check_in_3boss()) && query("item/food") < 5) {
 		set("item/buy", "10 gan liang from xiao er");
 		set("nextstep/cmds", "#t+ pe_buy;buy 10 gan liang from xiao er");
 		tl = 27;
 	} else
 
-	if (query("item/9hua") < 10 && get_var("loc_jiuhua") != "") {
+	if ((!check_in_3boss()) && query("item/9hua") < 10 && get_var("loc_jiuhua") != "") {
 		set("nextstep/cmds", "gdan0;i;set no_teach prepare");
 		tl = get_var("loc_jiuhua");
 	} else		
@@ -1626,7 +1626,7 @@ function do_prepare()
 		do_stab();
 		return;
 	} else 
-	if (query("other/backup") || (can_study() && query("hp/pot") > get_var("max_pot"))) {
+	if (query("other/backup") || ((!check_in_3boss())&&can_study() && query("hp/pot") > get_var("max_pot"))) {
 		set("nextstep/cmds", "#t+ pe_study;hp;set no_teach study");
 		tl = get_var("loc_study");
 	} else
