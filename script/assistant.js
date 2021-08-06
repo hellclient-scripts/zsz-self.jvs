@@ -352,9 +352,11 @@ function quick_start(){
     }
    }
 
-   function prompt_list_skill(){
+   function prompt_list_skill(name,id,code,data){
+    if (code==0){
      var comment=GetVariableComment("list_skill")
      Userinput.prompt("callback_list_skill","设置学习内容",comment?comment:"无备注",GetVariable("list_skill"))
+    }
    }
 
    function callback_list_skill(name,id,code,data){
