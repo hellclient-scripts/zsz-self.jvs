@@ -140,7 +140,10 @@ function quick_start_fam(fam){
         if (key==fam){
             world.Note("门派:"+key)
             var cmd_fuben=f.nopowerup?"wp2off;wp1on":"wp2off;yun powerup;yun shield;wp1on"
+    
             var initdata={
+                "cmd_aquest":(f.nopowerup?"":"yun powerup;yun shield;")+"mjq",
+                "cmd_bquest":(f.nopowerup?"":"yun powerup;yun shield;")+"mjq",
                 "id_pass":f.id_family,
                 "id_master":f.masterid,
                 "loc_master":f.masterloc,
@@ -183,8 +186,6 @@ function quick_start(){
         "bool_miss":"f",
         "cmd_kill":"yun recover;wp2off;wp1on;mjq",
         "cmd_mache":"mjq",
-        "cmd_aquest":"mjq",
-        "cmd_bquest":"mjq",
         "cmd_pfm":pfm=="shot"?"shot":"yun recover;"+pfm,
         "cmd_studying":"mjq",
         "cmd_wait":"yun recover;mjq",
@@ -382,11 +383,36 @@ function callback_weapon1(name,id,code,data){
             wieldcmd="wear "
             unwieldcmd="remove "
         }
+        var w3=(GetVariable("id_weapon")==GetVariable("id_weapon3"))
+        var w2=(GetVariable("id_weapon")==GetVariable("id_weapon2"))
+
         SetVariable("id_weapon",cmd[1])
+        if (w2){
+            SetVariable("id_weapon2",cmd[1])
+        }
+        if (w3){
+            SetVariable("id_weapon3",cmd[1])
+        }
         send("alias wp1on "+wieldcmd+cmd[1])
         send("alias wp1off "+unwieldcmd+cmd[1])
+        if (w2){
+            send("alias wp2on "+wieldcmd+cmd[1])
+            send("alias wp2off "+unwieldcmd+cmd[1])
+    
+        }
         send("alias")
-        Userinput.alert("","主武器设置成功","id_weapon设置为 "+cmd[1]+"别名 wp1on和wp1off 更新")
+        var msg="id_weapon设置为 "+cmd[1]
+        if (w2){
+            msg+=" id_weapon2设置为 "+cmd[1]
+        }
+        if (w3){
+            msg+=" id_weapon3设置为 "+cmd[1]
+        }
+        msg+=" 别名 wp1on和wp1off 更新"
+        if (w2){
+            msg+=" 别名 wp2on和wp2off 更新"
+        }
+        Userinput.alert("","主武器设置成功",msg)
     }
 }
 function prompt_weapon2(){
