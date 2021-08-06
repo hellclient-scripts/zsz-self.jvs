@@ -276,7 +276,7 @@ function quick_start(){
             prompt_weapon1()
             break
         case "prompt_weapon2":
-                prompt_weapon1()
+                prompt_weapon2()
                 break            
         case "prompt_min_neili":
             prompt_min_neili()
@@ -387,7 +387,7 @@ function callback_weapon1(name,id,code,data){
         Userinput.alert("","主武器设置成功","id_weapon设置为 "+cmd[1]+"别名 wp1on和wp1off 更新")
     }
 }
-function prompt_weapon1(){
+function prompt_weapon2(){
     Userinput.prompt("callback_weapon2","设置副武器","格式为 wield weapon 或 wear weapon","")
 }
 function callback_weapon2(name,id,code,data){
