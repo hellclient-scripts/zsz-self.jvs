@@ -139,11 +139,11 @@ function quick_start_fam(fam){
         var f=data_familys[key]
         if (key==fam){
             world.Note("门派:"+key)
-            var cmd_fuben=f.nopowerup?"wp2off;wp1on":"wp2off;yun powerup;yun shield;wp1on"
+            var cmd_fuben=f.nopowerup?"yun recover;wp2off;wp1on":"wp2off;yun powerup;yun shield;wp1on"
     
             var initdata={
                 "cmd_aquest":(f.nopowerup?"":"yun powerup;yun shield;")+"mjq",
-                "cmd_bquest":(f.nopowerup?"":"yun powerup;yun shield;")+"mjq",
+                "cmd_bquest":(f.nopowerup?"":"yun powerup;yun shield;"),
                 "id_pass":f.id_family,
                 "id_master":f.masterid,
                 "loc_master":f.masterloc,
@@ -184,7 +184,7 @@ function quick_start(){
         "bool_accept":"t",
         "bool_echo":"t",
         "bool_miss":"f",
-        "cmd_kill":"yun recover;wp2off;wp1on;mjq",
+        "cmd_kill":"yun recover;wp2off;wp1on",
         "cmd_mache":"mjq",
         "cmd_pfm":pfm=="shot"?"shot":"yun recover;"+pfm,
         "cmd_studying":"mjq",
@@ -349,15 +349,17 @@ function quick_start(){
             SetVariable("cmd_study","xue "+data)
             SetVariable("loc_study",data_npcs[data].loc)
         }
-        Userinput.alert("prompt_list_skill","学习命令修改成功","cmd_study已经设置为: "+GetVariable("cmd_study")+"\nloc_study已经设置为"+GetVariable("loc_study"))
+        Userinput.alert("callback_study_loc_next","学习命令修改成功","cmd_study已经设置为: "+GetVariable("cmd_study")+"\nloc_study已经设置为"+GetVariable("loc_study"))
     }
    }
-
-   function prompt_list_skill(name,id,code,data){
+   function callback_study_loc_next(name,id,code,data){
     if (code==0){
+        prompt_list_skill()
+    }
+   }
+   function prompt_list_skill(name,id,code,data){
      var comment=GetVariableComment("list_skill")
      Userinput.prompt("callback_list_skill","设置学习内容",comment?comment:"无备注",GetVariable("list_skill"))
-    }
    }
 
    function callback_list_skill(name,id,code,data){
