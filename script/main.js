@@ -14,7 +14,7 @@ var dbase_data = {
 	"walk"       : "null",
 	"search"     : {"flag" : ""},
 	"maze"       : {"count" : 0, "dir" : "null"},
-	"room"       : {"name" : "null", "id" : 0, "dir" : "", "cmd" : "", "miss" : 2763, "chat" : 2046},
+	"room"       : {"name" : "null", "id" : -1, "dir" : "", "cmd" : "", "miss" : 2763, "chat" : 2046},
 	"nextstep"   : {"flag" : "", "cmds" : "", "loc" : 0},
 	"quest"      : {"flag" : "null", "far" : 0, "info" : 0, "count" : 0, "master" : true, "letter" : false},
 	"stat"       : {"stime" : 0, "minute" : 0, "count" : 0, "eff" : 0},

@@ -1,6 +1,11 @@
 var mapper ={
     result:"",
 }
+mapper.sh = {"east" : "e", "south" : "s", "west" : "w", "north" : "n", "southeast" : "se", "southwest" : "sw", 
+		"northeast" : "ne", "northwest" : "nw", "eastup" : "eu", "eastdown" : "ed", "southup" : "su", 
+		"southdown" : "sd", "westup" : "wu", "westdown" : "wd", "northup" : "nu", "northdown" : "nd", 
+		"up" : "u", "down" : "d", "enter" : "enter", "out" : "out", "cross" : "cross"};
+
 mapper.re={"e" : "w", "s" : "n", "w" : "e", "n" : "s", "se" : "nw", "sw" : "ne", "ne" : "sw", "nw" : "se", 
 "eu" : "wd", "ed" : "wu", "su" : "nd", "sd" : "nu", "wu" : "ed", "wd" : "eu", "nu" : "sd", 
 "nd" : "su", "u" : "d", "d" : "u", "enter" : "out", "out" : "enter"};
@@ -98,6 +103,29 @@ mapper.getrmid=function(data){
         this.result="null"
     }
 },
+mapper.getroomexitssorted=function(id){
+    var result=Mapper.getexits(id)
+    var exits=[];
+    var self=this;
+    result.forEach(function(exit){
+        if (self.re[exit.command]){
+            exits.push(exit.command)
+        }
+    })
+    return exits.sort().join(",")
+}
+mapper.filterexitsorted=function(e){
+    var result=e.split(",")
+    var exits=[];
+    var self=this;
+    result.forEach(function(exit){
+        var s=self.sh[exit]
+        if (s){
+            exits.push(s)
+        }
+    })
+    return exits.sort().join(",")
+}
 mapper.execgetrmid=function(data){
     this.result=""
     var name=SplitN(data,"=",2)
@@ -107,6 +135,14 @@ mapper.execgetrmid=function(data){
     }else{
         if (result.length==1){
             this.result=result
+        }else{
+            var exits=this.filterexitsorted(name[1])
+            for (var id in result) {
+                if (this.getroomexitssorted(id)==exits){
+                    this.result=id
+                    break;
+                }
+            }
         }
     }
     if (this.result==""){

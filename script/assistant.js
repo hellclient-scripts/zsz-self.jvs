@@ -213,6 +213,7 @@ function quick_start(){
     send(GetVariable("id"))
     send(GetVariable("passw"))
     send("y")
+    send("set auto_regenerate")
     send("alias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan3 touch xxx;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu xxx jiuhua wan;alias mtc0 touch xxx;alias mtc touch xxx;alias mjq jiqu")
     send("alias wp1on "+wieldcmd+weapon+";alias wp1off "+unwieldcmd+weapon)
     send("alias wp2on "+wieldcmd+weapon+";alias wp2off "+unwieldcmd+weapon)
