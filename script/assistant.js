@@ -240,7 +240,7 @@ function quick_start(){
         list.append("prompt_weapon2","设置副武器")
         list.append("prompt_min_neili","设置内力")
         list.append("prompt_house","设置房屋")
-
+        list.append("ShowMods","扩展模块")
         
     }
     list.send("do_script_assist")
@@ -285,6 +285,9 @@ function quick_start(){
             break
         case "prompt_house":
             prompt_house()
+            break
+        case "ShowMods":
+            ShowMods()
             break
     }
    }

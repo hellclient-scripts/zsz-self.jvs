@@ -1,3 +1,7 @@
+var data_items=[
+    {"name":"","id":""}
+]
+
 var data_npcs = {
     "qi changfa"			: {"name" : "戚长发",		"loc" : 26,		"id" : "qi changfa"},
     "ku rong"				: {"name" : "枯荣大师",		"loc" : 657,	"id" : "ku rong"},

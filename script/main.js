@@ -37,7 +37,9 @@ var dbase_data = {
 	"askyou"     : {"flag" : false, "loc" : null, "index" : 0, "idpt" : 0, "count" : 0, "none" : false},
 	"boss"       : {"start" : false, "kill" : "", "step" : 0, "seadragon" : 0, "dongfang" : 0, "jiangshi" : 0, "juxianzhuang" : 1, "digong" : 0, "xuemo" : 0, "target1" : 0, "target2" : 0, "target3" : 0, "target4" : 0, "target5" : 0, "target6" : 0},
 	"xuemo"		: {"npc" : "", "step" : 1,"target" : false,"target1" : false, "target2" : false, "target3" : false, "target4" : false, "target5" : false, "target6" : false },
-	"digong"	: {"npc" : "", "step" : 1, "g_getk" : false,"n_gman" : 0,"passwd" : "a"}
+	"digong"	: {"npc" : "", "step" : 1, "g_getk" : false,"n_gman" : 0,"passwd" : "a"},
+	"trceatlu":false,
+	"belongings":{}
 	};    
 
 var npc_id       = new Array();
@@ -45,19 +47,19 @@ var cmd_count    = new Array();
 var step_walk    = new MyArray();        
 var auto_search  = new MySearch(3);
 //var mapper       = new ActiveXObject("mapper.path");
-eval(Include("mapper.js"))
+eval(Include("mapper.js"),"mapper.js")
 mapper.open("rooms_1311yn.h")
 mapper.setmissloc(get_var("list_mloc"))
 mapper.addhouse(get_var("house"))
 var m_FAIL       = "-333";
 var dg_maze      = new MyMaze(10);
 //--------------------------------------------------------------------------------
-eval( Include( "Static_Data.h" ) );	
-eval( Include( "queue.js" ));
-eval( Include( "data.js" ));
-eval( Include( "assistant.js" ));
-eval( Include( "weak.js" ));
-
+eval( Include( "Static_Data.h" ) ,"Static_Data.h");	
+eval( Include( "queue.js" ),"queue.js");
+eval( Include( "data.js" ),"data.js");
+eval( Include( "assistant.js" ),"assistant.js");
+eval( Include( "weak.js" ),"weak.js");
+eval( Include( "mods.js" ),"mods.js");
 //--------------------------------------------------------------------------------
 function Include( FileName ) {
 	var FileScriptingObject = new ActiveXObject("Scripting.FileSystemObject");
@@ -1611,6 +1613,10 @@ function do_prepare()
 		set("nextstep/cmds", "i;set no_teach cun money");
 		tl = 23;
 	} else
+	if (query("trceatlu")){
+		set("nextstep/cmds", "set no_teach eatlu.check");
+		tl = 306;
+	}else
 	if (query("item/load") && query("item/gift") != "null") {
 		tl = get_var("loc_gift");
 		if (tl == 2682) set("nextstep/cmds", "#t+ pe_drop;cun " + query("item/gift"));
@@ -1646,6 +1652,9 @@ function do_prepare()
 	if (query("hp/exp") > get_var("max_exp")) {
 		set("nextstep/cmds", "#t+ pe_fangqi;fangqi exp");
 		tl = get_var("loc_dazuo");
+	} else
+	if (Mods.Check()){
+		return;
 	} else {
 		world.EnableTriggerGroup("gpe", 0);
 		set("item/load", false);
@@ -2965,6 +2974,20 @@ function on_global(name, output, wildcards)
 				else {
 					set("room/id", -1);
 					goto(query("nextstep/loc"));
+				}
+			}else if (wcs[0] == "belongings"){
+				world.EnableTrigger("on_belongings",false)
+				set("belongings/_","")
+			}else if(wcs[0]=="eatlu.check"){
+				CheckBelongings("magic water")
+				send("set no_teach eatlu.checked")
+			}else if(wcs[0]=="eatlu.checked"){
+				if (query("belongings/magic water")){
+					send("join;eat lu;hp")
+					BusyTest(306,"set no_teach eatlu.check")
+				}else{
+					set("trceatlu",false)
+					do_prepare()
 				}
 			}else if (wcs[0] == "heal") {
 				stop_all();
@@ -4612,3 +4635,56 @@ function get_xmroom()
 	return tt;
 }	
 //--------------------------------------------------------------------------------
+function CheckBelongings(id){
+	if (id){
+		world.EnableTrigger("on_belongings",true)
+		set("belongings/"+id,"")
+		set("belongings/_",id)
+		send("touch "+id)
+		send("set no_teach belongings")
+	}
+}
+function HasBelongings(id){
+	if (query("belongings/"+id)){
+		return true
+	}
+	return false
+}
+function on_belongings(name, output, wildcards){
+	var wcs
+	wcs = VBArray(wildcards).toArray();
+	var id=query("belongings/_")
+	if (id){
+		world.EnableTrigger("on_belongings",false)
+		set("belongings/"+id,wcs[0])
+		set("belongings/_","")
+	}
+}
+world.EnableTrigger("on_belongings",false)
+
+function on_trc_eatlu(name, output, wildcards){
+	world.EnableTrigger("on_trc_eatlu",false)
+}
+world.EnableTrigger("on_trc_eatlu",false)
+
+function BusyTest(loc,cmds){
+	world.EnableTriggerGroup("busytest",true)
+	set("nextstep/loc",loc)
+	set("nextstep/flag", "COMMANDS");
+	set("nextstep/cmds", cmds);
+	send("enchase bao")
+}
+function on_busy_test_busy(name, output, wildcards){
+	world.Note("busy")
+	world.DoAfterSpecial(0.5, 'send("enchase bao")', 12);	
+}
+function on_busy_test_nobusy(name, output, wildcards){
+	world.EnableTriggerGroup("busytest",false)
+	goto(query("nextstep/loc"))	
+}
+world.EnableTriggerGroup("busytest",false)
+
+function EatLu(){
+	set("trceatlu",true)
+	do_prepare()
+}
