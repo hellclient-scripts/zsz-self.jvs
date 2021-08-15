@@ -3,13 +3,26 @@
     mods.Modules.san=san
     san.Current=0
     san.WeaponID=""
+    san.NeiliMax=0
+    san.NeiliMaxRepeat=0
     san.WeaponName=""
     san.Helpers=["huang shang","nanhai shenni","kuihua taijian","dugu qiubai"]
     san.ImbueList=["jiuzhuan jindan","feicui lan","magic water","xisui dan","xian dan","puti zi"]
-    san.ImbueOffset=5
+    san.ImbueOffset=6
+    san.ModuleCheckStop=function(){
+        san.Current=0
+        san.WeaponID=""
+        san.NeiliMax=0
+        san.NeiliMaxRepeat=0    
+    }
     san.ModuleCheck=function(){
         world.Note(query("hp/max_neili"))
-        if (query("hp/max_neili")<8000){
+        world.Note(query("hp/max_jingli"))
+        if (san.NeiliMax<8000){
+            world.Note("最大内力设置无效")
+            return
+        }
+        if ((san.NeiliMax-query("hp/max_neili"))>200){
             world.Note("内力不足")
             Mods.GoDoCommand(get_var("loc_gift"),"san.neiliitem")
         }else if(query("hp/max_jingli")<1000){
@@ -17,6 +30,8 @@
             Mods.GoDoCommand(get_var("loc_gift"),"san.jingliitem")
         }else if(query("hp/jingli")<query("hp/max_jingli")){
             Mods.GoDoCommand(get_var("loc_dazuo"),"san.tuna")
+        }else if(query("hp/neili")<query("hp/max_neili")){
+            Mods.GoDoCommand(get_var("loc_dazuo"),"san.dazuo")
 
         }else{
             san.Next()
@@ -27,10 +42,14 @@
         send("yun regenerate;tuna 100")
         BusyTest(get_var("loc_dazuo"),"hp;set no_teach prepare")
     }
+    san.CmdDazuo=function(){
+        send("yun regenerate;yun recover;dazuo 200")
+        BusyTest(get_var("loc_dazuo"),"hp;set no_teach prepare")
+    }
     san.CmdJingliItem=function(){
         send("take 1 renshen wan")
         CheckBelongings("renshen wan")
-        send(Mods.GetCommand("san.eatwan"))
+        BusyTest(get_var("loc_dazuo"),Mods.GetCommand("san.eatwan"))
     }
     san.CmdEatWan=function(){
         if (HasBelongings("renshen wan")){
@@ -49,6 +68,7 @@
     san.Report=function(title,msg){
         world.Note(title)
         world.Note(msg)
+        san.ModuleCheckStop()
     }
     san.CmdEatLu=function(){
         if (HasBelongings("magic water")){
@@ -61,6 +81,10 @@
         send("show "+san.WeaponID)
         san.Current++
         send("set no_teach prepare")
+    }
+    san.CmdReady=function(){
+        san.Current++
+        send("hp;set no_teach prepare")
     }
     san.CmdSanSelf=function(){
         san.Current++
@@ -113,14 +137,17 @@
                 Mods.GoDoCommand(data_npcs[san.Helpers[san.Current]].loc,"san.san")
                 return
             case 4:
+                Mods.GoDoCommand(get_var("loc_dazuo"),"san.ready")
+                return    
+            case 5:
                 Mods.GoDoCommand(get_var("loc_dazuo"),"san.sanself")
                 return
-            case 5:
             case 6:
             case 7:
-            case 8:                
+            case 8:
             case 9:                
-            case 10:
+            case 10:                
+            case 11:
                 Mods.GoDoCommand(get_var("loc_gift"),"san.imbue")
                 return
         }
@@ -140,9 +167,13 @@
         mods.Commands["san.eatwan"]=san.CmdEatWan
         mods.Commands["san.imbued"]=san.CmdImbued
         mods.Commands["san.tuna"]=san.CmdTuna
+        mods.Commands["san.dazuo"]=san.CmdDazuo
+        mods.Commands["san.ready"]=san.CmdReady
+
         mods.Commands["san.sanself"]=san.CmdSanSelf
         mods.Commands["san.imbue"]=san.CmdImbue
         mods.Commands["san.tryimbue"]=san.CmdTryImbue
         mods.Commands["san.checkimbue"]=san.CmdCheckImbue
     }
 }(Mods))
+

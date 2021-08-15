@@ -158,6 +158,7 @@ mapper.getidfrname=function (name) {
 },
 mapper.search=function(fl, tl, fm){
     var tags=fm.split(",")
+    Mapper.flashtags()
     Mapper.settags(tags)
     var result=Mapper.getpath(fl,1,[tl])
     var steps=[]
@@ -340,15 +341,15 @@ mapper.addhouse=function(line){
         var houesid=data[1]
         var houseloc=data[2]
         mapper.addhouseroom("1933="+hosuename+"大院|n:1934,out:"+houseloc+",")
-        mapper.addhouseroom("1934="+hosuename+"关前庭|e:1936,push、n:1937,s:1933,w:1935,")
+        mapper.addhouseroom("1934="+hosuename+"前庭|e:1936,push、n:1937,s:1933,w:1935,")
         mapper.addhouseroom("1935=右卫舍|e:1934,")
         mapper.addhouseroom("1936=左卫舍|w:1934,")
         mapper.addhouseroom("1937=走道|n:1938,push、s:1934,")
-        mapper.addhouseroom("1938="+hosuename+"关迎客厅|n:1939,s:1937,open door、e:2533,")
+        mapper.addhouseroom("1938="+hosuename+"迎客厅|n:1939,s:1937,open door、e:2533,")
         mapper.addhouseroom("1939=议事厅|e:1941,n:1942,s:1938,w:1940,")
-        mapper.addhouseroom("1940="+hosuename+"关武厅|e:1939,")
-        mapper.addhouseroom("1941="+hosuename+"关武厅|w:1939,")
-        mapper.addhouseroom("1942="+hosuename+"关中庭|open west、w:1943,n:1944,s:1939,")
+        mapper.addhouseroom("1940="+hosuename+"武厅|e:1939,")
+        mapper.addhouseroom("1941="+hosuename+"武厅|w:1939,")
+        mapper.addhouseroom("1942="+hosuename+"中庭|open west、w:1943,n:1944,s:1939,")
         mapper.addhouseroom("1943=左厢房|e:1942,")
         mapper.addhouseroom("1944=后院|e:-1,n:1947,s:1942,w:1945,")
         mapper.addhouseroom("1945=厨房|e:1944,")

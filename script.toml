@@ -4074,7 +4074,7 @@ Channel = ""
   ID = "d1d5cnq4t2m7ql73fgcs6n"
   Name = "pe_tunab"
   Enabled = false
-  Match = "^(> )*你现在正忙着呢！"
+  Match = "^(> )*(你现在正忙着呢！|你现在身体状况太差了，无法集中精神)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6301,17 +6301,17 @@ Channel = ""
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t4lhka73fgcs47"
-  Name = "on_trc"
+  ID = "d1d5cnq4t4lhka73fgcs47-a"
+  Name = "on_trc_eatlu"
   Enabled = false
-  Match = "^你定神一看，这才发现自己已经到了.人场。$"
+  Match = "^你定神一看，这才发现自己已经到了(.*)场。$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
   SoundFileName = ""
   SoundIfInactive = false
-  Script = "on_trc"
+  Script = "on_trc_eatlu"
   SendTo = 0
   Sequence = 90
   ExpandVariables = false
@@ -6322,7 +6322,7 @@ Channel = ""
   MultiLine = false
   LinesToMatch = 0
   WildcardLowerCase = false
-  Group = "gim"
+  Group = ""
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -6736,6 +6736,10 @@ Channel = ""
   Name = "id_weapon3"
   Desc = "武器装备英文名（必须填）"
   Intro = "必须填，可以和其他武器一样，不然修理会发呆"
+[[RequiredParams]]
+  Name = "id_weapon4"
+  Desc = "护甲英文名（选填）"
+  Intro = "维修护甲用"
 
 [[RequiredParams]]
   Name = "list_boss"

@@ -24,7 +24,7 @@ var dbase_data = {
 	"dispel"     : {"flag" : "", "next" : "", "count" : 0, "count1" : 0},
 	"connect"    : {"cmds" : "", "auto" : false},
 	"stab"       : {"flag" : true, "miss" : true, "index" : 0},
-	"item"       : {"food" : 0, "shuidai" : 0, "weapon0" : 1, "weapon" : 100, "weapon2" : 100, "weapon3" : 100, "silver" : 0, "zhen" : 0, 
+	"item"       : {"food" : 0, "shuidai" : 0, "weapon0" : 1, "weapon" : 100, "weapon2" : 100, "weapon3" : 100,"weapon4" : 100, "silver" : 0, "zhen" : 0, 
 			"gold" : 0, "9hua" : 0, "qlkey" : 0, "money" : 0, "buy" : "null", "arrow" : 0, "gong" : 0, "lsword" : 0, "gangbiao" : 0, "cash" : 0,
 			"sell" : "null", "gift" : "null", "wuqi" : 1, "qu" : "null", "flag" : false, "load" : false},
 	"hp"         : {"exp" : 1, "pot" : 1, "neili" : 1, "qi" : 1, "eff_qi" : 90, "eff_jing" : 90, "max_jing" : 100, 
@@ -1179,6 +1179,8 @@ function can_accept()
 
 	if (query("item/weapon3") < 30) return false;
 
+	if (query("item/weapon4") < 30) return false;
+
 	if (query("item/food") < 5) return false;
 
 	if (query("item/shuidai") < 2) return false;
@@ -1567,6 +1569,11 @@ function do_prepare()
 	} else
 	if ((!check_in_3boss()) && query("item/weapon3") < 30) {
 		var wp = get_var("id_weapon3");
+		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
+		tl = 66;
+	} else
+	if ((!check_in_3boss()) && query("item/weapon4") < 30) {
+		var wp = get_var("id_weapon4");
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
 		tl = 66;
 	} else
@@ -2364,21 +2371,26 @@ function on_kill(name, output, wildcards)
 			var cmd = "";
 			if (query("item/zhen") < 399) cmd = "gzhen " + query("npc/id") + ";" 
 			cmd +=get_var("cmd_npcfaint") + ";i;hp";
-			var num = Math.floor(Math.random() * 4);
+			var num = Math.floor(Math.random() * 5);
 			set("item/weapon0", 1);			
 			if (num == 0 || num == 1 || query("item/weapon") < 50) {
 				set("item/weapon", 0);
 				cmd += ";l " + get_var("id_weapon") + " of me";
 			} else 
-			if (num == 2 && (get_var("id_weapon2") != "" || get_var("id_weapon2") != "none")) {
+			if (num == 2 && (get_var("id_weapon2") != "") ){
 				set("item/weapon2", 0);
 				set("item/weapon0", 2);
 				cmd += ";l " + get_var("id_weapon2") + " of me";
 			} else 
-			if (num == 3 && (get_var("id_weapon3") != "" || get_var("id_weapon3") != "none")) {
+			if (num == 3 && (get_var("id_weapon3") != "") ){
 				set("item/weapon3", 0);
 				set("item/weapon0", 3);
 				cmd += ";l " + get_var("id_weapon3") + " of me";
+			}else 
+			if (num == 4 && (get_var("id_weapon4") != "")) {
+				set("item/weapon4", 0);
+				set("item/weapon0", 4);
+				cmd += ";l " + get_var("id_weapon4") + " of me";
 			}
 
 			send(cmd);
@@ -2586,7 +2598,8 @@ function on_prepare(name, output, wildcards)
 			world.EnableTrigger("pe_repair", false);
 				set("item/weapon", 100);
 				set("item/weapon2", 100);	
-				set("item/weapon3", 100);					
+				set("item/weapon3", 100);	
+				set("item/weapon4", 100);
 				send(get_var("cmd_pre"));
 			break;	
 		case "pe_buy":		// ^(> )*你从店小二那里买下了
@@ -2731,6 +2744,7 @@ function on_prepare(name, output, wildcards)
 			send("hp;set no_teach prepare");
 			break;
 		case "pe_tunab":	// 你现在正忙着呢！
+			send("yun recover;")
 			open_timer1(1, "busy", "tuna 1000");
 			break;
 	}
@@ -2983,12 +2997,15 @@ function on_global(name, output, wildcards)
 				send("set no_teach eatlu.checked")
 			}else if(wcs[0]=="eatlu.checked"){
 				if (query("belongings/magic water")){
-					send("join;eat lu;hp")
-					BusyTest(306,"set no_teach eatlu.check")
+					world.EnableTrigger("on_trc_eatlu",true)
+					send("join;hp;set no_teach eatlu.eat")
 				}else{
+					world.EnableTrigger("on_trc_eatlu",false)
 					set("trceatlu",false)
 					do_prepare()
 				}
+			}else if(wcs[0]=="eatlu.eat"){
+				BusyTest(306,"set no_teach eatlu.check")
 			}else if (wcs[0] == "heal") {
 				stop_all();
 				var eq = query("hp/eff_qi");
@@ -3054,7 +3071,10 @@ function on_global(name, output, wildcards)
 			else if (query("item/weapon0") == 2)	
 				set("item/weapon2", wcs[0] - 0);
 			else if (query("item/weapon0") == 3)	
-				set("item/weapon3", wcs[0] - 0);	
+				set("item/weapon3", wcs[0] - 0);
+			else if (query("item/weapon0") == 4)	
+				set("item/weapon4", wcs[0] - 0);	
+
 			break;
 		case "touch":		// ^(> )*你觉得一股热气从丹田冉冉升起。
 			set("hp/neili", query("hp/max_neili") * 0.66);
@@ -3556,6 +3576,7 @@ function on_alias(name, line, wildcards)
 			var cmd = get_var("id") + ";" + get_var("passw") + ";y";
 			send(cmd);
 			tongji(0);
+			StopMods();
 			set("room/id", -1);
 			set("stab/flag", true);
 			set("stab/miss", true);
@@ -3571,10 +3592,12 @@ function on_alias(name, line, wildcards)
 		case "stop":
 			set("item/load", true);
 			set("quest/flag", "null");
+			StopMods();
 			world.EnableTrigger("ga", false);
 			break;
 		case "spwk":
 			stop_all();
+			StopMods();
 			set("nextstep/flag", "");
 			set("quest/flag", "null");
 			set("npc/status", "end");
@@ -4663,9 +4686,9 @@ function on_belongings(name, output, wildcards){
 world.EnableTrigger("on_belongings",false)
 
 function on_trc_eatlu(name, output, wildcards){
+	send("eat magic water")
 	world.EnableTrigger("on_trc_eatlu",false)
 }
-world.EnableTrigger("on_trc_eatlu",false)
 
 function BusyTest(loc,cmds){
 	world.EnableTriggerGroup("busytest",true)

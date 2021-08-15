@@ -59,7 +59,11 @@ function OnModCommand(name, output, wildcards){
     }
 }
 
-
+function StopMods(){
+    if (Mods.CurrentModule){
+        Mods.StopModule(Mods.CurrentModule)
+    }
+}
 OnMods=function(name,id,code,data){
     if (code==0){
         switch (data){
@@ -67,13 +71,48 @@ OnMods=function(name,id,code,data){
                 EatLu()
                 return
             case "san":
-                Userinput.prompt("CallbackPromptSan","请选择要San的武器id","如baihongjian","")
+                Userinput.prompt("CallbackPromptSanNeiliMax","请设置你的最大内力","如8000。请hp -m查看 将准确的数据填入。错误轻则浪费magic water，重则掉基本内功。","")
+                return
+            case "lian":
+                Userinput.prompt("CallbackPromptLian","请设置你的的联系命令","如 wp1off;lian unarmed 50;","")
                 return
         }
     }
 }
+CallbackPromptLian=function(name,id,code,data){
+    if (code==0 && data){
+        Mods.Modules.lian.Start(data)
+    }
+}
+
+
+CallbackPromptSanNeiliMax=function(name,id,code,data){
+    if (code==0 && data){
+        if (isNaN(data)||(data-0)<8000){
+            Userinput.alert("","最大内力无效",data+"不是有效的最大内力，注意，设置错误会掉基本内功")
+            return
+        }
+        Mods.Modules.san.NeiliMax=data-0
+        Userinput.prompt("CallbackPromptSanNeiliMaxRepeat","请再次确认最大内力","如8000。请hp -m查看 将准确的数据填入。错误轻则浪费magic water，重则掉基本内功。","")
+    }
+}
+CallbackPromptSanNeiliMaxRepeat=function(name,id,code,data){
+    if (code==0 && data){
+        if (isNaN(data)||(data-0)<8000){
+            Userinput.alert("","最大内力无效",data+"不是有效的最大内力，注意，设置错误会掉基本内功")
+            return
+        }
+        Mods.Modules.san.NeiliMaxRepeat=data-0
+        if (Mods.Modules.san.NeiliMaxRepeat != Mods.Modules.san.NeiliMax){
+            Userinput.alert("","最大内力不匹配","两次输入的最大内力不匹配，请检查")
+            return
+
+        }
+        Userinput.prompt("CallbackPromptSan","请选择要San的武器id","如baihongjian","")
+    }
+}
 CallbackPromptSan=function(name,id,code,data){
-    if (code!=0 && data){
+    if (code==0 && data){
         Mods.Modules.san.Start(data)
     }
 }
@@ -81,7 +120,9 @@ ShowMods=function(){
     var list=Userinput.newlist("扩展模块","请选择你要运行的扩展模块",false)
     list.append("eatlu","自动去TRC吃身上的露")
     list.append("san","自动San兵器")
+    list.append("lian","练习技能/读书")
     list.send("OnMods")
 }
 
 Mods.Require("mods/san.js")
+Mods.Require("mods/lian.js")
