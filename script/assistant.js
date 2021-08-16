@@ -389,16 +389,13 @@ function callback_weapon1(name,id,code,data){
             wieldcmd="wear "
             unwieldcmd="remove "
         }
-        var w3=(GetVariable("id_weapon")==GetVariable("id_weapon3"))
         var w2=(GetVariable("id_weapon")==GetVariable("id_weapon2"))
 
         SetVariable("id_weapon",cmd[1])
         if (w2){
             SetVariable("id_weapon2",cmd[1])
         }
-        if (w3){
-            SetVariable("id_weapon3",cmd[1])
-        }
+
         send("alias wp1on "+wieldcmd+cmd[1])
         send("alias wp1off "+unwieldcmd+cmd[1])
         if (w2){
@@ -411,9 +408,7 @@ function callback_weapon1(name,id,code,data){
         if (w2){
             msg+=" id_weapon2设置为 "+cmd[1]
         }
-        if (w3){
-            msg+=" id_weapon3设置为 "+cmd[1]
-        }
+
         msg+=" 别名 wp1on和wp1off 更新"
         if (w2){
             msg+=" 别名 wp2on和wp2off 更新"
