@@ -2365,7 +2365,7 @@ function on_kill(name, output, wildcards)
 			var cmd = "";
 			if (query("item/zhen") < 399) cmd = "gzhen " + query("npc/id") + ";" 
 			cmd +=get_var("cmd_npcfaint") + ";i;hp";
-			var weapons=(get_var("id_weapon")+";"+get_var("id_weapon2")+";"+get_var("id_weapon3")).split(";")
+			var weapons=(get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon2")+";"+get_var("id_weapon3")).split(";")
 			var list=[]
 			weapons.forEach(function(data){
 				if (data){

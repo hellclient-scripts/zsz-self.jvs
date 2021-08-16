@@ -192,7 +192,6 @@ function quick_start(){
         "cmd_npcfaint":"wp1off;wp2on",
         "id_weapon":weapon,
         "id_weapon2":weapon,
-        "id_weapon3":weapon,
         "list_qask":"很远",
         "max_pot":"400",
         "max_th":"500",
