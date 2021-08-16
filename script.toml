@@ -6870,3 +6870,8 @@ Channel = ""
   Name = "bool_3boss_recon"
   Desc = "三小boss重连"
   Intro = "打3小boss时时候重连开关，适用于较弱的id"
+
+[[RequiredParams]]
+  Name = "bool_cungift"
+  Desc = "保存奖品"
+  Intro = "每个任务奖品都会保存，用于保存大米每个任务是尝试兑换的礼物"

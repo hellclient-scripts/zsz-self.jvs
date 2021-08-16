@@ -24,7 +24,9 @@ var dbase_data = {
 	"dispel"     : {"flag" : "", "next" : "", "count" : 0, "count1" : 0},
 	"connect"    : {"cmds" : "", "auto" : false},
 	"stab"       : {"flag" : true, "miss" : true, "index" : 0},
-	"item"       : {"food" : 0, "shuidai" : 0, "weapon0" : 1, "weapon" : 100, "weapon2" : 100, "weapon3" : 100,"weapon4" : 100, "silver" : 0, "zhen" : 0, 
+	"weapon":	{"id":"","dur":0},
+	"weapons":{},
+	"item"       : {"food" : 0, "shuidai" : 0, "silver" : 0, "zhen" : 0, 
 			"gold" : 0, "9hua" : 0, "qlkey" : 0, "money" : 0, "buy" : "null", "arrow" : 0, "gong" : 0, "lsword" : 0, "gangbiao" : 0, "cash" : 0,
 			"sell" : "null", "gift" : "null", "wuqi" : 1, "qu" : "null", "flag" : false, "load" : false},
 	"hp"         : {"exp" : 1, "pot" : 1, "neili" : 1, "qi" : 1, "eff_qi" : 90, "eff_jing" : 90, "max_jing" : 100, 
@@ -32,7 +34,7 @@ var dbase_data = {
 			"jingli" : 1, "th" : 1, "dispel" : false, "faint" : "null", "pot_full" : false, "level" : 0},
 	"timer"      : {"count" : 0, "time" : 0, "flag" : "null", "cmd" : "null", "pfm" : 0, "idle" : false},
 	"other"      : {"nextstep" : "", "loc" : "", "focus" : true, "heal" : "", "sleep" : 0, "jiqu" : 0, "study" : 0, "n_yj" : 0, "n_lx" : 0,
-			"qiankun" : false, "brief" : false, "trace" : false, "walk" : false, "backup" : false, "touch" : true,
+			"qiankun" : false, "brief" : false, "trace" : false, "walk" : false, "backup" : false, "touch" : true, "mtc":false,
 			"getw" : 0, "tell" : 0, "loc1" : ""},
 	"askyou"     : {"flag" : false, "loc" : null, "index" : 0, "idpt" : 0, "count" : 0, "none" : false},
 	"boss"       : {"start" : false, "kill" : "", "step" : 0, "seadragon" : 0, "dongfang" : 0, "jiangshi" : 0, "juxianzhuang" : 1, "digong" : 0, "xuemo" : 0, "target1" : 0, "target2" : 0, "target3" : 0, "target4" : 0, "target5" : 0, "target6" : 0},
@@ -1173,13 +1175,7 @@ function can_accept()
 
 	if (query("hp/eff_qi") < 75) return false;
 
-	if (query("item/weapon") < 35) return false;
-
-	if (query("item/weapon2") < 30) return false;
-
-	if (query("item/weapon3") < 30) return false;
-
-	if (query("item/weapon4") < 30) return false;
+	if (query("weapon/dur") < 35) return false;
 
 	if (query("item/food") < 5) return false;
 
@@ -1212,6 +1208,9 @@ function can_accept()
 
 function can_sleep()
 {
+	if (query("other/mtc")){
+		return false
+	}
 	var time = (new Date()).getTime();
 	if (time < query("other/sleep") - 0 + 55*1000) return false;
 
@@ -1557,23 +1556,14 @@ function do_prepare()
 		tl = 23;
 	} else
 
-	if (query("item/weapon") < 35 || ((query("item/weapon") < 98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
+	if (query("weapons/"+get_var("id_weapon")) < 35 || (query("weapons/"+get_var("id_weapon")<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
 		var wp = get_var("id_weapon");
+		set("weapon/id",wp),
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
 		tl = 66;
 	} else
-	if ((!check_in_3boss()) && query("item/weapon2") < 30) {
-		var wp = get_var("id_weapon2");
-		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
-		tl = 66;
-	} else
-	if ((!check_in_3boss()) && query("item/weapon3") < 30) {
-		var wp = get_var("id_weapon3");
-		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
-		tl = 66;
-	} else
-	if ((!check_in_3boss()) && query("item/weapon4") < 30) {
-		var wp = get_var("id_weapon4");
+	if ((!check_in_3boss()) && query("weapon/dur") < 30 && query("weapon/id") ){
+		var wp=query("weapon/id")
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
 		tl = 66;
 	} else
@@ -1624,14 +1614,14 @@ function do_prepare()
 		set("nextstep/cmds", "set no_teach eatlu.check");
 		tl = 306;
 	}else
-	if (query("item/load") && query("item/gift") != "null") {
+	if ((get_var("bool_cungift") || query("item/load")) && query("item/gift") != "null") {
 		tl = get_var("loc_gift");
 		if (tl == 2682) set("nextstep/cmds", "#t+ pe_drop;cun " + query("item/gift"));
 		else set("nextstep/cmds", "#t+ pe_drop;give " + query("item/gift") + " to " + get_var("list_control").split(",")[0] +";drop " + query("item/gift"));
 
 	} else
 	if (query("hp/jingli") < get_var("min_jingli")) {
-		set("nextstep/cmds", "#t+ pe_tuna;#t+ pe_tunab;mdan1;hp;tuna 500");
+		set("nextstep/cmds", "#t+ pe_tuna;#t+ pe_tunab;mdan1;hp;tuna "+getvar("num_tuna"));
 		tl = get_var("loc_dazuo");
 	} else
 
@@ -1644,6 +1634,10 @@ function do_prepare()
 		tl = get_var("loc_study");
 	} else
 	if (query("hp/neili") < get_var("min_neili") && get_var("loc_sleep") != "") {
+		if (query("other/mtc")){
+			send("set no_teach prepare")
+			return
+		}
 		if (can_sleep() && !check_in_3boss()) {
 			set("nextstep/cmds", "#t+ pe_sleep;sleep");
 			tl = get_var("loc_sleep");
@@ -2371,28 +2365,19 @@ function on_kill(name, output, wildcards)
 			var cmd = "";
 			if (query("item/zhen") < 399) cmd = "gzhen " + query("npc/id") + ";" 
 			cmd +=get_var("cmd_npcfaint") + ";i;hp";
-			var num = Math.floor(Math.random() * 5);
-			set("item/weapon0", 1);			
-			if (num == 0 || num == 1 || query("item/weapon") < 50) {
-				set("item/weapon", 0);
-				cmd += ";l " + get_var("id_weapon") + " of me";
-			} else 
-			if (num == 2 && (get_var("id_weapon2") != "") ){
-				set("item/weapon2", 0);
-				set("item/weapon0", 2);
-				cmd += ";l " + get_var("id_weapon2") + " of me";
-			} else 
-			if (num == 3 && (get_var("id_weapon3") != "") ){
-				set("item/weapon3", 0);
-				set("item/weapon0", 3);
-				cmd += ";l " + get_var("id_weapon3") + " of me";
-			}else 
-			if (num == 4 && (get_var("id_weapon4") != "")) {
-				set("item/weapon4", 0);
-				set("item/weapon0", 4);
-				cmd += ";l " + get_var("id_weapon4") + " of me";
+			var weapons=(get_var("id_weapon")+";"+get_var("id_weapon2")+";"+get_var("id_weapon3")).split(";")
+			var list=[]
+			weapons.forEach(function(data){
+				if (data){
+					list.push(data)
+				}
+			})
+			if (list.length){
+				var num = Math.floor(Math.random() * list.length);
+				var wp=list[num]
+				set("weapon/id",wp)
+				cmd += ";l " + wp + " of me";
 			}
-
 			send(cmd);
 			tongji(1);
 			break;
@@ -2596,10 +2581,8 @@ function on_prepare(name, output, wildcards)
 			break;
 		case "pe_repair": // ^(> )*铁匠道：“好了！”随手把(.*)还给了你，你看了看，满意的掏出了一些钱付了帐。$
 			world.EnableTrigger("pe_repair", false);
-				set("item/weapon", 100);
-				set("item/weapon2", 100);	
-				set("item/weapon3", 100);	
-				set("item/weapon4", 100);
+				set("weapon/dur", 100);
+				set("weapons/"+query("weapon/id"), 100);
 				send(get_var("cmd_pre"));
 			break;	
 		case "pe_buy":		// ^(> )*你从店小二那里买下了
@@ -2745,7 +2728,7 @@ function on_prepare(name, output, wildcards)
 			break;
 		case "pe_tunab":	// 你现在正忙着呢！
 			send("yun recover;")
-			open_timer1(1, "busy", "tuna 1000");
+			open_timer1(1, "busy", "tuna "+getvar("num_tuna"));
 			break;
 	}
 }
@@ -3066,17 +3049,10 @@ function on_global(name, output, wildcards)
 			if ((get_var("cmd_study").indexOf("xue ") != -1)&&(Math.floor(Math.random() * 5) == 0)) set("other/study", (new Date()).getTime());
 			break;
 		case "weapon":		// ^耐久度：(.*)%
-			if (query("item/weapon0") == 1)					
-				set("item/weapon", wcs[0] - 0);
-			else if (query("item/weapon0") == 2)	
-				set("item/weapon2", wcs[0] - 0);
-			else if (query("item/weapon0") == 3)	
-				set("item/weapon3", wcs[0] - 0);
-			else if (query("item/weapon0") == 4)	
-				set("item/weapon4", wcs[0] - 0);	
-
+			set("weapon/dur",wcs[0] - 0)
 			break;
 		case "touch":		// ^(> )*你觉得一股热气从丹田冉冉升起。
+			set("other/mtc",true)
 			set("hp/neili", query("hp/max_neili") * 0.66);
 			set("other/touch", true);
 			break;
@@ -3702,7 +3678,8 @@ function on_boss(name, output, wildcards)
 				telldm("副本失败"+ query("boss/kill"));
 			close_fb();
 			set("room/id",-1);
-			set("item/weapon", 0);
+			set("weapon/id",get_var("id_weapon"))
+			set("weapon/dur", 0);
 			send("halt;"+get_var("cmd_pre")+";l " + get_var("id_weapon") + " of me;mtc;i;hp;set no_teach prepare");
 			break;
 		case "bs_end":	// ^[> ]*(镇海神龙|僵尸道长|东方不败)(.*)副本将在30秒后消失。
