@@ -6725,21 +6725,17 @@ Channel = ""
 [[RequiredParams]]
   Name = "id_weapon"
   Desc = "武器装备英文名（必须填）"
-  Intro = "必须填，可以和其他武器一样，不然修理会发呆"
+  Intro = "必须填，可以和其他武器一样"
 
 [[RequiredParams]]
   Name = "id_weapon2"
   Desc = "武器装备英文名（必须填）"
-  Intro = "必须填，可以和其他武器一样，不然修理会发呆"
+  Intro = "必须填，可以和其他武器一样"
 
 [[RequiredParams]]
   Name = "id_weapon3"
-  Desc = "武器装备英文名（必须填）"
-  Intro = "必须填，可以和其他武器一样，不然修理会发呆"
-[[RequiredParams]]
-  Name = "id_weapon4"
-  Desc = "护甲英文名（选填）"
-  Intro = "维修护甲用"
+  Desc = "额外维修装备列表（必须填）"
+  Intro = "分号分割的额外维修装备列表，如 armor;staff"
 
 [[RequiredParams]]
   Name = "list_boss"

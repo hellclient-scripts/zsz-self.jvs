@@ -1556,7 +1556,7 @@ function do_prepare()
 		tl = 23;
 	} else
 
-	if (query("weapons/"+get_var("id_weapon")) < 35 || (query("weapons/"+get_var("id_weapon")<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
+	if (query("weapons/"+get_var("id_weapon")) < 35 || ((query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
 		var wp = get_var("id_weapon");
 		set("weapon/id",wp),
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
