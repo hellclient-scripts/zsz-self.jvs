@@ -41,6 +41,7 @@ var dbase_data = {
 	"xuemo"		: {"npc" : "", "step" : 1,"target" : false,"target1" : false, "target2" : false, "target3" : false, "target4" : false, "target5" : false, "target6" : false },
 	"digong"	: {"npc" : "", "step" : 1, "g_getk" : false,"n_gman" : 0,"passwd" : "a"},
 	"trceatlu":false,
+	"miss":{"fail":false,"until":0},
 	"belongings":{}
 	};    
 
@@ -336,7 +337,13 @@ function get_path(fl, tl)
 	var str, pas;
 
 	pas = get_var("id_pass");
-	if (get_var("bool_miss") && query("stab/miss")) pas += "," + get_var("id");
+	if (get_var("bool_miss") && query("stab/miss")){
+		var date = new Date();
+		var time = date.getTime();
+		if (time>query("miss/until")){
+	 		pas += "," + get_var("id");
+		}
+	}
 	mapper.exec("mush " + fl + " " + tl + " " + pas);
 	str = mapper.result;
 	if (str == "null") {
@@ -606,6 +613,7 @@ function step_trace(dir)
 function goto(tl)
 {
 	set("other/touch", true);
+	set("miss/fail",false)
 	var tmp = tl + "";
 	tmp = tmp.split(",");
 	for (var i=0; i<tmp.length; i++) {
@@ -1621,7 +1629,7 @@ function do_prepare()
 
 	} else
 	if (query("hp/jingli") < get_var("min_jingli")) {
-		set("nextstep/cmds", "#t+ pe_tuna;#t+ pe_tunab;mdan1;hp;tuna "+getvar("num_tuna"));
+		set("nextstep/cmds", "#t+ pe_tuna;#t+ pe_tunab;mdan1;hp;tuna "+get_var("num_tuna"));
 		tl = get_var("loc_dazuo");
 	} else
 
@@ -1635,7 +1643,7 @@ function do_prepare()
 	} else
 	if (query("hp/neili") < get_var("min_neili") && get_var("loc_sleep") != "") {
 		if (query("other/mtc")){
-			send("set no_teach prepare")
+			send("hp;set no_teach prepare")
 			return
 		}
 		if (can_sleep() && !check_in_3boss()) {
@@ -2009,7 +2017,17 @@ function on_walk(name, output, wildcards)
 			world.DiscardQueue();
 			world.EnableTrigger("wk_busy", false);
 			if (output.indexOf("感觉相当飘忽") != -1)
-				send("mdan1");
+				if (query("miss/fail")){
+					stop_all()
+					var date = new Date();
+					var time = date.getTime();
+					set("miss/until",time+5*60*1000)
+					send("hp;i;set no_teach prepare")
+					return
+				}else{
+					set("miss/fail",true)
+					send("mdan1")
+				}
 
 			if (output.indexOf("虾兵虾将") != -1) {
 				send("#t- step;#t+ bs_sea;look");
@@ -2750,7 +2768,7 @@ function on_hp(name, output, wildcards)
 			set("hp/eff_qi", (wcs[2] - 0));
 			set("hp/neili", (wcs[4] - 0));
 			set("hp/max_neili", (wcs[5] - 0));
-			if (query("other/touch") && (query("hp/neili") < get_var("min_neili"))) send("mtc;#q");
+			if (query("other/touch") && (query("hp/jingli")>get_var("min_jingli"))&&(query("hp/neili") < get_var("min_neili"))) send("mtc;#q");
 			break;
 		case "hp_3":	// ^【 食 物 】(.*)/(.*)【 潜 能 】(.*)$
 			set("hp/food", (wcs[0] - 0));
