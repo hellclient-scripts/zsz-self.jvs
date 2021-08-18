@@ -5,9 +5,9 @@ OnOpen = ""
 OnClose = ""
 OnConnect = "at_connect"
 OnDisconnect = "at_disconnect"
-OnBroadcast = ""
+OnBroadcast = "onBroadcast"
 OnAssist = "on_script_asssist"
-Channel = ""
+Channel = "zsz-self.jvs"
 
 [[Triggers]]
   ID = "d1d5cnq4t2kjb373fgcs2k"
@@ -629,6 +629,36 @@ Channel = ""
   Italic = false
   Variable = ""
 
+[[Triggers]]
+  ID = "on_npc"
+  Name = "on_npc"
+  Enabled = false
+  Match = "^  (.{2,4})\\((.+ .+)\\)$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_npc"
+  SendTo = 0
+  Sequence = 999
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
 [[Triggers]]
   ID = "d1d5cnq4t2l74f73fgcs38"
   Name = "sm_exit"
@@ -6394,6 +6424,25 @@ Channel = ""
 
 
 [[Timers]]
+  ID = "on_gc"
+  Name = "on_gc"
+  Enabled = true
+  Hour = 0
+  Minute = 0
+  Second = 60.0
+  Send = ""
+  Script = "on_gc"
+  AtTime = false
+  SendTo = 0
+  ActionWhenDisconnectd = true
+  Temporary = false
+  OneShot = false
+  Group = ""
+  Variable = ""
+  OmitFromLog = false
+  OmitFromOutput = false
+
+[[Timers]]
   ID = "d1d5cnq4t2nqj973fgcs8v"
   Name = "t_con"
   Enabled = false
@@ -6871,3 +6920,7 @@ Channel = ""
   Name = "bool_cungift"
   Desc = "保存奖品"
   Intro = "每个任务奖品都会保存，用于保存大米每个任务是尝试兑换的礼物"
+[[RequiredParams]]
+  Name = "bool_nohelp"
+  Desc = "禁用帮助找NPD功能"
+  Intro = "设为T后，不会请求帮助和帮助寻找npc"
