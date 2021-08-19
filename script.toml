@@ -6914,7 +6914,7 @@ Channel = "zsz-self.jvs"
 [[RequiredParams]]
   Name = "bool_3boss_recon"
   Desc = "三小boss重连"
-  Intro = "打3小boss时时候重连开关，适用于较弱的id"
+  Intro = "打3小boss时时候重连开关，适用于较弱的id。注意，不建议开seadragons,容易卡海怪"
 
 [[RequiredParams]]
   Name = "bool_cungift"
