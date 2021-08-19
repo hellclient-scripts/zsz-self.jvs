@@ -156,6 +156,8 @@
     san.Start=function(weaponid){
         san.Current=0
         san.WeaponID=weaponid
+        send("unwield "+weaponid)
+        send("remove "+weaponid)
         send("hp;i")
         mods.StartModule("san")
     }

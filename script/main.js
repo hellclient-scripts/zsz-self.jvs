@@ -832,11 +832,18 @@ function lose_focus()
 	set("other/focus", false);
 }
 
-function to_kill()
+function to_kill(init)
 {
-	set("npc/find", 0);
-	set("quest/far", 0);
-	set("quest/info", 0);
+	if (init){
+		set("npc/find", 0);
+		set("quest/far", 0);
+		set("quest/info", 0);
+	}
+	if (query("npc/find")==-1){
+		kill_npc()
+		return
+	}
+	HelpFind(query("npc/name"))
 	world.EnableTimer("t_kmg", true);
 
 	if (query("npc/status") == "disp") {
@@ -1491,7 +1498,7 @@ function do_gpssearch()
 		set("askyou/index", 0);
 		set("askyou/flag", false);
 		set("askyou/count", ct);
-		to_kill();
+		to_kill(false);
 		return;
 	}
 
@@ -1706,7 +1713,11 @@ function do_prepare()
 				set("xuemo/step", 1);
 				set("nextstep/cmds", "#tg+ gxm;#t+ dg_map0;#t+ dg_mape;look wall;push coffin;mjq");
 				tl = 2831;
-			} else {
+			} else
+			if(query("npc/status")=="start" ||query("npc/status")=="flee" ||query("npc/status")=="disp"  ){
+				do_continue()
+				return
+			}	else {
 				set("nextstep/cmds", "quest " + get_var("id_master"));
 				tl = get_var("loc_master");
 			}
@@ -1743,6 +1754,10 @@ function do_quest()
 
 function do_askinfo()
 {
+	if (query("npc/find")==-1){
+		kill_npc()
+		return
+	}
 	HelpFind(query("npc/name"))
 	var ix = query("quest/info") - 0;
 	var ke = get_info_key(ix);
@@ -1750,7 +1765,7 @@ function do_askinfo()
 		world.note("askinfo: 没有消息源！");
 		add_log("城市[" + query("npc/loc") + "]没有消息源！");
 		set("npc/loc", "很远");
-		to_kill();
+		to_kill(false);
 		return;
 	}
 
@@ -1770,7 +1785,10 @@ function do_askinfo()
 
 function do_askyou()
 {
-
+	if (query("npc/find")==-1){
+		kill_npc()
+		return
+	}
 	if (query("npc/id") == "null" || query("npc/id") == "" || query("npc/id") == "no body") {
 		var sn = "";
 		var pt = 2;
@@ -2242,7 +2260,7 @@ function on_quest(name, output, wildcards)
 			set("npc/id", "no body");
 			set("npc/loc", wcs[0].substr(0, 2));
 			add_room_cmd(get_var("cmd_bquest") + ";hp");
-			to_kill();
+			to_kill(true);
 			break;
 		case "qt_disp":	// (@npc_name)在(.*)失踪了！现在不知道去了哪里！”
 			set("npc/status", "disp");
@@ -2517,7 +2535,7 @@ function on_info(name, output, wildcards)
 			break;
 		case "info":		// ^(> )*(@info_name)说道：(.*)(好像听人说过是在|他不是在|据说是躲到|好像去了|已......
 			set("npc/loc", wcs[4].substr(0, 2));
-			to_kill();
+			to_kill(false);
 			break;
 		case "io_again":	// ^(> )*(@info_name)(说道：阿嚏！有点感冒，不好意思。|说道：等...等等，你说什么？没......
 			send("ask " + query("info/id") + " about " + query("npc/name"));
@@ -2537,7 +2555,7 @@ function on_info(name, output, wildcards)
 				set("askyou/flag", false);
 				set("askyou/none", true);
 				set("npc/loc", "很远");
-				to_kill();
+				to_kill(false);
 				return;			
 			}
 
@@ -3634,7 +3652,7 @@ function on_alias(name, line, wildcards)
 			if (loc != "this") set("npc/loc", loc);
 
 			world.note("别名格式: #kl npc中文 loc中文");
-			to_kill();
+			to_kill(true);
 			break;
 	}
 }
@@ -3881,7 +3899,7 @@ function do_continue()
 	else if (nt == "flee" || nt == "disp")
 		do_askinfo();
 	else if (nt == "start" || nt == "faint")
-		to_kill();
+		to_kill(false);
 	else if (qf != "null")
 		send("hp;i;set no_teach prepare");
 }
