@@ -71,7 +71,7 @@ OnMods=function(name,id,code,data){
                 EatLu()
                 return
             case "san":
-                Userinput.prompt("CallbackPromptSanNeiliMax","请设置你的最大内力","如8000。请hp -m查看 将准确的数据填入。错误轻则浪费magic water，重则掉基本内功。","")
+                Userinput.alert("CallbackSanIntro","自动san武器介绍","需要有自己的房子，需要将资源存储在gift_loc的聚宝箱内。大约需要1.5w存款,200 magic water,200 renshen wan,20 feicui lan,30 puti zi,30 jiuzhuan jindan,30 xiandan,30 xisui dan")
                 return
             case "lian":
                 Userinput.prompt("CallbackPromptLian","请设置你的的联系命令","如 wp1off;lian unarmed 50;","")
@@ -85,7 +85,11 @@ CallbackPromptLian=function(name,id,code,data){
     }
 }
 
-
+CallbackSanIntro=function(name,id,code,data){
+    if (code==0){
+        Userinput.prompt("CallbackPromptSanNeiliMax","请设置你的最大内力","如8000。请hp -m查看 将准确的数据填入。错误轻则浪费magic water，重则掉基本内功。","")
+    } 
+}
 CallbackPromptSanNeiliMax=function(name,id,code,data){
     if (code==0 && data){
         if (isNaN(data)||(data-0)<8000){
