@@ -630,6 +630,36 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
+  ID = "on_npcheal"
+  Name = "on_npcheal"
+  Enabled = false
+  Match = "^  (.{2,4})正坐在地下运功疗伤。$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_npcheal"
+  SendTo = 0
+  Sequence = 999
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "on_npc"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+[[Triggers]]
   ID = "on_npc"
   Name = "on_npc"
   Enabled = false
@@ -651,7 +681,7 @@ Channel = "zsz-self.jvs"
   MultiLine = false
   LinesToMatch = 0
   WildcardLowerCase = false
-  Group = ""
+  Group = "on_npc"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -6540,6 +6570,31 @@ Channel = "zsz-self.jvs"
   ReverseSpeedwalk = false
   OmitFromOutput = false
   OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "setvar"
+  Name = "setvar"
+  Enabled = true
+  Match = "#setvar * *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+
 
 [[Aliases]]
   ID = "d1d5cnq4t2np6073fgcs8r"

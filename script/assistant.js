@@ -300,7 +300,7 @@ function quick_start(){
         list.append("699699","699699 npc lv 150,无西域，补技能到191和知识类")
         list.append("799699","799699 npc lv 150")
         list.append("1199699","1199699 npc lv 170")
-        list.append("1599699","1599699 npc lv 150")
+        list.append("1599699","1599699 npc lv 200")
         list.append("1999699","1999699 npc lv 225")
         list.append("2499699","2499699 npc lv 255,closed过火浪")
         list.append("2699699","2699699 npc lv 275")

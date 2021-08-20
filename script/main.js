@@ -803,6 +803,7 @@ function at_connect()
 {
 	world.EnableTimer("t_con", false);
 	set("npc/find", 0);
+	set("npc/coor",-1);
 	send(query("connect/cmds"));
 	world.EnableTrigger("faint", true);
 	world.EnableTrigger("hurt", true);
@@ -836,6 +837,7 @@ function to_kill(init)
 {
 	if (init){
 		set("npc/find", 0);
+		set("npc/coor",-1);
 		set("quest/far", 0);
 		set("quest/info", 0);
 	}
@@ -843,7 +845,6 @@ function to_kill(init)
 		kill_npc()
 		return
 	}
-	HelpFind(query("npc/name"))
 	world.EnableTimer("t_kmg", true);
 
 	if (query("npc/status") == "disp") {
@@ -876,9 +877,11 @@ function kill_npc()
 	stop_all();
 	set("npc/find", 0);
 	if (query("npc/coor") == query("room/id")) {
+		world.Note("找到 "+query("npc/name")+" ，原地击毙")
 		send(kill_cmd());
 	} 
 	else {
+		world.Note("前往 "+query("npc/coor")+" 击杀 "+query("npc/name"))
 		set("nextstep/flag", "COMMANDS");
 		set("nextstep/cmds", kill_cmd());
 		goto(query("npc/coor"));
@@ -1088,20 +1091,25 @@ function enter_maze(dir)
 	set("maze/dir", dir);
 	set("maze/count", 0);
 	send("hp;set no_teach maze");
-	world.EnableTrigger("on_npc",false);
+	world.EnableTriggerGroup("on_npc",false);
 	world.EnableTrigger("step", false);
 	world.EnableTriggerGroup("gsm", 1);
 	return true;
 }
-
 function incity(coor, cy)
 {
 	if (Trim(coor) == "")
 		return false;
 
-	if (cy == "很远") 
+	if (cy == "很远"){
+		for (var key in loc_list){
+			if (incity(coor,key)){
+			return true;
+			}
+		}
+		return false
+	}
 								 
-		return true;
 
 	if (cy == "长安" && ((coor >= 244 && coor <= 381) || coor == 20 || coor == 709 || coor == 909 
 	|| coor == 1010 || coor == 1139))
@@ -1360,7 +1368,7 @@ function do_walk(path)
 	set("other/walk", true);
 	set("other/trace", true);
 	add_room_cmd("#t- wk_miss");
-	world.EnableTrigger("on_npc",true);
+	world.EnableTriggerGroup("on_npc",true);
 	world.EnableTrigger("step", true);
 	world.EnableTrigger("wk_busy", true);
 	world.EnableTrigger("wk_shhu", true);
@@ -1391,7 +1399,7 @@ function do_autosearch(dp, flag)
 	send("look");
 	set("other/walk", true);
 	set("other/trace", true);
-	world.EnableTrigger("on_npc",true);
+	world.EnableTriggerGroup("on_npc",true);
 	world.EnableTrigger("step", true);
 	world.EnableTrigger("wk_busy", true);
 	world.EnableTrigger("wk_shhu", true);
@@ -1455,6 +1463,7 @@ function do_searchend()
 
 		var fx = query("quest/far") - 0 + 1;
 		if (fx >= le || fx < 0) {
+			set("npc/status", "end");
 			send("hp;i;set no_teach prepare");
 			add_log("很远搜索完毕！");
 			return;
@@ -1681,6 +1690,10 @@ function do_prepare()
 		world.EnableTriggerGroup("gpe", 0);
 		set("item/load", false);
 		if (query("quest/flag") == "kill") {
+			if(query("npc/status")=="start" ||query("npc/status")=="flee" ||query("npc/status")=="disp"  ){
+				do_continue()
+				return
+			}	else 
 			if (can_fuben("seadragon") && get_var("list_boss").indexOf("seadragon") != -1 ) {
 				set("boss/kill", "seadragon");
 				set("nextstep/cmds", get_var("cmd_3boss")+";kill sea dragon king;" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
@@ -1713,18 +1726,14 @@ function do_prepare()
 				set("xuemo/step", 1);
 				set("nextstep/cmds", "#tg+ gxm;#t+ dg_map0;#t+ dg_mape;look wall;push coffin;mjq");
 				tl = 2831;
-			} else
-			if(query("npc/status")=="start" ||query("npc/status")=="flee" ||query("npc/status")=="disp"  ){
-				do_continue()
-				return
-			}	else {
+			} else{
 				set("nextstep/cmds", "quest " + get_var("id_master"));
 				tl = get_var("loc_master");
 			}
 		} else {
 			set("nextstep/flag", "");
 			world.note("=====任务结束！=====");
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTrigger("ga", false);
 			return;
@@ -1789,6 +1798,7 @@ function do_askyou()
 		kill_npc()
 		return
 	}
+	HelpFind(query("npc/name"))
 	if (query("npc/id") == "null" || query("npc/id") == "" || query("npc/id") == "no body") {
 		var sn = "";
 		var pt = 2;
@@ -1900,6 +1910,7 @@ function on_step(name, output, wildcards)
 
 	switch (query("walk")) { 
 		case "auto":
+			world.EnableTimer("timer1", false);
 			if (enter_maze(mdir)) return;
 			var exs = exit_filt(wcs[1]);
 			var dir = auto_search.next(exs.split(","));
@@ -1908,7 +1919,7 @@ function on_step(name, output, wildcards)
 				do_nextstep();
 				return;
 			}
-
+			open_timer1(1,"step_fail",null)
 			send(dir);
 			break;
 		case "multi":
@@ -1929,6 +1940,7 @@ function on_step(name, output, wildcards)
 			else if (step_walk.eob()) send(step_walk.block(get_var("num_step")));
 			break;
 		case "find":
+			world.EnableTimer("timer1", false);
 			var res = exit_filt(wcs[1], "GPS");
 			if (res != -1 && res != m_FAIL) {
 				world.note("---当前位置[" + res + "]---");
@@ -1942,7 +1954,7 @@ function on_step(name, output, wildcards)
 				world.note("---无法定位---");
 				return;
 			}
-
+			open_timer1(1,"step_fail",null)
 			send(dir);
 			break;
 	}
@@ -2029,7 +2041,7 @@ function on_maze(name, output, wildcards)
 			break;
 		case "sm_out":	// ^(> )*(深山|昆仑山下|戈壁|丝绸之路|天山脚下|东门)$
 			world.EnableTriggerGroup("gsm", 0);		
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", true);
 			break;
 	}
@@ -2326,7 +2338,7 @@ function on_kill(name, output, wildcards)
 			if (name == "kl_npc1" || name == "kl_npc") {
 				world.EnableTriggerGroup("gkl", 1);
 			}
-
+			world.Note("发现 "+query("npc/name"))
 			set("npc/find", -1);
 			var rn = query("room/name");
 			if (rn == "大沙漠" || rn == "南疆沙漠" || rn == "戈壁滩" || query("walk") == "auto") {
@@ -2349,6 +2361,7 @@ function on_kill(name, output, wildcards)
 		case "kl_fight4":	// ^(> )*你现在没有力气战斗了。
 			world.EnableTrigger("kl_nobody", false);
 			set("npc/find", 0);
+			set("npc/coor",-1);
 			world.EnableTimer("t_pfm", false);
 			send("hp;set no_teach heal");
 			break;
@@ -2373,6 +2386,7 @@ function on_kill(name, output, wildcards)
 			world.EnableTrigger("kl_help", false);
 			world.EnableTrigger("kl_help1", false);
 			set("npc/find", 0);
+			set("npc/coor",-1);
 			do_areasearch();	
 			break;
 		case "kl_fight3":	// ^(> )*(@npc_name)(一见到你|和你一碰面|对著你大喝|喝道：「你|一眼瞥见你|和你仇人相见分外眼红)
@@ -2386,6 +2400,7 @@ function on_kill(name, output, wildcards)
 			world.EnableTriggerGroup("gkl1", 0);
 			set("quest/info", 0);
 			set("npc/find", 0);
+			set("npc/coor",-1);
 			set("npc/status", "flee");
 			if (query("hp/dispel")) {
 				ydispel(true);
@@ -2441,6 +2456,7 @@ function on_kill(name, output, wildcards)
 			world.EnableTrigger("kl_help1", false);
 			world.EnableTimer("t_pfm", false);
 			set("npc/find", 0);
+			set("npc/coor",-1);
 			set("npc/head", 0);
 			set("npc/corpse", 1);
 			set("npc/wd", 0);
@@ -2601,6 +2617,7 @@ function on_info(name, output, wildcards)
 			world.EnableTrigger("io_you3", false);
 			var ix = query("askyou/idpt") + 1;
 			if (ix >= npc_id.length) {
+				set("npc/status", "end");
 				send("hp;i;set no_teach prepare");
 				add_log("io_you3:找不到" + query("npc/name") + "。");
 				return;
@@ -3529,6 +3546,10 @@ function on_timer(name)
 						world.Disconnect();
 						open_timer1(120, "con_delay", null);
 						break;
+					case "step_fail":
+						auto_search.back();
+						send("l")
+						break;
 				}				
 			} else
 				set("timer/count", num);
@@ -3568,6 +3589,7 @@ function on_timer(name)
 				else {
 				set("room/id", -1);
 				set("npc/find", 0);
+				set("npc/coor",-1);
 				set("quest/letter", false);
 				world.SetVariable("name_npc", "aa");
 				send("hp;i;set no_teach prepare");
@@ -3627,7 +3649,7 @@ function on_alias(name, line, wildcards)
 			set("npc/status", "end");
 			set("boss/start",false);
 			world.EnableTimer("t_kmg", false); 
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTrigger("ga", false);
 			//world.EnableTrigger("setting", false);
@@ -3641,6 +3663,7 @@ function on_alias(name, line, wildcards)
 			set("askyou/count", 0);
 			set("npc/wd", -1);
 			set("npc/find", 0);
+			set("npc/coor",-1);
 			set("npc/status", "start");
 			set("quest/accept", "false");
 			set("quest/info", 0);
@@ -3654,6 +3677,12 @@ function on_alias(name, line, wildcards)
 			world.note("别名格式: #kl npc中文 loc中文");
 			to_kill(true);
 			break;
+		case "setvar":
+			var varname=wcs[0]
+			var varvalue=wcs[1]
+			if (varname){
+				world.SetVariable(varname, varvalue);
+			}
 	}
 }
 
@@ -3776,7 +3805,7 @@ function on_boss(name, output, wildcards)
 		case "bs_sea1":	// ^[> ]*(水怪|海怪|水灵怪|海灵怪)扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！
 			world.EnableTrigger("wk_busy", true);
 			world.EnableTimer("t_pfm", false);
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", true);
 			world.EnableTrigger("bs_sea1", false);
 			send(get_step());
@@ -4155,7 +4184,7 @@ function on_digong(name, output, wildcards)
 			
 			//看一下
 			world.EnableTrigger("sm_exit", false);
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTrigger("dg_npc", true);
 			if ((query("item/qlkey") < 16) && query("digong/g_getk"))
@@ -4241,7 +4270,7 @@ function do_digong()
 			nn = "hp;set no_teach digong";
 		} else 
 		if (dg_maze.cloc == dg_maze.tloc) {
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTriggerGroup("gsm", 1);
 			world.EnableTriggerGroup("gwk", 1);
@@ -4251,7 +4280,7 @@ function do_digong()
 			if (nn == m_FAIL)
 				world.note("aaaaa");			
 		} else { 
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTriggerGroup("gsm", 1);
 			world.EnableTriggerGroup("gwk", 1);
@@ -4337,7 +4366,7 @@ function on_xuemo(name, output, wildcards)
 			world.EnableTrigger("xm_nobusy", false);
 			if ((( nn!= "") && (nn != "end")) || (query("xuemo/step") >= 8)) {
 			//if (nn != "end") {
-				world.EnableTrigger("on_npc",false);			
+				world.EnableTriggerGroup("on_npc",false);			
 				world.EnableTrigger("step", false);
 				world.EnableTrigger("wk_noexit", false);
 				world.EnableTrigger("wk_nobusy", false);	
@@ -4596,7 +4625,7 @@ function on_xuemo(name, output, wildcards)
 			
 			//看一下
 			world.EnableTrigger("sm_exit", false);
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTrigger("xm_npc", true);
 			send("hp;look;set no_teach xuemo");
@@ -4625,7 +4654,7 @@ function do_xuemo()
 			nn = "hp;set no_teach xuemo";
 		} else 
 		if (dg_maze.cloc == dg_maze.tloc && (query("xuemo/target"))) {
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTriggerGroup("gsm", 1);
 			world.EnableTriggerGroup("gwk", 1);
@@ -4635,7 +4664,7 @@ function do_xuemo()
 			if (nn == m_FAIL)
 				world.note("迷宫路径结束到达指定地点发生错误");			
 		} else { 
-			world.EnableTrigger("on_npc",false);
+			world.EnableTriggerGroup("on_npc",false);
 			world.EnableTrigger("step", false);
 			world.EnableTriggerGroup("gsm", 1);
 			world.EnableTriggerGroup("gwk", 1);
