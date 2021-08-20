@@ -1,6 +1,6 @@
 var data_helpfind={}
-var data_lasthelpid=""
-var data_lasthelptime=0
+var data_lasthelp_id=""
+var data_lasthelp_time=0
 function GetWorldInfo(){
     return world.WorldAddress()+":"+world.WorldPort()
 }
@@ -39,11 +39,11 @@ function HelpFind(name){
         return
     }
     var t=(new Date()).getTime()
-    if (name==data_helpfind&& t-data_lasthelptime<2000){
+    if (name==data_lasthelp_id&& t-data_lasthelp_time<2000){
         return
     }
-    data_helpfind=name
-    data_lasthelptime=t
+    data_lasthelp_id=name
+    data_lasthelp_time=t
     Broadcast("help "+GetWorldInfo()+" "+name,true)
 }
 function OnFound(name,id,loc){
@@ -59,7 +59,7 @@ function OnFound(name,id,loc){
             set("npc/id",id)
         }
         if (query("npc/find")!=-1){
-            data_helpfind=""
+            data_lasthelp_id=""
             if (query("npc/coor")==-1){
                 world.Note("接到线报:"+name+"|"+id+"|"+loc)
                 set("stat/helped",query("stat/helped")+1)
