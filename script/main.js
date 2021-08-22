@@ -26,6 +26,7 @@ var dbase_data = {
 	"stab"       : {"flag" : true, "miss" : true, "index" : 0},
 	"weapon":	{"id":"","dur":0},
 	"weapons":{},
+	"deposit":0,
 	"item"       : {"food" : 0, "shuidai" : 0, "silver" : 0, "zhen" : 0, 
 			"gold" : 0, "9hua" : 0, "qlkey" : 0, "money" : 0, "buy" : "null", "arrow" : 0, "gong" : 0, "lsword" : 0, "gangbiao" : 0, "cash" : 0,
 			"sell" : "null", "gift" : "null", "wuqi" : 1, "qu" : "null", "flag" : false, "load" : false},
@@ -1585,7 +1586,7 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 100 cash");
 		tl = 23;
 	} else
-
+	
 	if (query("weapons/"+get_var("id_weapon")) < 35 || ((query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
 		var wp = get_var("id_weapon");
 		set("weapon/id",wp),
@@ -1636,8 +1637,17 @@ function do_prepare()
 		set("nextstep/cmds", "sell " + query("item/sell") + ";i;set no_teach prepare");
 		tl = 48;
 	} else
+	if (query("item/cash") > 1000) {
+		set("nextstep/cmds", "i;set no_teach cun money");
+		tl = 23;
+	} else
 	if (query("item/load") && (query("item/silver") > 300 || query("item/gold") > get_var("min_gold") - 0 + 200 || query("item/cash") > 300)) {
 		set("nextstep/cmds", "i;set no_teach cun money");
+		tl = 23;
+	} else
+	if (query("deposit")>30000) {	
+		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 1001 cash;score;i");	
+		set("nextstep/cmds", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 1001 cash;score;i");
 		tl = 23;
 	} else
 	if (query("trceatlu")){
@@ -3008,14 +3018,17 @@ function on_global(name, output, wildcards)
 				world.EnableTrigger("pe_cunb", true);
 				if (query("item/silver") > 300) {
 					var num = query("item/silver") - 50;
-					send("cun " + num + " silver");
-				} 
+					send("cun " + num + " silver;score");
+				}
 				else if (query("item/gold") - get_var("min_gold") > 200) {
 					var num = query("item/gold") - get_var("min_gold") - 15;
-					send("cun " + num + " gold");
-				} else if (query("item/cash") > 300) {
+					send("cun " + num + " gold;score");
+				} else if (query("item/cash") > 1000) {
+					send("bond 1000 cash;i;score;set no_teach prepare");
+				}
+				 else if (query("item/cash") > 300) {
 					var num =  query("item/cash") - 50;
-					send("cun " + num +" cash");
+					send("cun " + num +" cash;score");
 				}
 				else {
 					world.EnableTrigger("pe_silver", false);
@@ -3330,6 +3343,10 @@ function on_global(name, output, wildcards)
 		case "ttg":		// ^(> )*听涛阁 
 			send(get_var("cmd_ttg"));
 			break;
+		case "deposit":
+			var deposit=number(wcs[0])
+			set("deposit",deposit)
+			break
 	}
 }
 

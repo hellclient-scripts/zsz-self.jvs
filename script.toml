@@ -6451,6 +6451,37 @@ Channel = "zsz-self.jvs"
   Inverse = false
   Italic = false
   Variable = ""  
+[[Triggers]]
+  ID = "deposit"
+  Name = "deposit"
+  Enabled = true
+  Match = "^┃【钱庄】(.+)两黄金(.+白银|)\\s+┃$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_global"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""  
+
 
 
 [[Timers]]
