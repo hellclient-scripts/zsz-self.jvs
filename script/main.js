@@ -63,6 +63,7 @@ eval( Include( "data.js" ),"data.js");
 eval( Include( "assistant.js" ),"assistant.js");
 eval( Include( "weak.js" ),"weak.js");
 eval( Include( "helpfind.js" ),"helpfind.js");
+eval( Include( "notify.js" ),"helpfind.js");
 eval( Include( "mods.js" ),"mods.js");
 //--------------------------------------------------------------------------------
 function Include( FileName ) {
@@ -908,9 +909,7 @@ function perform()
 
 function telldm(flag)
 {
-	var dm = get_var("list_control").split(",")[0];
-	if (dm == "") return;
-
+	NotifyDM(flag)
 	var cnt = flag;
 	switch (flag) {
 		case "faint":
@@ -932,7 +931,8 @@ function telldm(flag)
 		default :
 			break;
 	}
-
+	var dm = get_var("list_control").split(",")[0];
+	if (dm == "") return;
 	var wdm = world.getworld(dm);
 	if (wdm != null)
 		wdm.note(get_var("id") + " " + cnt);
