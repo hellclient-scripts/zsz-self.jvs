@@ -4,7 +4,7 @@ var data_notify={
 }
 function NotifyDM(flag){
     var t=(new Date()).getTime()
-    if (flag==data_notify.last && (t-data_notify.last_time)<600){
+    if (flag==data_notify.last && (t-data_notify.last_time)<600000){
         return
     }
     data_notify.last=flag

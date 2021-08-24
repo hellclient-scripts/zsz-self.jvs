@@ -239,6 +239,7 @@ function quick_start(){
         list.append("prompt_weapon2","设置副武器")
         list.append("prompt_min_neili","设置内力")
         list.append("prompt_house","设置房屋")
+        list.append("prompt_boss","设置Boss")
         list.append("ShowMods","扩展模块")
         
     }
@@ -288,6 +289,9 @@ function quick_start(){
         case "ShowMods":
             ShowMods()
             break
+        case "prompt_boss":
+            prompt_boss()
+            break;
     }
    }
 
@@ -474,4 +478,23 @@ function prompt_house(){
 
 function callback_shoud_reload(name,id,code,data){
         Userinput.alert("","需要刷新","设置需要重新加载脚本后才能生效")
+}
+
+function prompt_boss(){
+    var list=Userinput.newlist("请选择你要打的副本","副本",false)
+    list.setmutli(true)
+    list.append("seadragon","镇海神龙(seadragon)")
+    list.append("jiangshi","僵尸道长(jiangshi)")
+    list.append("dongfang","黑木崖东方不败(dongfang)")
+    list.append("juxianzhuang","血战聚贤庄(juxianzhuang)")
+    list.append("digong","秦皇陵墓(digong)")
+    list.append("xuemo","诡异墓园(xuemo)")
+    list.setvalues(get_var("list_boss").split(","))
+    list.send("callback_boss")
+}
+function callback_boss(name,id,code,data){
+    if (code==0){
+        var list=JSON.parse(data)
+        world.SetVariable("list_boss",list.join(","))
+    }
 }

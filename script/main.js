@@ -910,7 +910,6 @@ function perform()
 
 function telldm(flag)
 {
-	NotifyDM(flag)
 	var cnt = flag;
 	switch (flag) {
 		case "faint":
@@ -1587,17 +1586,7 @@ function do_prepare()
 		tl = 23;
 	} else
 	
-	if (query("weapons/"+get_var("id_weapon")) < 35 || ((query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
-		var wp = get_var("id_weapon");
-		set("weapon/id",wp),
-		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
-		tl = 66;
-	} else
-	if ((!check_in_3boss()) && query("weapon/dur") < 30 && query("weapon/id") ){
-		var wp=query("weapon/id")
-		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
-		tl = 66;
-	} else
+
 	if (query("item/gong") < 1 && get_var("cmd_pfm") == "shot") {
 		set("item/buy", "long bow from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy long bow from tie jiang");
@@ -1628,7 +1617,17 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy 10 gan liang from xiao er");
 		tl = 27;
 	} else
-
+	if (query("weapons/"+get_var("id_weapon")) < 35 || ((query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
+		var wp = get_var("id_weapon");
+		set("weapon/id",wp),
+		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
+		tl = 66;
+	} else
+	if ((!check_in_3boss()) && query("weapon/dur") < 30 && query("weapon/id") ){
+		var wp=query("weapon/id")
+		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
+		tl = 66;
+	} else
 	if ((!check_in_3boss()) && query("item/9hua") < 10 && get_var("loc_jiuhua") != "") {
 		set("nextstep/cmds", "gdan0;i;set no_teach prepare");
 		tl = get_var("loc_jiuhua");
@@ -2716,6 +2715,7 @@ function on_prepare(name, output, wildcards)
 			world.EnableTrigger("pe_quf", false);
 			send("refund 1");
 			telldm("钱不够取！");
+			NotifyDM("余额不够");
 			open_timer1(2, "busy", "i;set no_teach prepare");
 			break;
 		case "pe_fangqi":	// ^(> )*(你抬头仰望天空，发现它明亮透析，说不出的娇媚，令你身心俱化。|你又想起了很......
@@ -2970,6 +2970,7 @@ function on_global(name, output, wildcards)
 		case "dead":		// ^[> ]*你请先用 enable 指令选择你要使用的内功。
 			stop_all();
 			telldm("死掉了啦！");
+			NotifyDM("Enable错误");
 			set("connect/auto", false);
 			world.Disconnect();
 			break;
@@ -3328,6 +3329,7 @@ function on_global(name, output, wildcards)
 				stop_all();
 				set("connect/auto", false);
 				telldm("死掉了啦！");
+				NotifyDM("预期外的位置");
 				world.Disconnect();
 				return;
 			}
@@ -3442,6 +3444,7 @@ function on_dispel(name, output, wildcards)
 							set("connect/auto", false);
 							ydispel(false);
 							telldm("dispel");
+							NotifyDM("dispel fail")
 							world.Disconnect();
 							return;
 						}							
