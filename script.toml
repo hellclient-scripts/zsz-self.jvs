@@ -6741,6 +6741,28 @@ Channel = "zsz-self.jvs"
   ReverseSpeedwalk = false
   OmitFromOutput = false
   OmitFromCommandHistory = false
+[[Aliases]]
+  ID = "login"
+  Name = "login"
+  Enabled = true
+  Match = "#login"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
 
 [[RequiredParams]]
   Name = "bool_accept"
@@ -7008,5 +7030,9 @@ Channel = "zsz-self.jvs"
   Intro = "每个任务奖品都会保存，用于保存大米每个任务是尝试兑换的礼物"
 [[RequiredParams]]
   Name = "bool_nohelp"
-  Desc = "禁用帮助找NPD功能"
+  Desc = "禁用帮助找NPC功能"
   Intro = "设为T后，不会请求帮助和帮助寻找npc"
+[[RequiredParams]]
+  Name = "list_assist"
+  Desc = "帮助命令列表"
+  Intro = "帮助命令列表，以|分割，可以通过助理按钮调用，方便是操作"

@@ -240,6 +240,10 @@ function quick_start(){
         list.append("prompt_min_neili","设置内力")
         list.append("prompt_house","设置房屋")
         list.append("prompt_boss","设置Boss")
+        if(get_var("list_assist")){
+            list.append("prompt_list_assist","自定义命令")
+
+        }
         list.append("ShowMods","扩展模块")
         
     }
@@ -292,6 +296,9 @@ function quick_start(){
         case "prompt_boss":
             prompt_boss()
             break;
+        case "prompt_list_assist":
+            prompt_list_assist()
+            break
     }
    }
 
@@ -496,5 +503,20 @@ function callback_boss(name,id,code,data){
     if (code==0){
         var list=JSON.parse(data)
         world.SetVariable("list_boss",list.join(","))
+    }
+}
+
+function prompt_list_assist(){
+    var list=Userinput.newlist("执行自定义命令","请选择",false)
+    var cmds=get_var("list_assist").split("|")
+    cmds.forEach(function(data){
+        list.append(data,data)
+    });
+    list.send("callback_list_assist")
+
+}
+function callback_list_assist(name,id,code,data){
+    if (code==0){
+        world.Execute(data)
     }
 }

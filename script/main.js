@@ -549,7 +549,7 @@ function send(str)
 						break;
 					case "#roomid":
 						if (cmd[1] != null && cmd[1] != "") set("room/id",cmd[1]-0)
-						break
+						break					
 				}
 			} else {
 				var dy = get_cmd_delay();
@@ -1411,6 +1411,7 @@ function do_search()
 {
 	var sfg, str, loc, map, tol;
 	HelpFind(query("npc/name"))
+	world.SetVariable("name_npc", query("npc/name"));
 
 	map = "";
 	loc = query("npc/loc");
@@ -1776,6 +1777,7 @@ function do_askinfo()
 		kill_npc()
 		return
 	}
+	world.SetVariable("name_npc", query("npc/name"));
 	HelpFind(query("npc/name"))
 	var ix = query("quest/info") - 0;
 	var ke = get_info_key(ix);
@@ -1808,6 +1810,7 @@ function do_askyou()
 		return
 	}
 	HelpFind(query("npc/name"))
+	world.SetVariable("name_npc", query("npc/name"));
 	if (query("npc/id") == "null" || query("npc/id") == "" || query("npc/id") == "no body") {
 		var sn = "";
 		var pt = 2;
@@ -3703,6 +3706,13 @@ function on_alias(name, line, wildcards)
 			if (varname){
 				world.SetVariable(varname, varvalue);
 			}
+			break
+		case "login":
+			world.Connect();	
+			world.send(get_var("id"))
+			world.send(get_var("passw"))
+			world.send("y")
+			break;
 	}
 }
 
