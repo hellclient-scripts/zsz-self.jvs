@@ -1654,7 +1654,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2lhka73fgcs47"
   Name = "item"
   Enabled = false
-  Match = "^(  |□)(.*)(白银\\(Silver\\)|黄金\\(Gold\\)|九花玉露丸\\(Jiuhua wan\\)|牛皮水袋\\(shui dai\\)|干粮\\(Gan liang\\)|狼牙箭\\(Arrow\\)|点金盘龙弓\\(panlong gong\\)|长弓\\(long bow\\)|长剑\\(long sword\\)|包裹\\(baoguo\\)|火折\\(fire\\)|一千两银票\\(Cash\\)|玉蜂针\\(Yufeng zhen\\)|钢镖\\(Gangbiao\\)|青龙臂铠\\(qinglong key\\))"
+  Match = "^(  |□)(.*)(白银\\(Silver\\)|黄金\\(Gold\\)|九花玉露丸\\(Jiuhua wan\\)|牛皮水袋\\(shui dai\\)|干粮\\(Gan liang\\)|狼牙箭\\(Arrow\\)|点金盘龙弓\\(panlong gong\\)|长弓\\(long bow\\)|长剑\\(long sword\\)|钢刀\\(iron blade\\)|包裹\\(baoguo\\)|火折\\(fire\\)|一千两银票\\(Cash\\)|玉蜂针\\(Yufeng zhen\\)|钢镖\\(Gangbiao\\)|青龙臂铠\\(qinglong key\\))"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6765,6 +6765,28 @@ Channel = "zsz-self.jvs"
   OmitFromOutput = false
   OmitFromCommandHistory = false
 
+[[Aliases]]
+  ID = "repeat"
+  Name = "repeat"
+  Enabled = true
+  Match = "^#(\\d+) (.*)$"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
 [[RequiredParams]]
   Name = "bool_accept"
   Desc = "接信开关"

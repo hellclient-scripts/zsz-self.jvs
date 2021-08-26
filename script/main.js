@@ -28,7 +28,7 @@ var dbase_data = {
 	"weapons":{},
 	"deposit":0,
 	"item"       : {"food" : 0, "shuidai" : 0, "silver" : 0, "zhen" : 0, 
-			"gold" : 0, "9hua" : 0, "qlkey" : 0, "money" : 0, "buy" : "null", "arrow" : 0, "gong" : 0, "lsword" : 0, "gangbiao" : 0, "cash" : 0,
+			"gold" : 0, "9hua" : 0, "qlkey" : 0, "money" : 0, "buy" : "null", "arrow" : 0, "gong" : 0, "lsword" : 0,"iblade":0, "gangbiao" : 0, "cash" : 0,
 			"sell" : "null", "gift" : "null", "wuqi" : 1, "qu" : "null", "flag" : false, "load" : false},
 	"hp"         : {"exp" : 1, "pot" : 1, "neili" : 1, "qi" : 1, "eff_qi" : 90, "eff_jing" : 90, "max_jing" : 100, 
 			"max_qi" : 100, "max_neili" : 1, "max_jingli" : 1, "food" : 1, "water" : 1, "jing" : 1, 
@@ -1599,6 +1599,11 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy long sword from tie jiang");
 		tl = 66;
 	} else
+	if (query("item/iblade") < 1 && get_var("id_weapon") == "iron blade") {
+		set("item/buy", "iron blade from tie jiang");
+		set("nextstep/cmds", "#t+ pe_buy;buy iron blade from tie jiang");
+		tl = 66;
+	} else
 	if (query("item/arrow") < 9 && get_var("cmd_pfm") == "shot") {
 		set("item/buy", "50 狼牙箭 from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy 50 狼牙箭 from tie jiang");
@@ -2885,6 +2890,7 @@ function on_item(name, output, wildcards)
 			set("item/arrow", 0);
 			set("item/silver", 0);
 			set("item/lsword", 0);
+			set("item/iblade", 0);
 			set("item/shuidai", 0);
 			set("item/gift", "null");
 			set("item/cash", 0);
@@ -2922,6 +2928,8 @@ function on_item(name, output, wildcards)
 				set("item/food", num);
 			else if (output.indexOf("长剑") != -1)
 				set("item/lsword", num);
+			else if (output.indexOf("钢刀") != -1)
+				set("item/iblade", num);				
 			else if (output.indexOf("长弓") != -1)
 				set("item/gong", num);
 			else if (output.indexOf("狼牙箭") != -1)
@@ -3714,6 +3722,22 @@ function on_alias(name, line, wildcards)
 			world.send(get_var("passw"))
 			world.send("y")
 			break;
+		case "repeat":
+			var times=wcs[0]
+			var cmds=wcs[1]
+			if (isNaN(times)){
+				world.Note("次数"+times+"无效")
+				return
+			}
+			var num=times-0
+			if (num<=0 || num>99){
+				world.Note("次数应该在0-99之间")
+				return
+			}
+			for(var i=0;i<num;i++){
+				send(cmds)
+			}
+			break
 	}
 }
 
