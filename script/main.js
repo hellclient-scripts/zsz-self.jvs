@@ -522,6 +522,7 @@ function send(str)
 						break;
 					case "#q":
 						world.speedwalkdelay = 0;
+						world.LockQueue();
 						break;
 						// case "#yanjiu":
 						// 	world.queue(get_study(), fg);
@@ -725,7 +726,7 @@ function tongji(flag)
 }
 
 //--------------------------------------------------------------------------------
-function stop_all()
+function stop_all(force)
 {
 	set("other/walk", false);
 	world.EnableTriggerGroup("gwk", 0);
@@ -736,7 +737,7 @@ function stop_all()
 	world.EnableTimer("timer1", false);
 	world.EnableTimer("t_pfm", false);
 	world.EnableTrigger("io_nobody", false);
-	world.DiscardQueue();
+	world.DiscardQueue(force);
 }
 
 function open_timer1(time, flag, cmd)
@@ -2971,7 +2972,7 @@ function on_global(name, output, wildcards)
 	var wcs = VBArray(wildcards).toArray();
 	switch (name) {
 		case "dead":		// ^[> ]*你请先用 enable 指令选择你要使用的内功。
-			stop_all();
+			stop_all(true);
 			telldm("死掉了啦！");
 			NotifyDM("Enable错误");
 			set("connect/auto", false);
@@ -3194,7 +3195,7 @@ function on_global(name, output, wildcards)
 			send("yun recover;yun regenerate;hp;set no_teach heal");
 			break;
 		case "faint1":		// ^(> )*你的眼前一黑，接著什么也不知道了....
-			stop_all();
+			stop_all(true);
 			world.EnableTrigger("hurt", false);
 			world.EnableTrigger("faint", false);
 			world.EnableTrigger("kl_help", false);
@@ -3329,7 +3330,7 @@ function on_global(name, output, wildcards)
 			if (rne.search(new RegExp("[a-zA-Z0-9、 ()【】「」.。,，:：;；?？!！]", "g")) != -1) return;
 
 			if (rne == "鬼门关") {
-				stop_all();
+				stop_all(true);
 				set("connect/auto", false);
 				telldm("死掉了啦！");
 				NotifyDM("预期外的位置");

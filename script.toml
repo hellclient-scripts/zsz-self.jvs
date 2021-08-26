@@ -3050,7 +3050,7 @@ Channel = "zsz-self.jvs"
   Name = ""
   Enabled = true
   Match = "丁一慢慢变成了一滩污血"
-  Send = "jiqu\nalias p yong blade.tianya and throwing.yuce"
+  Send = "mjq"
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
@@ -3107,36 +3107,7 @@ Channel = "zsz-self.jvs"
   Italic = false
   Variable = ""
 
-[[Triggers]]
-  ID = "d1d5cnq4t2lum573fgcs5m"
-  Name = ""
-  Enabled = true
-  Match = "你使用的武器不对，难以施展「刀至上，至"
-  Send = "wield xxxx"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = ""
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
+
 
 [[Triggers]]
   ID = "d1d5cnq4t2luvv73fgcs5n"
@@ -3174,7 +3145,7 @@ Channel = "zsz-self.jvs"
   Name = ""
   Enabled = true
   Match = "秦始皇僵尸扑在地上挣扎了几下，腿一伸，口中喷出几口"
-  Send = "jiqu\nalias p yong blade.tianya and throwing.yuce"
+  Send = "mjq"
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
@@ -6482,6 +6453,36 @@ Channel = "zsz-self.jvs"
   Italic = false
   Variable = ""  
 
+[[Triggers]]
+  ID = "jubaoxiang"
+  Name = "jubaoxiang"
+  Enabled = true
+  Match = "^当前聚宝箱的容量状态为 ：[已占]\\s*\\d*\\s*/ [最大] \\s*\\d*\\s*$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_jubaoxiang"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = "" 
 
 
 [[Timers]]
@@ -7027,7 +7028,7 @@ Channel = "zsz-self.jvs"
 [[RequiredParams]]
   Name = "bool_cungift"
   Desc = "保存奖品"
-  Intro = "每个任务奖品都会保存，用于保存大米每个任务是尝试兑换的礼物"
+  Intro = "每个任务奖品都会保存，用于gift大米每个任务都尝试兑换礼物后尽快保存"
 [[RequiredParams]]
   Name = "bool_nohelp"
   Desc = "禁用帮助找NPC功能"
