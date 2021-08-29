@@ -20,7 +20,7 @@ var dbase_data = {
 	"stat"       : {"stime" : 0, "minute" : 0, "count" : 0, "eff" : 0,"helped":0},
 	"info"       : {"id" : "", "list" : ""},
 	"npc"        : {"name" : "null", "id" : "", "loc" : "", "find" : 0, "coor" : -1, "status" : "null", "wd" : 0,
-			"corpse" : 0, "head" : 0},
+			"corpse" : 0, "head" : 0,"onkill" : ""},
 	"dispel"     : {"flag" : "", "next" : "", "count" : 0, "count1" : 0},
 	"connect"    : {"cmds" : "", "auto" : false},
 	"stab"       : {"flag" : true, "miss" : true, "index" : 0},
@@ -472,92 +472,100 @@ function get_info_key(index)
 	return io[index]; 
 }
 
-function send(str)
-{
-	if (str == "" || str == null || str == m_FAIL) 
+var _linesre = new RegExp("[^;]+", "g");
+var _cmdsre = new RegExp("[^、。]+", "g");
+var _groupre=new RegExp("[;\n]", "g");
+function groupcmds(str){
+	if (str == "" || str == null || str == m_FAIL){
+		return str;
+	}
+	return str.replace(_groupre, "、")
+}
+function send(str, grouped) {
+	if (str == "" || str == null || str == m_FAIL)
 		return;
-	var re = new RegExp("[^;、。]+", "g");
-	var cmds = str.match(re);
+	if (grouped) {
+		str = groupcmds(str)
+	}
+	var cmds = str.match(_linesre);
 	var fg = get_var("bool_echo");
-	if (fg) 
+	if (fg)
 		EchoInput = 1;
-	else 
+	else
 		EchoInput = 0;
-	
-	for (var i=0; i<cmds.length; i++) {
-		var cmd = cmds[i];
-		if (cmd != "" && cmd != null) {
-			if (cmd.indexOf("#") == 0) {
-				cmd = cmd.split(" ");
-				switch(cmd[0]) {
-					case "#t+":
-						world.EnableTrigger(cmd[1], true);
-						break;
-					case "#t-":
-						world.EnableTrigger(cmd[1], false);
-						break;
-					case "#tg+":
-						world.EnableTriggerGroup(cmd[1], true);
-						break;
-					case "#tg-":
-						world.EnableTriggerGroup(cmd[1], false);
-						break;
-					case "#ts+":
-						world.EnableTimer(cmd[1], true);
-						world.ResetTimer(cmd[1]);
-						break;
-					case "#ts-":
-						world.EnableTimer(cmd[1], false);
-						break;
-					case "#addtr":
-						if (cmd[1] == null || cmd[1] == "") break;
 
-						world.DeleteTrigger(cmd[1]);
-						if (cmd[2] == null || cmd[2] == "") break;
+	for (var i = 0; i < cmds.length; i++) {
+		var commands = cmds[i].match(_cmdsre)
+		var buf=[]
+		commands.forEach(function (cmd) {
+			if (cmd != "" && cmd != null) {
+				if (cmd.indexOf("#") == 0) {
+					if (buf.length){
+						Metronome.push(buf, true, fg)
+						buf=[]
+					}
+					cmd = cmd.split(" ");
+					switch (cmd[0]) {
+						case "#t+":
+							world.EnableTrigger(cmd[1], true);
+							break;
+						case "#t-":
+							world.EnableTrigger(cmd[1], false);
+							break;
+						case "#tg+":
+							world.EnableTriggerGroup(cmd[1], true);
+							break;
+						case "#tg-":
+							world.EnableTriggerGroup(cmd[1], false);
+							break;
+						case "#ts+":
+							world.EnableTimer(cmd[1], true);
+							world.ResetTimer(cmd[1]);
+							break;
+						case "#ts-":
+							world.EnableTimer(cmd[1], false);
+							break;
+						case "#addtr":
+							if (cmd[1] == null || cmd[1] == "") break;
 
-						world.AddTriggerEx(cmd[1], cmd[2], cmd[3], 1|4|8|32, 14, 0, "",  "", 0, 149);
-						break;
-					case "#clr":
-						world.DeleteOutput();
-						break;
-					case "#q":
-						world.speedwalkdelay = 0;
-						world.LockQueue();
-						break;
-						// case "#yanjiu":
-						// 	world.queue(get_study(), fg);
-						// 	break;
-						// case "#yj2":
-						// 	var rd = query("room/id");
-						// 	if (query("hp/pot") > get_var("min_pot") && rd != 1946 && rd != 2452) {
-						// 		world.queue(get_study(), fg);
-						// 	}
-						// 	break;						
-					case "#yanjiu":
-						send(get_study());
-						break;
-					case "#yj2":
-						var rd = query("room/id");
-						if (query("hp/pot") > get_var("min_pot") && rd != 1946 && rd != 2452) {
+							world.DeleteTrigger(cmd[1]);
+							if (cmd[2] == null || cmd[2] == "") break;
+
+							world.AddTriggerEx(cmd[1], cmd[2], cmd[3], 1 | 4 | 8 | 32, 14, 0, "", "", 0, 149);
+							break;
+						case "#clr":
+							world.DeleteOutput();
+							break;
+						case "#q":
+							world.speedwalkdelay = 0;
+							world.LockQueue();
+							break;
+						case "#yanjiu":
 							send(get_study());
-						}
-						break;
-					case "#lian":
-						var num = 0;
-						if (cmd[1] != null && cmd[1] != "") num = cmd[1];
-
-						do_lian(num);
-						break;
-					case "#roomid":
-						if (cmd[1] != null && cmd[1] != "") set("room/id",cmd[1]-0)
-						break					
+							break;
+						case "#yj2":
+							var rd = query("room/id");
+							if (query("hp/pot") > get_var("min_pot") && rd != 1946 && rd != 2452) {
+								send(get_study());
+							}
+							break;
+						case "#lian":
+							var num = 0;
+							if (cmd[1] != null && cmd[1] != "") num = cmd[1];
+							do_lian(num);
+							break;
+						case "#roomid":
+							if (cmd[1] != null && cmd[1] != "") set("room/id", cmd[1] - 0)
+							break
+					}
+				} else {
+					buf.push(cmd)
 				}
-			} else {
-				var dy = get_cmd_delay();
-				if (query("walk") == "auto" && dy < 1) world.speedwalkdelay = 1;
-				else world.speedwalkdelay = dy;
-				world.queue(cmd, fg);
 			}
+		})
+		if (buf.length){
+			Metronome.push(buf, true, fg)
+			buf=[]
 		}
 	}
 }
@@ -1015,7 +1023,9 @@ function do_lian(num)
 	if (res.length <= 0) return;
 
 	ix = Math.floor(Math.random() * res.length);
-	send(res[ix]);
+	//send(res[ix]);
+	send(res[ix],true);
+	// Metronome.push(res[ix],true,get_var("bool_each")?1:0)
 }
 
 function kill_cmd()
@@ -1045,7 +1055,10 @@ function kill_cmd()
 		if (pfm != "") cmd += ";" + pfm;
 		cmd += ";#q";
 	}
-
+	var on_kill=query("npc/onkill")
+	if (!on_kill || on_kill!=query("npc/name")){
+		cmd=groupcmds(cmd)
+	}
 	return cmd;
 }
 
@@ -2384,6 +2397,7 @@ function on_kill(name, output, wildcards)
 			send("hp;set no_teach heal");
 			break;
 		case "kl_fight5":	// ^(> )*看起来(@name_npc)想杀死你！
+			set("npc/onkill",get_var("name_npc"))
 			var tmp = get_var("cmd_pfm");
 			if (tmp == "shot" || tmp.indexOf("mpf") != -1) return;
 
@@ -2410,6 +2424,7 @@ function on_kill(name, output, wildcards)
 		case "kl_fight3":	// ^(> )*(@npc_name)(一见到你|和你一碰面|对著你大喝|喝道：「你|一眼瞥见你|和你仇人相见分外眼红)
 			stop_all();
 			world.EnableTriggerGroup("gkl", 1);
+			set("npc/onkill",get_var("name_npc"))
 			send(kill_cmd());
 			break;
 		case "kl_flee":	// (@npc_name)(摇摇欲坠|身负重伤|狂叫一声|晃了两下|再退一步|已是避|深吸一口气|只有招架之功)(.*)
@@ -2434,7 +2449,6 @@ function on_kill(name, output, wildcards)
 			break;
 		case "kl_help1":	// ^(> )*说时迟，那时快！突然转出(.*)个人，一起冲上前来，看来是早有防备！$
 			//if (wcs[1] == query("npc/name") || wcs[1].indexOf("蛇") != -1 || wcs[1] || wcs[1].indexOf("蝎") != -1 || wcs[1].indexOf("虎") != -1 || wcs[1].indexOf("狼狗") != -1) return;
-
 			var cmd = get_var("id") + ";" + get_var("passw") 
 				+ ";y;cut head from corpse;get head;" + kill_cmd();
 			reconnect(cmd);
@@ -2479,6 +2493,7 @@ function on_kill(name, output, wildcards)
 			set("npc/corpse", 1);
 			set("npc/wd", 0);
 			set("npc/status", "dead");
+			set("npc/onkill","")
 			add_room_cmd(get_var("cmd_aquest"));
 
 			var cmd = "cut head from corpse;get head";
@@ -2636,6 +2651,7 @@ function on_info(name, output, wildcards)
 			var ix = query("askyou/idpt") + 1;
 			if (ix >= npc_id.length) {
 				set("npc/status", "end");
+				set("npc/onkill","")
 				send("hp;i;set no_teach prepare");
 				add_log("io_you3:找不到" + query("npc/name") + "。");
 				return;
@@ -3286,6 +3302,7 @@ function on_global(name, output, wildcards)
 					set("quest/flag", "null");
 					set("boss/start", false);
 					set("npc/status", "end");
+					set("npc/onkill","")
 					break;
 				case "#to":
 					goto(cot[1]);
@@ -3697,6 +3714,7 @@ function on_alias(name, line, wildcards)
 			set("npc/find", 0);
 			set("npc/coor",-1);
 			set("npc/status", "start");
+			set("npc/onkill","")
 			set("quest/accept", "false");
 			set("quest/info", 0);
 			if (npc != "this") {
