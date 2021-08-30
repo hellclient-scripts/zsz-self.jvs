@@ -493,7 +493,7 @@ function send(str, grouped) {
 		EchoInput = 1;
 	else
 		EchoInput = 0;
-
+	Metronome.setbeats(world.GetVariable("num_cmds")/2)
 	for (var i = 0; i < cmds.length; i++) {
 		var commands = cmds[i].match(_cmdsre)
 		var buf=[]

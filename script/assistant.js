@@ -142,14 +142,14 @@ function quick_start_fam(fam){
             var cmd_fuben=f.nopowerup?"yun recover;wp2off;wp1on":"wp2off;yun powerup;yun shield;wp1on"
     
             var initdata={
-                "cmd_aquest":(f.nopowerup?"":"yun powerup;yun shield;")+"mjq",
-                "cmd_bquest":(f.nopowerup?"":"yun powerup;yun shield;"),
+                "cmd_aquest":(f.nopowerup?"":"yun powerup;yun shield"),
+                "cmd_bquest":(f.nopowerup?"":"yun powerup;yun shield"),
                 "id_pass":f.id_family,
                 "id_master":f.masterid,
                 "loc_master":f.masterloc,
                 "loc_sleep":f.sleeploc,
                 "loc_dazuo":f.dazuoloc,
-                "cmd_npcdie":f.nopowerup?"wp2off;wp1on":"wp2off;wp1on;yun powrup;yun shield",
+                "cmd_npcdie":f.nopowerup?"wp2off;wp1on":"wp2off;wp1on;yun powerup;yun shield",
                 "cmd_3boss":cmd_fuben,
                 "cmd_digong":cmd_fuben,
                 "cmd_jxz":cmd_fuben,
