@@ -3368,7 +3368,7 @@ function on_global(name, output, wildcards)
 			} 
 			else if (query("walk") == "find") {
 				set("room/name", rne); 
-				add_log("room name:[" + rne + "]无效！");	
+				//add_log("room name:[" + rne + "]无效！");	
 			}
 			break;
 		case "ttg":		// ^(> )*听涛阁 
