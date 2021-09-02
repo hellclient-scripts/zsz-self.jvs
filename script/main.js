@@ -1562,6 +1562,10 @@ function do_gpssearch()
 	goto(tl);
 }
 
+function NpcAlive(){
+	return query("npc/status")=="start" ||query("npc/status")=="flee" ||query("npc/status")=="disp"
+}
+
 function do_prepare()
 {
 	var tl;
@@ -1637,7 +1641,7 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy 10 gan liang from xiao er");
 		tl = 27;
 	} else
-	if (query("weapons/"+get_var("id_weapon")) < 35 || ((query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo")))&&!check_in_3boss()) {
+	if (query("weapons/"+get_var("id_weapon")) < 35 || (query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo"))&&!check_in_3boss()) {
 		var wp = get_var("id_weapon");
 		set("weapon/id",wp),
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
@@ -1719,7 +1723,7 @@ function do_prepare()
 		world.EnableTriggerGroup("gpe", 0);
 		set("item/load", false);
 		if (query("quest/flag") == "kill") {
-			if(query("npc/status")=="start" ||query("npc/status")=="flee" ||query("npc/status")=="disp"  ){
+			if(NpcAlive()){
 				do_continue()
 				return
 			}	else 
@@ -1962,7 +1966,7 @@ function on_step(name, output, wildcards)
 				set("room/cmd", "");
 			}
 
-			if ((step_walk.eof() || step_walk.eob()) && query("npc/find") == -1) {
+			if ((step_walk.eof() || step_walk.eob()) && (query("npc/find") == -1)&&NpcAlive()) {
 				kill_npc();
 				return;
 			}
