@@ -59,6 +59,9 @@ function OnFound(name,id,loc){
             set("npc/id",id)
         }
         if (query("npc/find")!=-1){
+            if (!incity(loc,query("npc/loc"))){
+                return
+            }
             data_lasthelp_id=""
             if (query("npc/coor")==-1){
                 world.Note("接到线报:"+name+"|"+id+"|"+loc)

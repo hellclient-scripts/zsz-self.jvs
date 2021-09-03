@@ -1660,7 +1660,7 @@ function do_prepare()
 		set("nextstep/cmds", "sell " + query("item/sell") + ";i;set no_teach prepare");
 		tl = 48;
 	} else
-	if (query("item/cash") > 1000) {
+	if (query("item/cash") > 2000) {
 		set("nextstep/cmds", "i;set no_teach cun money");
 		tl = 23;
 	} else
@@ -1669,8 +1669,8 @@ function do_prepare()
 		tl = 23;
 	} else
 	if (query("deposit")>30000) {	
-		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 1001 cash;score;i");	
-		set("nextstep/cmds", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 1001 cash;score;i");
+		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 2001 cash;score;i");	
+		set("nextstep/cmds", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 2001 cash;score;i");
 		tl = 23;
 	} else
 	if (query("trceatlu")){
@@ -3056,8 +3056,8 @@ function on_global(name, output, wildcards)
 				else if (query("item/gold") - get_var("min_gold") > 200) {
 					var num = query("item/gold") - get_var("min_gold") - 15;
 					send("cun " + num + " gold;score");
-				} else if (query("item/cash") > 1000) {
-					send("bond 1000 cash;i;score;set no_teach prepare");
+				} else if (query("item/cash") > 2000) {
+					send("bond 2000 cash;i;score;set no_teach prepare");
 				}
 				 else if (query("item/cash") > 300) {
 					var num =  query("item/cash") - 50;
@@ -3161,6 +3161,7 @@ function on_global(name, output, wildcards)
 			break;
 		case "weapon":		// ^耐久度：(.*)%
 			set("weapon/dur",wcs[0] - 0)
+			set("weapons/"+query("weapon/id"), wcs[0] - 0);
 			break;
 		case "touch":		// ^(> )*你觉得一股热气从丹田冉冉升起。
 			set("other/mtc",true)
