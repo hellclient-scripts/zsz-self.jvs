@@ -76,6 +76,9 @@ OnMods=function(name,id,code,data){
             case "lian":
                 Userinput.prompt("CallbackPromptLian","请设置你的的联系命令","如 wp1off;lian unarmed 50;","")
                 return
+            case "warehouse":
+                Mods.Modules.warehouse.List()
+                return
         }
     }
 }
@@ -125,8 +128,11 @@ ShowMods=function(){
     list.append("eatlu","自动去TRC吃身上的露")
     list.append("san","自动San兵器")
     list.append("lian","练习技能/读书")
+    list.append("warehouse","聚宝箱管理")
     list.send("OnMods")
 }
 
 Mods.Require("mods/san.js")
 Mods.Require("mods/lian.js")
+Mods.Require("mods/warehouse.js")
+

@@ -12,6 +12,7 @@ var Dir_re = {"e" : "w", "s" : "n", "w" : "e", "n" : "s", "se" : "nw", "sw" : "n
 // 全局变量。
 var dbase_data = {
 	"walk"       : "null",
+	"xiang":{},
 	"search"     : {"flag" : ""},
 	"maze"       : {"count" : 0, "dir" : "null"},
 	"room"       : {"name" : "null", "id" : -1, "dir" : "", "cmd" : "", "miss" : 2763, "chat" : 2046},
@@ -27,6 +28,7 @@ var dbase_data = {
 	"weapon":	{"id":"","dur":0},
 	"weapons":{},
 	"deposit":0,
+	"allitem":{},
 	"item"       : {"food" : 0, "shuidai" : 0, "silver" : 0, "zhen" : 0, 
 			"gold" : 0, "9hua" : 0, "qlkey" : 0, "money" : 0, "buy" : "null", "arrow" : 0, "gong" : 0, "lsword" : 0,"iblade":0, "gangbiao" : 0, "cash" : 0,
 			"sell" : "null", "gift" : "null", "wuqi" : 1, "qu" : "null", "flag" : false, "load" : false},
@@ -225,7 +227,7 @@ function get_cmd_delay()
 	return delay;
 }
 
-function query(str)
+function query(str,no_mfail)
 {
 	if (str == null) {
 		var qr = "";
@@ -249,7 +251,7 @@ function query(str)
 	var ar = str.match(re);
 	if (ar.length < 1) {
 		world.note("query():变量[" + str + "]不存在！");
-		return m_FAIL;
+		return no_mfail?null:m_FAIL;
 	}
 
 	var qr = dbase_data;
@@ -257,7 +259,7 @@ function query(str)
 		qr = qr[ar[i]];
 		if (qr == null) {
 			world.note("query():变量[" + str + "]不存在！");
-			return m_FAIL;
+			return no_mfail?null:m_FAIL;
 		}
 	}
 
@@ -2895,7 +2897,12 @@ function on_hp(name, output, wildcards)
 			break;
 	}
 }
-
+function on_allitem(name, output, wildcards){
+	var wcs = VBArray(wildcards).toArray();
+	var num = number(wcs[1]);
+	if (num == 0) num = 1;
+	set("allitem/"+wcs[2].toLowerCase(),num)
+}
 function on_item(name, output, wildcards)
 {
 	var wcs = VBArray(wildcards).toArray();
@@ -2918,6 +2925,7 @@ function on_item(name, output, wildcards)
 			set("item/gangbiao", 0);
 			set("item/sell", "null");
 			set("item/qlkey", 0);
+			set("allitem",{})
 			if ((wcs[0] - 0) > 75) set("item/load", true);
 			if (output.indexOf("带著") != -1) {
 				set("item/flag", true);
@@ -3085,7 +3093,7 @@ function on_global(name, output, wildcards)
 				}
 			}else if (wcs[0] == "belongings"){
 				world.EnableTrigger("on_belongings",false)
-				set("belongings/_","")
+				set("belongings/_id","")
 			}else if(wcs[0]=="eatlu.check"){
 				CheckBelongings("magic water")
 				send("set no_teach eatlu.checked")
@@ -4803,13 +4811,12 @@ function CheckBelongings(id){
 	if (id){
 		world.EnableTrigger("on_belongings",true)
 		set("belongings/"+id,"")
-		set("belongings/_",id)
-		send("touch "+id)
-		send("set no_teach belongings")
+		set("belongings/_id",id)
+		send("enchase "+id+" with "+id+";set no_teach belongings",true)
 	}
 }
 function HasBelongings(id){
-	if (query("belongings/"+id)){
+	if (query("belongings/"+id,true)){
 		return true
 	}
 	return false
@@ -4817,11 +4824,11 @@ function HasBelongings(id){
 function on_belongings(name, output, wildcards){
 	var wcs
 	wcs = VBArray(wildcards).toArray();
-	var id=query("belongings/_")
+	var id=query("belongings/_id")
 	if (id){
 		world.EnableTrigger("on_belongings",false)
 		set("belongings/"+id,wcs[0])
-		set("belongings/_","")
+		set("belongings/_id","")
 	}
 }
 world.EnableTrigger("on_belongings",false)
@@ -4853,3 +4860,34 @@ function EatLu(){
 	do_prepare()
 }
 
+//-------------------------
+
+function on_jubaoxiang(name, output, wildcards){
+	var wcs = VBArray(wildcards).toArray();
+	set("xiang",{
+		"_used":wcs[0]-0,
+		"_max":wcs[1]-0,
+	})
+	if (wcs[0]>0){
+		world.EnableTrigger("jubaoxiang_start", true);
+	}
+}
+
+
+function on_jubaoxiang_item(name, output, wildcards){
+	var wcs = VBArray(wildcards).toArray();
+	set("xiang/"+wcs[1],wcs[2]-0)
+}
+
+function on_jubaoxiang_start(name, output, wildcards){
+	world.EnableTrigger("jubaoxiang_start", false);
+	world.EnableTrigger("jubaoxiang_end", true);
+	world.EnableTrigger("jubaoxiang_item", true);
+
+}
+function on_jubaoxiang_end(name, output, wildcards){
+	world.EnableTrigger("jubaoxiang_end", false);
+	world.EnableTrigger("jubaoxiang_item", false);
+
+
+}
