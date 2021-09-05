@@ -2899,9 +2899,9 @@ function on_hp(name, output, wildcards)
 }
 function on_allitem(name, output, wildcards){
 	var wcs = VBArray(wildcards).toArray();
-	var num = number(wcs[1]);
+	var num = number(wcs[2]);
 	if (num == 0) num = 1;
-	set("allitem/"+wcs[2].toLowerCase(),num)
+	set("allitem/"+wcs[4].toLowerCase(),num)
 }
 function on_item(name, output, wildcards)
 {
@@ -3095,10 +3095,9 @@ function on_global(name, output, wildcards)
 				world.EnableTrigger("on_belongings",false)
 				set("belongings/_id","")
 			}else if(wcs[0]=="eatlu.check"){
-				CheckBelongings("magic water")
-				send("set no_teach eatlu.checked")
+				send("i;set no_teach eatlu.checked")
 			}else if(wcs[0]=="eatlu.checked"){
-				if (query("belongings/magic water")){
+				if (query("allitem/magic water",true)){
 					world.EnableTrigger("on_trc_eatlu",true)
 					send("join;hp;set no_teach eatlu.eat")
 				}else{
