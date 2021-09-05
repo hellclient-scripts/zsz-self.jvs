@@ -643,7 +643,7 @@ function goto(tl)
 	var fl = query("room/id");
 	if (fl == -1) {
 		world.note("err(goto()): fl为无效地点！");
-		do_autosearch(5, "find");
+		do_autosearch(8, "find");
 	} else {
 		var pa = get_path(fl, tl);
 		if(pa != m_FAIL) do_walk(pa.split(";"));
@@ -2744,7 +2744,7 @@ function on_prepare(name, output, wildcards)
 			break;
 		case "pe_quf":	// ^(> )*你存的钱不够取。
 			world.EnableTrigger("pe_quf", false);
-			send("refund 1");
+			send("duihuan 10 cash to gold;refund 1");
 			telldm("钱不够取！");
 			NotifyDM("余额不够");
 			open_timer1(2, "busy", "i;set no_teach prepare");
@@ -3768,6 +3768,12 @@ function on_alias(name, line, wildcards)
 			for(var i=0;i<num;i++){
 				send(cmds)
 			}
+			break
+		case "stab":
+			stop_all();
+			set("stab/index", 0);
+			set("stab/miss", false);
+			send("hp;i;set no_teach prepare");
 			break
 	}
 }
