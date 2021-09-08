@@ -2742,7 +2742,9 @@ function on_prepare(name, output, wildcards)
 			open_timer1(2, "busy", query("item/qu"));
 			break;
 		case "pe_quf":	// ^(> )*你存的钱不够取。
-			world.EnableTrigger("pe_quf", false);
+			world.EnableTrigger("pe_silver", false);
+			world.EnableTrigger("pe_cunb", false);
+			world.EnableTrigger("pe_qub", false);
 			send("duihuan 10 cash to gold;refund 1");
 			telldm("钱不够取！");
 			NotifyDM("余额不够");
