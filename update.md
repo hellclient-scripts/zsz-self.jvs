@@ -1,6 +1,6 @@
 # 更新记录
 
-调整检查物品指令，从touch调整为 enchase
+修正study时内力不足直接sleep,如果此时身上有毒会死的bug
 加入模块 聚宝箱管理>补充饮食 补充计划任务id的吃喝
 加入模块 聚宝箱管理>补充九花材料 补充做九花的材料
 gold不够后refind时加入duihuan 10 cash to gold避免兑换的还是gold造成机器卡住

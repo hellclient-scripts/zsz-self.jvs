@@ -6330,37 +6330,6 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t4lhka73fgcs47"
-  Name = "on_belongings"
-  Enabled = false
-  Match = "^你无法把(.+)镶嵌到(.+)上。$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_belongings"
-  SendTo = 0
-  Sequence = 90
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "d1d5cnq4t4lhka73fgcs47-a"
   Name = "on_trc_eatlu"
   Enabled = false

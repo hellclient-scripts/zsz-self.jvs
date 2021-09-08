@@ -47,22 +47,19 @@
         BusyTest(get_var("loc_dazuo"),"hp;set no_teach prepare")
     }
     san.CmdJingliItem=function(){
-        send("take 1 renshen wan")
-        CheckBelongings("renshen wan")
+        send("take 1 renshen wan;i")
         BusyTest(get_var("loc_dazuo"),Mods.GetCommand("san.eatwan"))
     }
     san.CmdEatWan=function(){
-        if (HasBelongings("renshen wan")){
-            send("eat renshen wan;hp;")
-            do_prepare()
+        if (query("allitem/renshen wan",true)){
+            send("eat renshen wan;hp;i;set no_teach prepare")
         }else{
             san.Report("资源不足","renshen wan 不足")
         }
     }
 
     san.CmdNeiliItem=function(){
-        send("take 1 magic water")
-        CheckBelongings("magic water")
+        send("take 1 magic water;i")
         send(Mods.GetCommand("san.eatlu"))
     }
     san.Report=function(title,msg){
@@ -71,7 +68,7 @@
         san.ModuleCheckStop()
     }
     san.CmdEatLu=function(){
-        if (HasBelongings("magic water")){
+        if (query("allitem/magic water",true)){
             EatLu()
         }else{
             san.Report("资源不足","magic water 不足")
@@ -96,13 +93,12 @@
     }
     san.CmdImbue=function(){
         var id=san.CurrentImbue()
-        send("take 1 "+id)
-        CheckBelongings(id)
+        send("take 1 "+id+";i")
         send(Mods.GetCommand("san.tryimbue"))
     }
     san.CmdTryImbue=function(){
         var id=san.CurrentImbue()
-        if (!HasBelongings(id)){
+        if (!query("allitem/"+id,true)){
             san.Report("资源不足",id+" 不足")
             return
         }
@@ -111,19 +107,19 @@
     }
     san.CmdImbued=function(){
         var id=san.CurrentImbue()
-        CheckBelongings(id)
+        send("i")
         BusyTest(get_var("loc_gift"),Mods.GetCommand("san.checkimbue"))
     }
     san.CmdCheckImbue=function(){
         var id=san.CurrentImbue()
-        if (!HasBelongings(id)){
+        if (!query("allitem/"+id,true)){
             world.Note("资源"+id+"镶嵌到"+san.WeaponID+"成功")
             add_log("资源"+id+"镶嵌到"+san.WeaponID+"成功");
             san.Current=0
-            do_prepare()
+            send("set no_teach prepare")
             return
         }
-        send("cun "+id)
+        send("cun "+id+";i")
         san.Current++
         send("set no_teach prepare")
     }

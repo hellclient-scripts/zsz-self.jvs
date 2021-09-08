@@ -45,7 +45,6 @@ var dbase_data = {
 	"digong"	: {"npc" : "", "step" : 1, "g_getk" : false,"n_gman" : 0,"passwd" : "a"},
 	"trceatlu":false,
 	"miss":{"fail":false,"until":0},
-	"belongings":{}
 	};    
 
 var npc_id       = new Array();
@@ -3041,10 +3040,7 @@ function on_global(name, output, wildcards)
 
 				if (query("hp/jing") < 45 && query("hp/neili") < 30 && can_sleep()) {
 					world.EnableTrigger("pe_study", false);
-					set("nextstep/flag", "COMMANDS");
-					set("nextstep/cmds", "#t+ pe_sleep;sleep");
-					world.SendImmediate("halt");
-					goto(get_var("loc_sleep"));
+					send("halt;yun regenerate;hp;set no_teach prepare");
 					return;
 				}
 				//if (get_var("cmd_study") != "jingxiu")
@@ -3090,10 +3086,7 @@ function on_global(name, output, wildcards)
 				else {
 					set("room/id", -1);
 					goto(query("nextstep/loc"));
-				}
-			}else if (wcs[0] == "belongings"){
-				world.EnableTrigger("on_belongings",false)
-				set("belongings/_id","")
+			}
 			}else if(wcs[0]=="eatlu.check"){
 				send("i;set no_teach eatlu.checked")
 			}else if(wcs[0]=="eatlu.checked"){
@@ -4812,34 +4805,8 @@ function get_xmroom()
 	return tt;
 }	
 //--------------------------------------------------------------------------------
-function CheckBelongings(id){
-	if (id){
-		world.EnableTrigger("on_belongings",true)
-		set("belongings/"+id,"")
-		set("belongings/_id",id)
-		send("enchase "+id+" with "+id+";set no_teach belongings",true)
-	}
-}
-function HasBelongings(id){
-	if (query("belongings/"+id,true)){
-		return true
-	}
-	return false
-}
-function on_belongings(name, output, wildcards){
-	var wcs
-	wcs = VBArray(wildcards).toArray();
-	var id=query("belongings/_id")
-	if (id){
-		world.EnableTrigger("on_belongings",false)
-		set("belongings/"+id,wcs[0])
-		set("belongings/_id","")
-	}
-}
-world.EnableTrigger("on_belongings",false)
-
 function on_trc_eatlu(name, output, wildcards){
-	send("eat magic water")
+	send("eat magic water;i")
 	world.EnableTrigger("on_trc_eatlu",false)
 }
 
