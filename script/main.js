@@ -1693,10 +1693,6 @@ function do_prepare()
 		do_stab();
 		return;
 	} else 
-	if (query("other/backup") || ((!check_in_3boss())&&can_study() && query("hp/pot") > get_var("max_pot"))) {
-		set("nextstep/cmds", "#t+ pe_study;hp;set no_teach study");
-		tl = get_var("loc_study");
-	} else
 	if (query("hp/neili") < get_var("min_neili") && get_var("loc_sleep") != "") {
 		if (query("other/mtc")){
 			send("hp;set no_teach prepare")
@@ -1709,6 +1705,9 @@ function do_prepare()
 			set("nextstep/cmds", "#t+ pe_dazuo;#t+ pe_dazuof;dazuo " + get_var("num_dazuo"));
 			tl = get_var("loc_dazuo");
 		}
+	} else	if (query("other/backup") || ((!check_in_3boss())&&can_study() && query("hp/pot") > get_var("max_pot"))) {
+		set("nextstep/cmds", "#t+ pe_study;hp;set no_teach study");
+		tl = get_var("loc_study");
 	} else
 	if (query("hp/th") > get_var("max_th") && can_jiqu()) {
 		set("nextstep/cmds", "#t+ pe_jiqu1;#t+ pe_jiqu3;yun recover;yun regenerate;mjq");
