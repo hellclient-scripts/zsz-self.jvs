@@ -18,7 +18,8 @@ var data_familys = {
     "武当派"   : {"masterid" : "zhang sanfeng",	"mastername" : "张三丰",	"masterloc" : 2161, "sleeploc" : 2152 , "id_family" : "wd",	"dazuoloc" : 2160},
     "全真教"   : {"masterid" : "ma yu",			"mastername" : "马钰",		"masterloc" : 2232, "sleeploc" : 2250, "id_family" : "qz",	"dazuoloc" : 2231},
     "魔教"  	: {"masterid" : "jin shi",			"mastername" : "金狮",		"masterloc" : 2741, "sleeploc" : 2735, "id_family" : "mj",	"dazuoloc" : 2729},
-    "少林派"   : {"masterid" : "xuanci dashi",		"mastername" : "玄慈大师",	"masterloc" : 1887, "sleeploc" : 1924, "id_family" : "sl",	"dazuoloc" : 1886}
+    "少林派"   : {"masterid" : "xuanci dashi",		"mastername" : "玄慈大师",	"masterloc" : 1887, "sleeploc" : 1924, "id_family" : "sl",	"dazuoloc" : 1886},
+    "将军府"   : {"masterid" : "wu qian",		"mastername" : "吴潜",	"masterloc" : 2850, "sleeploc" : 2865, "id_family" : "jjf",	"dazuoloc" : 2849}
    };
 var _assist_init_data={}
 function prompt_id(){

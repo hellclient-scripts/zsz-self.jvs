@@ -2432,6 +2432,9 @@ function on_kill(name, output, wildcards)
 			send(kill_cmd());
 			break;
 		case "kl_flee":	// (@npc_name)(摇摇欲坠|身负重伤|狂叫一声|晃了两下|再退一步|已是避|深吸一口气|只有招架之功)(.*)
+			if (output.indexOf("兵法战策")>-0){
+				return
+			}
 			world.EnableTimer("t_pfm", false);
 			world.EnableTriggerGroup("gkl", 0);
 			world.EnableTriggerGroup("gkl1", 0);
@@ -2993,6 +2996,9 @@ function on_item(name, output, wildcards)
 			}
 			break;
 		case "im_gift":	// (仙丹|洗髓丹|火红仙丹|神力丸|菩提子|九转金丹|天香玉露|金块|玄冰寒铁|乌金丝|补天石|冰蚕丝)
+		if (output.indexOf("记忆水晶") != -1){
+			return 
+		} 				
 			var gt = wcs[1].toLowerCase();
 			set("item/gift", gt);
 			break;

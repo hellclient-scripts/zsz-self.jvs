@@ -185,6 +185,15 @@ var data_npcs = {
     "tie yan"				: {"name" : "铁燕",			"loc" : 2737,	"id" : "tie yan"},
     "liu ruosong"			: {"name" : "柳若松",		"loc" : 2725,	"id" : "liu ruosong"}, 
     "fu hongxue"			: {"name" : "傅红雪",		"loc" : 2734,	"id" : "fu hongxue"},
+    "guo jing"			: {"name" : "郭靖",		"loc" : 177,	"id" : "guo jing"},
+    "wu qian"			: {"name" : "吴潜",		"loc" : 2850,	"id" : "wu qian"},
+    "yu jie"			: {"name" : "余介",		"loc" : 2871,	"id" : "yu jie"},
+    "fan tingzhao"			: {"name" : "范廷召",		"loc" : 2845,	"id" : "fan tingzhao"},
+    "meng gong"			: {"name" : "孟珙",		"loc" : 2858,	"id" : "meng gong"},
+    "ge huaimin"			: {"name" : "葛怀敏",		"loc" : 2861,	"id" : "ge huaimin"},
+    "pan guangyu"			: {"name" : "潘光裕",		"loc" : 2862,	"id" : "pan guangyu"},
+    "kong shouzheng"			: {"name" : "孔守正",		"loc" : 2875,	"id" : "kong shouzheng"},
+    "gao hua"			: {"name" : "高化",		"loc" : 2876,	"id" : "gao hua"},
     "nan xian":{"name":"南贤","loc":1551,"id":"nan xian"}
    };
 
