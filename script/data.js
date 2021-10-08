@@ -177,7 +177,7 @@ var data_npcs = {
     "dubi shenni"			: {"name" : "独臂神尼",		"loc" : 1430,	"id" : "dubi shenni"},
     "feng mofeng"			: {"name" : "冯默风",		"loc" : 2555,	"id" : "feng mofeng"},
     "sheng di"				: {"name" : "胜谛",			"loc" : 1639,	"id" : "sheng di"},
-    "chen jialuo"			: {"name" : "陈家洛",		"loc" : 2309,	"id" : "chen jialuo"},
+    "chen jialuo"			: {"name" : "陈家洛",		"loc" : 2468,	"id" : "chen jialuo"},
     "shang jianming"		: {"name" : "商剑鸣",		"loc" : 1284,	"id" : "shang jianming"},
     "jin shi"				: {"name" : "金狮",			"loc" : 2741,	"id" : "jin shi"},
     "yin long"				: {"name" : "银龙",			"loc" : 2732,	"id" : "yin long"},
