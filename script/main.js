@@ -18,10 +18,10 @@ var dbase_data = {
 	"room"       : {"name" : "null", "id" : -1, "dir" : "", "cmd" : "", "miss" : 2763, "chat" : 2046},
 	"nextstep"   : {"flag" : "", "cmds" : "", "loc" : 0},
 	"quest"      : {"flag" : "null", "far" : 0, "info" : 0, "count" : 0, "master" : true, "letter" : false},
-	"stat"       : {"stime" : 0, "minute" : 0, "count" : 0, "eff" : 0,"helped":0},
+	"stat"       : {"stime" : 0, "minute" : 0, "count" : 0, "eff" : 0,"helped":0,"busy":0,"busycount":0,"busyerr":0},
 	"info"       : {"id" : "", "list" : ""},
 	"npc"        : {"name" : "null", "id" : "", "loc" : "", "find" : 0, "coor" : -1, "status" : "null", "wd" : 0,
-			"corpse" : 0, "head" : 0,"onkill" : ""},
+			"corpse" : 0, "head" : 0,"onkill" : "","busystart":0},
 	"dispel"     : {"flag" : "", "next" : "", "count" : 0, "count1" : 0},
 	"connect"    : {"cmds" : "", "auto" : false},
 	"stab"       : {"flag" : true, "miss" : true, "index" : 0},
@@ -683,6 +683,10 @@ function set_status()
 
 	str += ", 完成:" +  query("quest/count") + ", quest:" + query("quest/flag"); 
 	str += ", 效率:" +  query("stat/eff") + "/小时, 用时:" + query("stat/minute") + "分钟"; 
+	var busyeff=query("stat/busyeff")
+	if (busyeff && get_var("bool_showbusy")){
+		str +=", 平均 busy:"+busyeff.toFixed(2)
+	}
 	if (!get_var("bool_nohelp") && query("stat/count")){
 		var rate=query("stat/helped")*100/query("stat/count")
 		str += "，线报率:"+rate.toFixed(2)+"%"; 
@@ -713,6 +717,9 @@ function tongji(flag)
 		set("stat/count", 0);
 		set("stat/eff", 0);
 		set("stat/helped",0)
+		set("stat/busy",0)
+		set("stat/busycount",0)
+		set("stat/busyeff", 0);
 		return;
 	}
 
@@ -1034,7 +1041,7 @@ function kill_cmd()
 	var id = "";
 	var cmd = "";
 	var pfm = perform();
-
+	set("npc/busybusy",0)
 	id = query("npc/id");
 	if (id == "" || id == null) id = "no body";
 
@@ -2466,6 +2473,7 @@ function on_kill(name, output, wildcards)
 			//var cmd = "gzhen " + query("npc/id") + ";" + get_var("cmd_npcfaint") + ";hp;i";
 			var cmd = "";
 			if (query("item/zhen") < 399) cmd = "gzhen " + query("npc/id") + ";" 
+			set("npc/busystart",(new Date()).getTime())
 			cmd +=get_var("cmd_npcfaint") + ";i;hp";
 			var weapons=(get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon2")+";"+get_var("id_weapon3")).split(";")
 			var list=[]
@@ -2502,7 +2510,15 @@ function on_kill(name, output, wildcards)
 			set("npc/status", "dead");
 			set("npc/onkill","")
 			add_room_cmd(get_var("cmd_aquest"));
-
+			var busystart=query("npc/busystart")
+			if (busystart){
+				var busy=((new Date()).getTime()-busystart)/1000
+				var allbusy=query("stat/busy")-0+busy
+				var busycount=query("stat/busycount")-0+1
+				set("stat/busy",allbusy)
+				set("stat/busycount",busycount)
+				set("stat/busyeff", allbusy/busycount);
+			}
 			var cmd = "cut head from corpse;get head";
 				
 			var tmp = get_var("cmd_npcdie");

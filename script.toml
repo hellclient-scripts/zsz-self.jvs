@@ -7156,7 +7156,6 @@ Channel = "zsz-self.jvs"
   Name = "bool_3boss_recon"
   Desc = "三小boss重连"
   Intro = "打3小boss时时候重连开关，适用于较弱的id。注意，不建议开seadragons,容易卡海怪"
-
 [[RequiredParams]]
   Name = "bool_cungift"
   Desc = "保存奖品"
@@ -7165,6 +7164,10 @@ Channel = "zsz-self.jvs"
   Name = "bool_nohelp"
   Desc = "禁用帮助找NPC功能"
   Intro = "设为T后，不会请求帮助和帮助寻找npc"
+[[RequiredParams]]
+  Name = "bool_showbusy"
+  Desc = "显示busy"
+  Intro = "设为T后，会显示任务的平均busy时间(npc昏倒到npc死亡)"  
 [[RequiredParams]]
   Name = "list_assist"
   Desc = "帮助命令列表"
