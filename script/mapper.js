@@ -18,6 +18,7 @@ mapper.getroom=function(id){
     })
     this.result=data.join(",")
 }
+mapper.lines=[]
 mapper.filterdir=function(dir){
     var re = /[。·！]/g;
 	dir = dir.replace(re, "");
@@ -246,6 +247,7 @@ mapper.parsepath=function(fr,str){
 	Mapper.addpath(fr,p)
 }
 mapper.loadline=function(line){
+    mapper.lines.push(line)
     var result=SplitN(line,"=",2)
     var id=result[0]
     var data=""

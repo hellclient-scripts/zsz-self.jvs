@@ -233,7 +233,11 @@ function quick_start(){
         }else{
             list.append("stop","结束任务")
         }
+        
         list.append("list_loc","前往地点")
+        if(Userinput.newdatagrid){
+            list.append("builtinrooms","地图信息管理(只读)")
+        }
         list.append("expmax","设置最大EXP")
         list.append("cmdstudy","设置学习指令")
         list.append("listskill","设置学习内容")
@@ -267,6 +271,11 @@ function quick_start(){
             break
         case "stop":
             set("quest/flag", "null");
+            break
+        case "builtinrooms":
+            BuiltinroomsGrid.setpage(1)
+            BuiltinroomsGrid.setfilter("")
+            publishgrid(BuiltinroomsGrid,mapper.lines)
             break
         case "expmax":
             prompt_exp_max()
@@ -520,5 +529,52 @@ function prompt_list_assist(){
 function callback_list_assist(name,id,code,data){
     if (code==0){
         world.Execute(data)
+    }
+}
+
+let publishgrid=function(grid,alldata){
+    let pagesize=10
+    let page=grid.getpage()
+    let filter=grid.getfilter()
+    let start=(page-1)*pagesize
+    let end=page*pagesize
+    let count=0
+    grid.resetitems()
+    for (let i=0;i<alldata.length;i++){
+        let data=alldata[i]
+        if (filter && data.indexOf(filter)<0){
+            continue
+        }
+        count++
+        if (count>=start && count<end){
+            grid.append(i,alldata[i])
+        }
+    }
+    grid.setmaxpage(Math.ceil(count/pagesize))
+    grid.publish("")
+}
+
+let BuiltinroomsGrid=Userinput.newdatagrid("内建房间信息","内建房间信息管理")
+BuiltinroomsGrid.setonpage("InfoUIDataBuiltinroomsGridOnPage")
+let InfoUIDataBuiltinroomsGridOnPage=function(name,id,code,data){
+    if (code==0 && data){
+        BuiltinroomsGrid.setpage(data-0)
+        publishgrid(BuiltinroomsGrid,mapper.lines)
+    }
+}
+BuiltinroomsGrid.setonfilter("InfoUIDataBuiltinroomsGridOnFilter")
+let InfoUIDataBuiltinroomsGridOnFilter=function(name,id,code,data){
+    if (code==0){
+        BuiltinroomsGrid.setpage(1)
+        BuiltinroomsGrid.setfilter(data)
+
+        publishgrid(BuiltinroomsGrid,mapper.lines)
+
+    }
+}
+BuiltinroomsGrid.setonview("InfoUIDataBuiltinroomsGridOnView")
+let InfoUIDataBuiltinroomsGridOnView=function(name,id,code,data){
+    if (code==0 && data){
+        Userinput.alert("","查看内建房间",mapper.lines[data-0])
     }
 }

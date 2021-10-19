@@ -18,7 +18,7 @@ var dbase_data = {
 	"room"       : {"name" : "null", "id" : -1, "dir" : "", "cmd" : "", "miss" : 2763, "chat" : 2046},
 	"nextstep"   : {"flag" : "", "cmds" : "", "loc" : 0},
 	"quest"      : {"flag" : "null", "far" : 0, "info" : 0, "count" : 0, "master" : true, "letter" : false},
-	"stat"       : {"stime" : 0, "minute" : 0, "count" : 0, "eff" : 0,"helped":0,"busy":0,"busycount":0,"busyerr":0},
+	"stat"       : {"stime" : 0, "minute" : 0, "count" : 0, "eff" : 0,"helped":0,"busy":0,"busycount":0,"busyeff":0},
 	"info"       : {"id" : "", "list" : ""},
 	"npc"        : {"name" : "null", "id" : "", "loc" : "", "find" : 0, "coor" : -1, "status" : "null", "wd" : 0,
 			"corpse" : 0, "head" : 0,"onkill" : "","busystart":0},
