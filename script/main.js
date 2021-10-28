@@ -931,6 +931,10 @@ function kill_npc()
 	}
 }
 
+function InSmartMode(){
+	return get_var("bool_smartmode") & !query("boss/start")
+}
+
 function perform()
 {
 	set("other/touch", true);
@@ -938,7 +942,7 @@ function perform()
 	if (pfm == "shot") 
 		pfm = "shot " + query("npc/id") + " with arrow"; 
 	else {
-		if (query("npc/wd") == 1 || get_var("bool_smartmode")){
+		if (query("npc/wd") == 1 || InSmartMode()){
 			pfm = CmdMpf();
 		}
 
@@ -1087,7 +1091,7 @@ function kill_cmd()
 				if (tmp[i].indexOf("jingang") == -1) cmd += ";" + tmp[i];
 			}
 		}
-		if (!get_var("bool_smartmode")){
+		if (!InSmartMode){
 			if (pfm != "") cmd += ";" + pfm;
 		}
 		cmd += ";#q";
@@ -2442,14 +2446,14 @@ function on_kill(name, output, wildcards)
 			if (tmp == "shot" || tmp.indexOf("mpf") != -1) return;
 
 			if (query("npc/wd") == 1){
-				if (get_var("bool_smartmode")){
+				if (InSmartMode){
 					send(CmdPfmlich());
 				}else{
 					send(CmdMpf());
 				}
 			}else{
 				set("npc/wd", 0);
-				if (get_var("bool_smartmode")){
+				if (InSmartMode){
 					send(get_var("cmd_pfm") + ";#q");
 				}
 			}
