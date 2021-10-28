@@ -294,7 +294,18 @@ function set(flag, value)
 		set_status();
 }
 
-
+function GetCmd(name){
+	var list=world.GetVariable("list_cmd").split("|")
+    for (var index in list) {
+		var data=world.SplitN(list[index],":",2)
+		if (data.length>1){
+			if (data[0]==name){
+				return data[1]
+			}
+		}
+	}
+	return ""
+}
 //--------------------------------------------------------------------------------
 function get_room(str)
 {
@@ -473,7 +484,7 @@ function get_info_key(index)
 	return io[index]; 
 }
 
-var _linesre = new RegExp("[^;]+", "g");
+var _linesre = new RegExp("[^;\n]+", "g");
 var _cmdsre = new RegExp("[^、。]+", "g");
 var _groupre=new RegExp("[;\n]", "g");
 function groupcmds(str){
@@ -555,6 +566,19 @@ function send(str, grouped) {
 							if (cmd[1] != null && cmd[1] != "") num = cmd[1];
 							do_lian(num);
 							break;
+						case "#cmd":
+							send(GetCmd(cmd[1]))
+							break;
+						case "#setvar":
+							if (cmd.length>2 && cmd[1]){
+								world.SetVariable(cmd[1],cmd.slice(2).join(" "))
+							}
+							break
+						case "#unsetvar":
+							if (cmd.length>1 && cmd[1]){
+								world.SetVariable(cmd[1],"")
+							}
+							break	
 						case "#roomid":
 							if (cmd[1] != null && cmd[1] != "") set("room/id", cmd[1] - 0)
 							break
@@ -914,14 +938,18 @@ function perform()
 	if (pfm == "shot") 
 		pfm = "shot " + query("npc/id") + " with arrow"; 
 	else {
-		if (query("npc/wd") == 1) pfm = "mpf";
+		if (query("npc/wd") == 1 || get_var("bool_smartmode")){
+			pfm = CmdMpf();
+		}
 
 		if (query("other/getw") == 1) {
 			set("other/getw", 0);
 			pfm = "get " + get_var("id_weapon") + ";wield " + get_var("id_weapon") + ";" + pfm;
 		}
 	}
-	if (query("boss/start")) pfm = pfm + "\nenchase 1";
+	if (query("boss/start")){
+		pfm = pfm + "\nenchase 1";
+	}
 	return pfm;
 }
 
@@ -1059,8 +1087,9 @@ function kill_cmd()
 				if (tmp[i].indexOf("jingang") == -1) cmd += ";" + tmp[i];
 			}
 		}
-
-		if (pfm != "") cmd += ";" + pfm;
+		if (!get_var("bool_smartmode")){
+			if (pfm != "") cmd += ";" + pfm;
+		}
 		cmd += ";#q";
 	}
 	var on_kill=query("npc/onkill")
@@ -1634,7 +1663,7 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy 50 狼牙箭 from tie jiang");
 		tl = 66;
 	} else
-	if ((query("item/gangbiao") - 0 + query("item/zhen")) < 200 && get_var("cmd_pfm").indexOf("yuce") != -1) {
+	if ((query("item/gangbiao") - 0 + query("item/zhen")) < 200 && (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao")))	 {
 		set("item/buy", "100 gangbiao from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy 100 gangbiao from tie jiang");
 		tl = 66;
@@ -2412,12 +2441,18 @@ function on_kill(name, output, wildcards)
 			var tmp = get_var("cmd_pfm");
 			if (tmp == "shot" || tmp.indexOf("mpf") != -1) return;
 
-			if (query("npc/wd") == 1)
-				send("mpf");
-			else
+			if (query("npc/wd") == 1){
+				if (get_var("bool_smartmode")){
+					send(CmdPfmlich());
+				}else{
+					send(CmdMpf());
+				}
+			}else{
 				set("npc/wd", 0);
-
-			send(get_var("cmd_pfm") + ";#q");
+				if (get_var("bool_smartmode")){
+					send(get_var("cmd_pfm") + ";#q");
+				}
+			}
 			break;
 		case "kl_wd":	// ^(> )*(@name_npc)微一凝神，运起太极神功，全身灌满真气，衣裳无风自舞，气势迫人。
 			var fam = get_var("id_pass");
@@ -3759,9 +3794,21 @@ function on_alias(name, line, wildcards)
 			var varname=wcs[0]
 			var varvalue=wcs[1]
 			if (varname){
-				world.SetVariable(varname, varvalue);
+				world.SetVariable(varname, varvalue?varvalue:"");
 			}
 			break
+		case "unsetvar":
+			var varname=wcs[0]
+			if (varname){
+				world.SetVariable(varname, "");
+			}
+			break
+		case "cmd":
+			var cmdname=wcs[0]
+			if (cmdname){
+				send(GetCmd(cmdname))
+			}
+			break	
 		case "login":
 			world.Connect();	
 			world.send(get_var("id"))
@@ -4437,6 +4484,14 @@ function close_fb()
 	set("boss/step", 0);
 	
 }
+function CmdMpf(){
+	var str=get_var("cmd_backstab")
+	return str?str:"mpf"
+}
+function CmdPfmlich(){
+	var str=get_var("cmd_cheapshot")
+	return str?str:"pfm_lich"
+}
 //--------------------------------------------------------------------------------
 function on_xuemo(name, output, wildcards)
 {
@@ -4482,7 +4537,7 @@ function on_xuemo(name, output, wildcards)
 				world.EnableTrigger("xm_nobody", true);	
 				world.EnableTrigger("xm_target", true);	
 				var pp = get_var("cmd_pfm");
-				if (nn == "skeleton lich") pp = "pfm_lich";
+				if (nn == "skeleton lich") pp = CmdPfmlich();
 				send("hp;n;look;kill "+ nn +";#ts+ t_pfm;"+pp+";#t+ xm_nobusy;jiqu 300");	
 				if (query("xuemo/step") == 8) send("freport");
 			} else {
@@ -4513,7 +4568,7 @@ function on_xuemo(name, output, wildcards)
 			}
 			//var cmd = get_var("id") + ";" + get_var("passw") + ";y;halt;hp;i;fquest;set no_teach xuemo connect;l skeleton lich;mpf;#t+ xm_nobody;#t+ xm_juling;#ts+ t_pfm";
 			//reconnect(cmd);
-			world.DoAfterSpecial(0.1, 'reconnect(get_var("id") + ";" + get_var("passw") + ";y;halt;hp;i;fquest;set no_teach xuemo connect;l skeleton lich;mpf;#t+ xm_nobody;#t+ xm_juling;l;#ts+ t_pfm")', 12);
+			world.DoAfterSpecial(0.1, 'reconnect(get_var("id") + ";" + get_var("passw") + ";y;halt;hp;i;fquest;set no_teach xuemo connect;l skeleton lich;'+CmdMpf()+';#t+ xm_nobody;#t+ xm_juling;l;#ts+ t_pfm")', 12);
 			break;	
 		case "xm_npc":	//^[> ]*(.{0,4})\(鬼气\) (.*)\((.*)\)
 			if (query("xuemo/target")) return;
@@ -4637,7 +4692,7 @@ function on_xuemo(name, output, wildcards)
 					tl = 2834;	
 					break;
 				case 8:
-					send("tuna 200;dazuo 200;mpf");
+					send("tuna 200;dazuo 200;"+CmdMpf());
 					set("xuemo/target",true);
 					set("nextstep/cmds", "do 3 freport;#t+ xm_nobusy;#ts+ t_pfm");
 					set("nextstep/flag", "COMMANDS");									

@@ -554,7 +554,9 @@ let publishgrid=function(grid,alldata){
     grid.publish("")
 }
 
-let BuiltinroomsGrid=Userinput.newdatagrid("内建房间信息","内建房间信息管理")
+let BuiltinroomsGrid
+if (Userinput.newdatagrid){
+BuiltinroomsGrid=Userinput.newdatagrid("内建房间信息","内建房间信息管理")
 BuiltinroomsGrid.setonpage("InfoUIDataBuiltinroomsGridOnPage")
 let InfoUIDataBuiltinroomsGridOnPage=function(name,id,code,data){
     if (code==0 && data){
@@ -577,4 +579,5 @@ let InfoUIDataBuiltinroomsGridOnView=function(name,id,code,data){
     if (code==0 && data){
         Userinput.alert("","查看内建房间",mapper.lines[data-0])
     }
+}
 }

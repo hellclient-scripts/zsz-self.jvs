@@ -6618,7 +6618,7 @@ Channel = "zsz-self.jvs"
   Enabled = false
   Hour = 0
   Minute = 0
-  Second = 1.0
+  Second = 0.5
   Send = ""
   Script = "on_timer"
   AtTime = false
@@ -6715,6 +6715,51 @@ Channel = "zsz-self.jvs"
   OmitFromOutput = false
   OmitFromCommandHistory = false
 
+[[Aliases]]
+  ID = "unsetvar"
+  Name = "unsetvar"
+  Enabled = true
+  Match = "#unsetvar *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "cmd"
+  Name = "cmd"
+  Enabled = true
+  Match = "#cmd *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
 
 
 [[Aliases]]
@@ -6966,7 +7011,23 @@ Channel = "zsz-self.jvs"
   Name = "cmd_pfm"
   Desc = "QM任务绝招"
   Intro = "QM任务PFM设置，（吸气+p）"
+[[RequiredParams]]
+  Name = "cmd_backstab"
+  Desc = "强力攻击"
+  Intro = "面对强大的敌人时的强力攻击，在打有特防的npc/巫妖/血魔时使用。留空会发送 pfm 到游戏"
+[[RequiredParams]]
+  Name = "cmd_cheapshot"
+  Desc = "偷袭"
+  Intro = "面对强大的敌人时的第一次攻击，在打有特防的npc/巫妖时使用，一般设置为 普通攻击+Busy技能，用于打破对手yun powerup的busy并busy对方。留空会发送 pfm_lich 到游戏"
+[[RequiredParams]]
+  Name = "bool_smartmode"
+  Desc = "智能模式"
+  Intro = "是否使用智能模式（F否T是）"
 
+[[RequiredParams]]
+  Name = "list_cmd"
+  Desc = "|分割的命令列表"
+  Intro = "由|分割的命令列表，格式为 yp:yun powerup|ys:yun shield|mpf:xxxx,可以在send时通过#cmd mpf 的形式发送"
 [[RequiredParams]]
   Name = "cmd_pre"
   Desc = "重连后命令"
@@ -7168,6 +7229,10 @@ Channel = "zsz-self.jvs"
   Name = "bool_showbusy"
   Desc = "显示busy"
   Intro = "设为T后，会显示任务的平均busy时间(npc昏倒到npc死亡)"  
+[[RequiredParams]]
+  Name = "bool_gangbiao"
+  Desc = "自动买钢镖"
+  Intro = "设为T后，自动买钢镖"
 [[RequiredParams]]
   Name = "list_assist"
   Desc = "帮助命令列表"
