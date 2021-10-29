@@ -40,7 +40,7 @@ var dbase_data = {
 			"qiankun" : false, "brief" : false, "trace" : false, "walk" : false, "backup" : false, "touch" : true, "mtc":false,
 			"getw" : 0, "tell" : 0, "loc1" : ""},
 	"askyou"     : {"flag" : false, "loc" : null, "index" : 0, "idpt" : 0, "count" : 0, "none" : false},
-	"boss"       : {"start" : false, "kill" : "", "step" : 0, "seadragon" : 0, "dongfang" : 0, "jiangshi" : 0, "juxianzhuang" : 1, "digong" : 0, "xuemo" : 0, "target1" : 0, "target2" : 0, "target3" : 0, "target4" : 0, "target5" : 0, "target6" : 0},
+	"boss"       : {"start" : false, "name":"","kill" : "", "step" : 0, "seadragon" : 0, "dongfang" : 0, "jiangshi" : 0, "juxianzhuang" : 1, "digong" : 0, "xuemo" : 0, "target1" : 0, "target2" : 0, "target3" : 0, "target4" : 0, "target5" : 0, "target6" : 0},
 	"xuemo"		: {"npc" : "", "step" : 1,"target" : false,"target1" : false, "target2" : false, "target3" : false, "target4" : false, "target5" : false, "target6" : false },
 	"digong"	: {"npc" : "", "step" : 1, "g_getk" : false,"n_gman" : 0,"passwd" : "a"},
 	"trceatlu":false,
@@ -53,7 +53,7 @@ var step_walk    = new MyArray();
 var auto_search  = new MySearch(3);
 //var mapper       = new ActiveXObject("mapper.path");
 eval(Include("mapper.js"),"mapper.js")
-mapper.open("rooms_1311yn.h")
+mapper.open("rooms.h")
 mapper.setmissloc(get_var("list_mloc"))
 mapper.addhouse(get_var("house"))
 var m_FAIL       = "-333";
@@ -932,7 +932,11 @@ function kill_npc()
 }
 
 function InSmartMode(){
-	return get_var("bool_smartmode") & !query("boss/start")
+	return get_var("bool_smartmode") && !query("boss/start")
+}
+
+function IsXuemoBoss(){
+	return query("boss/start")&&query("boss/kill")=="xuemo"&&query("boss/name")=="丁一";
 }
 
 function perform()
@@ -942,7 +946,7 @@ function perform()
 	if (pfm == "shot") 
 		pfm = "shot " + query("npc/id") + " with arrow"; 
 	else {
-		if (query("npc/wd") == 1 || InSmartMode()){
+		if (IsXuemoBoss() || query("npc/wd") == 1 || InSmartMode()){
 			pfm = CmdMpf();
 		}
 
@@ -3747,6 +3751,7 @@ function on_alias(name, line, wildcards)
 			set("other/n_yj",3);
 			set("other/n_lx",2);
 			world.EnableTrigger("ga", true);
+			send(get_var("cmd_pre"))
 			send("#t+ level;cha;hp;i;unset keep_idle");
 			open_timer1(1, "busy", "set no_teach prepare");
 			world.EnableTrigger("setting", true);
@@ -3857,6 +3862,7 @@ function on_boss(name, output, wildcards)
 			//set("other/study", (new Date()).getTime());
 			var time1 = (new Date()).getTime();
 			set("boss/start", true);
+			set("boss/name","")
 			if (query("boss/kill") == "seadragon") {
 				set("boss/seadragon", time1);
 			} else 
@@ -3904,6 +3910,7 @@ function on_boss(name, output, wildcards)
 			var npcname = wcs[0];
 			var id = list[npcname];
 			send("kill " + id);
+			set("boss/name",npcname)
 			if (query("boss/start")) world.EnableTrigger("bs_nobusy", true);
 			world.EnableTrigger("bs_sea1", true);
 			open_pfm();
@@ -4302,7 +4309,6 @@ function on_digong(name, output, wildcards)
 			//地宫副本开始标记
 			set("boss/kill","digong");
 			set("boss/start",true);
-
 			//入口标记
 			set("room/id",2819);
 			dg_maze.cloc = dg_maze.enter;	
@@ -4492,9 +4498,16 @@ function CmdMpf(){
 	var str=get_var("cmd_backstab")
 	return str?str:"mpf"
 }
-function CmdPfmlich(){
+function CmdPfmlich(name){
 	var str=get_var("cmd_cheapshot")
-	return str?str:"pfm_lich"
+
+	if (!str){
+		str=""
+	}
+	if (!name){
+		name=""
+	}
+	return str.replace("$*",name)
 }
 //--------------------------------------------------------------------------------
 function on_xuemo(name, output, wildcards)
@@ -4541,7 +4554,7 @@ function on_xuemo(name, output, wildcards)
 				world.EnableTrigger("xm_nobody", true);	
 				world.EnableTrigger("xm_target", true);	
 				var pp = get_var("cmd_pfm");
-				if (nn == "skeleton lich") pp = CmdPfmlich();
+				if (nn == "skeleton lich") pp = CmdPfmlich("skeleton lich");
 				send("hp;n;look;kill "+ nn +";#ts+ t_pfm;"+pp+";#t+ xm_nobusy;jiqu 300");	
 				if (query("xuemo/step") == 8) send("freport");
 			} else {
@@ -4568,10 +4581,7 @@ function on_xuemo(name, output, wildcards)
 			
 			var stp = query("xuemo/step");
 			if (stp == 6)	{set("xuemo/npc", "skeleton lich");			
-			//	world.SendImmediate("kill skeleton lich\npfm_lich");
 			}
-			//var cmd = get_var("id") + ";" + get_var("passw") + ";y;halt;hp;i;fquest;set no_teach xuemo connect;l skeleton lich;mpf;#t+ xm_nobody;#t+ xm_juling;#ts+ t_pfm";
-			//reconnect(cmd);
 			world.DoAfterSpecial(0.1, 'reconnect(get_var("id") + ";" + get_var("passw") + ";y;halt;hp;i;fquest;set no_teach xuemo connect;l skeleton lich;'+CmdMpf()+';#t+ xm_nobody;#t+ xm_juling;l;#ts+ t_pfm")', 12);
 			break;	
 		case "xm_npc":	//^[> ]*(.{0,4})\(鬼气\) (.*)\((.*)\)
@@ -4691,7 +4701,7 @@ function on_xuemo(name, output, wildcards)
 					break;
 				case 5:
 					set("xuemo/target",true);
-					set("nextstep/cmds", "kill skeleton lich;pfm_lich;#q;#t+ xm_nobusy;#ts+ t_pfm;"+get_var("cmd_pfm"));
+					set("nextstep/cmds", "kill skeleton lich;"+CmdPfmlich("skeleton lich")+";#q;#t+ xm_nobusy;#ts+ t_pfm;"+get_var("cmd_pfm"));
 					set("nextstep/flag", "COMMANDS");
 					tl = 2834;	
 					break;

@@ -555,17 +555,20 @@ let publishgrid=function(grid,alldata){
 }
 
 let BuiltinroomsGrid
+let InfoUIDataBuiltinroomsGridOnFilter
+let InfoUIDataBuiltinroomsGridOnPage
+let InfoUIDataBuiltinroomsGridOnView
 if (Userinput.newdatagrid){
 BuiltinroomsGrid=Userinput.newdatagrid("内建房间信息","内建房间信息管理")
 BuiltinroomsGrid.setonpage("InfoUIDataBuiltinroomsGridOnPage")
-let InfoUIDataBuiltinroomsGridOnPage=function(name,id,code,data){
+InfoUIDataBuiltinroomsGridOnPage=function(name,id,code,data){
     if (code==0 && data){
         BuiltinroomsGrid.setpage(data-0)
         publishgrid(BuiltinroomsGrid,mapper.lines)
     }
 }
 BuiltinroomsGrid.setonfilter("InfoUIDataBuiltinroomsGridOnFilter")
-let InfoUIDataBuiltinroomsGridOnFilter=function(name,id,code,data){
+InfoUIDataBuiltinroomsGridOnFilter=function(name,id,code,data){
     if (code==0){
         BuiltinroomsGrid.setpage(1)
         BuiltinroomsGrid.setfilter(data)
@@ -575,7 +578,7 @@ let InfoUIDataBuiltinroomsGridOnFilter=function(name,id,code,data){
     }
 }
 BuiltinroomsGrid.setonview("InfoUIDataBuiltinroomsGridOnView")
-let InfoUIDataBuiltinroomsGridOnView=function(name,id,code,data){
+InfoUIDataBuiltinroomsGridOnView=function(name,id,code,data){
     if (code==0 && data){
         Userinput.alert("","查看内建房间",mapper.lines[data-0])
     }
