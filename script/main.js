@@ -294,8 +294,10 @@ function set(flag, value)
 		set_status();
 }
 
+var newlinere=/\n/g
+
 function GetCmd(name){
-	var list=world.GetVariable("list_cmd").split("|")
+	var list=world.GetVariable("list_cmd").replace(newlinere,"|").split("|")
     for (var index in list) {
 		var data=world.SplitN(list[index],":",2)
 		if (data.length>1){
@@ -569,6 +571,10 @@ function send(str, grouped) {
 						case "#cmd":
 							send(GetCmd(cmd[1]))
 							break;
+						case "#rcmd":
+							if (cmd.length>1){
+								send(GetCmd(cmd[(Math.floor(Math.random() * cmd.length))]))
+							}
 						case "#setvar":
 							if (cmd.length>2 && cmd[1]){
 								world.SetVariable(cmd[1],cmd.slice(2).join(" "))
@@ -1039,7 +1045,7 @@ function do_lian(num)
 	if (lst == null || lst == "") return;
 
 	num = num - 1;
-	lst = lst.split("|");
+	lst = lst.replace(newlinere,"|").split("|");
 	if (num >= lst.length) return;
 
 	var res = new Array;
@@ -3817,7 +3823,13 @@ function on_alias(name, line, wildcards)
 			if (cmdname){
 				send(GetCmd(cmdname))
 			}
-			break	
+			break
+			case "rcmd":
+				var cmds=wcs[0]
+				if (cmds){
+					send(line)
+				}
+				break			
 		case "login":
 			world.Connect();	
 			world.send(get_var("id"))
@@ -4498,6 +4510,8 @@ function CmdMpf(){
 	var str=get_var("cmd_backstab")
 	return str?str:"mpf"
 }
+
+var holderre=/\$\*/g
 function CmdPfmlich(name){
 	var str=get_var("cmd_cheapshot")
 
@@ -4507,7 +4521,7 @@ function CmdPfmlich(name){
 	if (!name){
 		name=""
 	}
-	return str.replace("$*",name)
+	return str.replace(holderre,name)
 }
 //--------------------------------------------------------------------------------
 function on_xuemo(name, output, wildcards)

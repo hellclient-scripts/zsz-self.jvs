@@ -6761,6 +6761,29 @@ Channel = "zsz-self.jvs"
   OmitFromOutput = false
   OmitFromCommandHistory = false
 
+[[Aliases]]
+  ID = "rcmd"
+  Name = "rcmd"
+  Enabled = true
+  Match = "#rcmd *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
 
 [[Aliases]]
   ID = "d1d5cnq4t2np6073fgcs8r"

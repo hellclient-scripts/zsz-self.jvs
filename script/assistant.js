@@ -580,7 +580,23 @@ InfoUIDataBuiltinroomsGridOnFilter=function(name,id,code,data){
 BuiltinroomsGrid.setonview("InfoUIDataBuiltinroomsGridOnView")
 InfoUIDataBuiltinroomsGridOnView=function(name,id,code,data){
     if (code==0 && data){
-        Userinput.alert("","查看内建房间",mapper.lines[data-0])
+        var cmds=data.split(" ")
+        if (cmds.length>1){
+            BuiltinroomsGrid.hide()
+            goto(cmds[1]);
+            return
+        }
+        var list=Userinput.newlist("查看内建房间",mapper.lines[data-0],false)
+        var result=Mapper.getexits(data)
+        list.append("go "+data,"前往该房间")
+        result.forEach(function(exit){
+            let name=Mapper.getroomname(exit.to)
+            if (name){
+                list.append(exit.to,"查看出口["+name+"]: "+exit.command)
+            }
+        })
+        list.send("InfoUIDataBuiltinroomsGridOnView")
+
     }
 }
 }
