@@ -4573,7 +4573,7 @@ function on_xuemo(name, output, wildcards)
 				if (query("xuemo/step") == 8) send("freport");
 			} else {
 				world.EnableTimer("t_pfm", false);
-				send("get bone staff;get zombie blood;get ghost fire");										
+				send("get bone staff;get zombie blood;get ghost fire;#q");										
 				set("room/id",2834);
 				set("xuemo/step",7);
 				set("xuemo/target",true);
@@ -4797,7 +4797,8 @@ function on_xuemo(name, output, wildcards)
 						set("xuemo/target6",true);
 						break;
 					case "心武": 
-						send("get spirit tower");
+						world.Note("spirit tower")
+						send("get spirit tower;#q");
 						set("room/id",2833);
 						set("xuemo/step",4);
 						set("nextstep/cmds", "give spirit tower to ding yi;freport;jiqu");
