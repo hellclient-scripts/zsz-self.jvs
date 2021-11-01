@@ -1101,9 +1101,7 @@ function kill_cmd()
 				if (tmp[i].indexOf("jingang") == -1) cmd += ";" + tmp[i];
 			}
 		}
-		if (!InSmartMode){
-			if (pfm != "") cmd += ";" + pfm;
-		}
+		if (pfm != "") cmd += ";" + pfm;
 		cmd += ";#q";
 	}
 	var on_kill=query("npc/onkill")
@@ -1677,7 +1675,7 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy 50 狼牙箭 from tie jiang");
 		tl = 66;
 	} else
-	if ((query("item/gangbiao") - 0 + query("item/zhen")) < 200 && (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao")))	 {
+	if ((query("item/gangbiao") - 0 + query("item/zhen")) < 400 && (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao")))	 {
 		set("item/buy", "100 gangbiao from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy 100 gangbiao from tie jiang");
 		tl = 66;
@@ -2454,19 +2452,12 @@ function on_kill(name, output, wildcards)
 			set("npc/onkill",get_var("name_npc"))
 			var tmp = get_var("cmd_pfm");
 			if (tmp == "shot" || tmp.indexOf("mpf") != -1) return;
-
 			if (query("npc/wd") == 1){
-				if (InSmartMode){
-					send(CmdPfmlich());
-				}else{
-					send(CmdMpf());
-				}
+					send(CmdMpf())
 			}else{
 				set("npc/wd", 0);
-				if (InSmartMode){
-					send(get_var("cmd_pfm") + ";#q");
-				}
 			}
+			send(get_var("cmd_pfm") + ";#q");
 			break;
 		case "kl_wd":	// ^(> )*(@name_npc)微一凝神，运起太极神功，全身灌满真气，衣裳无风自舞，气势迫人。
 			var fam = get_var("id_pass");
@@ -4720,7 +4711,7 @@ function on_xuemo(name, output, wildcards)
 					tl = 2834;	
 					break;
 				case 8:
-					send("tuna 200;dazuo 200;"+CmdMpf());
+					send("tuna 200;dazuo 200;"+CmdMpf()+";#q");
 					set("xuemo/target",true);
 					set("nextstep/cmds", "do 3 freport;#t+ xm_nobusy;#ts+ t_pfm");
 					set("nextstep/flag", "COMMANDS");									
