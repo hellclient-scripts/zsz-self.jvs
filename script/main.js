@@ -585,6 +585,22 @@ function send(str, grouped) {
 								world.SetVariable(cmd[1],"")
 							}
 							break	
+						case "#weapon":
+								if (cmd.length<3 || (cmd[1]!="wield" && cmd[1]!="wear")){
+									world.Note("装备格式错误，应为 #weapon wield myblade 或 #weapon wear mystrike")
+									break;
+								}
+								let weapon=cmd.slice(2).join(" ")
+								let wieldcmd=cmd[1] +" " +weapon
+								let unwieldcmd
+								if (cmd[1]=="wield"){
+									unwieldcmd="unwield "+weapon
+								}else{
+									unwieldcmd="remove "+weapon
+								}
+								send("wp1off;alias wp1on "+wieldcmd+";alias wp1off "+unwieldcmd+";wp1on;#q")
+								world.SetVariable("id_weapon",weapon)
+						break							
 						case "#roomid":
 							if (cmd[1] != null && cmd[1] != "") set("room/id", cmd[1] - 0)
 							break
@@ -3815,12 +3831,15 @@ function on_alias(name, line, wildcards)
 				send(GetCmd(cmdname))
 			}
 			break
-			case "rcmd":
+		case "rcmd":
 				var cmds=wcs[0]
 				if (cmds){
 					send(line)
 				}
-				break			
+		break			
+		case "weapon":
+				send(line)
+		break			
 		case "login":
 			world.Connect();	
 			world.send(get_var("id"))
@@ -3944,7 +3963,7 @@ function on_boss(name, output, wildcards)
 			"骷髅头" : "skull", "精金" : "perfect metal", "木灵" : "perfect wood", "炎晶" : "earth fire", "玄冰" : "cold ice", 
 			"金块" : "jin kuai", "金锭" : "jin ding", "金条" : "jin tiao", "小金元宝" : "xiao yuanbao","大金元宝" : "da yuanbao", 
 			"乾坤塔符石" : "rune03", "混元道果符石" : "rune04", "傲世诀符石" : "rune02","灵通术符石" : "rune01","灵性符石" : "rune05","九龙诀符石" : "rune08","金刚伏魔符石" : "rune09",
-			"密宝奇珍" : "mibao qizhen","青龙臂铠" : "qinglong key"};
+			"密宝奇珍" : "mibao qizhen","青龙臂铠" : "qinglong key","「守城录」":"strategy book"};
 					
 			var item = wcs[2];
 			var id = list[item];
@@ -3963,6 +3982,7 @@ function on_boss(name, output, wildcards)
 			world.EnableTrigger("wk_busy", false);
 			world.EnableTrigger("bs_sea", false);
 			world.EnableTrigger("bs_sea1", true);
+			send(get_var("cmd_3boss"))
 			send("kill " + wcs[2] + ";" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
 			open_pfm();
 			break;

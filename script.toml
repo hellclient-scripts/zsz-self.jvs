@@ -261,7 +261,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2l3qv73fgcs2s"
   Name = "bs_drop"
   Enabled = true
-  Match = "^[> ]*当(.*)一声，一(只|个|块|粒|根|颗|枚|锭|片|束|些|份)(.*)从天而降，掉落在你面前。"
+  Match = "^[> ]*当(.*)一声，一(只|个|块|粒|根|颗|枚|锭|片|束|些|份|本)(.*)从天而降，掉落在你面前。"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6784,6 +6784,28 @@ Channel = "zsz-self.jvs"
   OmitFromOutput = false
   OmitFromCommandHistory = false
 
+[[Aliases]]
+  ID = "weapon"
+  Name = "weapon"
+  Enabled = true
+  Match = "#weapon *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
 
 [[Aliases]]
   ID = "d1d5cnq4t2np6073fgcs8r"
@@ -6985,10 +7007,6 @@ Channel = "zsz-self.jvs"
   Desc = "房屋信息"
   Intro = "设置后会将1933-1949设置为对应的房屋信息\n格式为'包子铺 bzp 1558'"
 
-[[RequiredParams]]
-  Name = "cmd_3boss"
-  Desc = "3小副本准备命令"
-  Intro = "打3个小BOSS副本进入前的设置（例如切换pfm，yun powerup等）"
 
 [[RequiredParams]]
   Name = "cmd_aquest"
@@ -6999,16 +7017,26 @@ Channel = "zsz-self.jvs"
   Name = "cmd_bquest"
   Desc = "接Quest后命令"
   Intro = "接QM任务后的命令研究+练习，新手期这里请慎重，内力不够，频繁研究练习会导致效率降低，建议：吸气吸精就可以）"
-
 [[RequiredParams]]
-  Name = "cmd_digong"
-  Desc = "地宫准备命令"
-  Intro = "地宫副本进入前的设置（例如切换pfm，yun powerup等）"
-
+  Name = "cmd_pre"
+  Desc = "重连后命令"
+  Intro = "副本任务或重新连线后的设置"
+[[RequiredParams]]
+  Name = "cmd_3boss"
+  Desc = "3小副本准备命令"
+  Intro = "打3个小BOSS副本进入前的设置（例如切换pfm，yun powerup等）"
 [[RequiredParams]]
   Name = "cmd_jxz"
   Desc = "聚贤庄准备命令"
   Intro = "聚贤庄副本进入前的设置（例如切换pfm，yun powerup等）"
+[[RequiredParams]]
+  Name = "cmd_digong"
+  Desc = "地宫准备命令"
+  Intro = "地宫副本进入前的设置（例如切换pfm，yun powerup等）"
+[[RequiredParams]]
+  Name = "cmd_xm"
+  Desc = "血魔准备命令"
+  Intro = "血魔副本进入前的设置（例如切换pfm，yun powerup等）"
 
 [[RequiredParams]]
   Name = "cmd_kill"
@@ -7045,16 +7073,12 @@ Channel = "zsz-self.jvs"
 [[RequiredParams]]
   Name = "bool_smartmode"
   Desc = "智能模式"
-  Intro = "是否使用智能模式（F否T是）"
+  Intro = "是否使用智能模式（F否T是），功能开发中，请勿使用"
 
 [[RequiredParams]]
   Name = "list_cmd"
   Desc = "|分割的命令列表"
   Intro = "由|分割的命令列表，格式为 yp:yun powerup|ys:yun shield|mpf:xxxx,可以在send时通过#cmd mpf 的形式发送"
-[[RequiredParams]]
-  Name = "cmd_pre"
-  Desc = "重连后命令"
-  Intro = "副本任务或重新连线后的设置"
 
 [[RequiredParams]]
   Name = "cmd_study"
@@ -7075,11 +7099,6 @@ Channel = "zsz-self.jvs"
   Name = "cmd_wait"
   Desc = "闲时命令"
   Intro = "QM任务杀完NPC后，砍错头，需要等着接信时候的设置（吸气+吸精+汲取或吐纳）"
-
-[[RequiredParams]]
-  Name = "cmd_xm"
-  Desc = "血魔准备命令"
-  Intro = "血魔副本进入前的设置（例如切换pfm，yun powerup等）"
 
 [[RequiredParams]]
   Name = "id"
