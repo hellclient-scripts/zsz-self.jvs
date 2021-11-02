@@ -7071,6 +7071,10 @@ Channel = "zsz-self.jvs"
   Desc = "偷袭"
   Intro = "面对强大的敌人时的第一次攻击，在打有特防的npc/巫妖时使用，一般设置为 普通攻击+Busy技能，用于打破对手yun powerup的busy并busy对方。留空会发送 pfm_lich 到游戏"
 [[RequiredParams]]
+  Name = "cmd_jiqu"
+  Desc = "汲取指令"
+  Intro = "汲取的指令，留空发送mjq"
+[[RequiredParams]]
   Name = "bool_smartmode"
   Desc = "智能模式"
   Intro = "是否使用智能模式（F否T是），功能开发中，请勿使用"

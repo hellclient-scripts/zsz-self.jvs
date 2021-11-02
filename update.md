@@ -5,15 +5,43 @@
 * 加入钢镖开关bool_gangbiao,设为t会自动买钢镖,设为f需要判断pfm里是否有yuce字眼，钢镖购买量提升为400
 * list_lian技能可以同时通过 | 和回车来分割不同的技能
 * 加入变量cmd_cheapshot,即原来的pfm_lich用于晕血魔副本的巫妖,留空会发送pfm_lich到服务器，和原来的表现一致
-* 加入变量cmd_backstab,即原来的mpf用于攻击有特防npc和血魔丁一，留空会发送mpf到服务器，和原来的表现一致
+* 加入变量cmd_backstab,即原来的mpf用于攻击有特防npc和血魔丁一，留空会发送mpf到服务器，和原来的表现一致。注：为保证兼容性，杀丁一时留空发的还是cmd_pfm。
 * 血魔丁一的pfm从原来的cmd_pfm变成mpf，以便做针对性的设置
 * 加入变量list_cmd，类似list_lian, | 或回车分隔 按名字注册的命令，可以通过 #cmd 名字发送。格式为 pfm:yong sowrd.kuangfeng and throwing.yuce;busy:yong throwing.tianhua twice,然后#cmd pfm
 * 加入指令#cmd #cmd 命令名 可以使用list_cmd里注册过的命令。一般用于cmd_pfm等位置
-* 加入指令#setvar和#unsetvar,用于修改变量设置。主要用于cmd_pre和cmd_xuemo，切换副本和qm的设置。比如 #setvar cmd_pfm #cmd pfm ;#setvar cmd_pfm #cmd lian
+* 加入指令#setvar和#unsetvar,用于修改变量设置。主要用于cmd_pre和cmd_xuemo，切换副本和qm的设置。格式为 #setvar 变量名 变量值 ;#unsetvar 变量名
 * 加入命令#rcmd,随机执行给定的list_cmd里的指令，一般用于qm随机找npc学技能或者门贡商店换商品。比如 #rcmd fmjz fmgao fmlu
+* 加入命令#weapon,格式为#weapon wield staffa #weapon wear strikea。用于切换武器，修改id_weapon,并会占据wp1on和wp1off的alias。
 * 加入变量bool_showbusy,设为t会显示每个任务的busy时间(从npc晕倒到npc死亡)
 * 由于原客户端部分apibug,客户端需要升级到1101版本
 * 1101客户端有两个额外的修改，一个是通过上下箭头切换历史发送命令，另一个是原历史命令按钮改为批量发送功能，方便留post或做计划
+
+### 关于#cmd和#weapon用普渡和葵花做qm范例
+
+list_cmd为
+
+```
+pudu:yun recover;yong staff.twice
+kuihua:yun recover;yong sword.wu and sword.you
+you:yong recover;yong sword.you twice
+```
+
+cmd_pre为
+```
+#weapon wield staffa;#setvar cmd_pfm #cmd pudu;#setvar cmd_backstab #cmd pudu;
+```
+
+* cmd_3boss
+* cmd_jxz
+* cmd_xm
+* cmd_digong
+```
+#weapon wield sworda;#setvar cmd_pfm #cmd kuihua;#setvar cmd_backstab #cmd you 
+```
+为了保证正常修理，id_weapon3为
+```
+sworda,staffa,armora
+```
 ## 21.10.04
 * 加入将军府的rideto路径，id_pass设为jjf2可以使用
 * 不保存记忆水晶，以免卡住

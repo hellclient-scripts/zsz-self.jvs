@@ -598,7 +598,7 @@ function send(str, grouped) {
 								}else{
 									unwieldcmd="remove "+weapon
 								}
-								send("wp1off;alias wp1on "+wieldcmd+";alias wp1off "+unwieldcmd+";wp1on;#q")
+								send("wp2off;wp1off;alias wp1on "+wieldcmd+";alias wp1off "+unwieldcmd+";wp1on;#q")
 								world.SetVariable("id_weapon",weapon)
 						break							
 						case "#roomid":
@@ -958,7 +958,7 @@ function InSmartMode(){
 }
 
 function IsXuemoBoss(){
-	return query("boss/start")&&query("boss/kill")=="xuemo"&&query("boss/name")=="丁一";
+	return query("boss/start")&&query("boss/kill")=="xuemo"&&query("boss/name")=="丁一"&&get_var("cmd_backstab");
 }
 
 function perform()
@@ -1774,7 +1774,7 @@ function do_prepare()
 		tl = get_var("loc_study");
 	} else
 	if (query("hp/th") > get_var("max_th") && can_jiqu()) {
-		set("nextstep/cmds", "#t+ pe_jiqu1;#t+ pe_jiqu3;yun recover;yun regenerate;mjq");
+		set("nextstep/cmds", "#t+ pe_jiqu1;#t+ pe_jiqu3;yun recover;yun regenerate;"+CmdMjq());
 		tl = get_var("loc_dazuo");
 	} else
 	if (query("hp/exp") > get_var("max_exp")) {
@@ -1821,7 +1821,7 @@ function do_prepare()
 			if (can_fuben("xuemo") && get_var("list_boss").indexOf("xuemo") != -1) {
 				set("boss/kill", "xuemo");
 				set("xuemo/step", 1);
-				set("nextstep/cmds", "#tg+ gxm;#t+ dg_map0;#t+ dg_mape;look wall;push coffin;mjq");
+				set("nextstep/cmds", "#tg+ gxm;#t+ dg_map0;#t+ dg_mape;look wall;push coffin;"+CmdMjq());
 				tl = 2831;
 			} else{
 				set("nextstep/cmds", "quest " + get_var("id_master"));
@@ -3951,7 +3951,7 @@ function on_boss(name, output, wildcards)
 			world.EnableTimer("t_pfm", false); 
 			send("fleave");
 			if (query("boss/kill") == "digong" || query("boss/kill") == "xuemo") {
-				send("mjq");
+				send(CmdMjq());
 				dg_maze.init(1);
 			}
 			break;
@@ -4521,13 +4521,19 @@ function CmdMpf(){
 	var str=get_var("cmd_backstab")
 	return str?str:"mpf"
 }
-
+function CmdMjq(){
+	var str=get_var("cmd_jiqu")
+	return str?str:"mjq"
+}
 var holderre=/\$\*/g
 function CmdPfmlich(name){
 	var str=get_var("cmd_cheapshot")
 
 	if (!str){
 		str=""
+	}
+	if (str==""){
+		return "pfm_lich "+name
 	}
 	if (!name){
 		name=""
@@ -4588,7 +4594,7 @@ function on_xuemo(name, output, wildcards)
 				set("room/id",2834);
 				set("xuemo/step",7);
 				set("xuemo/target",true);
-				set("nextstep/cmds", "give all to ding yi;freport;jiqu");
+				set("nextstep/cmds", "give all to ding yi;freport;"+CmdMjq());
 				set("nextstep/flag", "COMMANDS");
 				dg_maze.cloc = dg_maze.leave;
 				dg_maze.tloc = -1;
@@ -4714,7 +4720,7 @@ function on_xuemo(name, output, wildcards)
 					set("xuemo/target1",false);
 					set("xuemo/target2",false);
 					set("xuemo/target3",false);
-					set("nextstep/cmds", "freport;jiqu");
+					set("nextstep/cmds", "freport;"+CmdMjq());
 					set("nextstep/flag", "COMMANDS");
 					tl = 2835;
 					break;
@@ -4812,7 +4818,7 @@ function on_xuemo(name, output, wildcards)
 						send("get spirit tower;#q");
 						set("room/id",2833);
 						set("xuemo/step",4);
-						set("nextstep/cmds", "give spirit tower to ding yi;freport;jiqu");
+						set("nextstep/cmds", "give spirit tower to ding yi;freport;"+CmdMjq());
 						set("nextstep/flag", "COMMANDS");
 						dg_maze.cloc = dg_maze.lockrm1;
 						dg_maze.tloc = -1;
