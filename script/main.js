@@ -584,7 +584,11 @@ function send(str, grouped) {
 							if (cmd.length>1 && cmd[1]){
 								world.SetVariable(cmd[1],"")
 							}
-							break	
+							break
+						case "#jiqu":{
+							send(CmdMjq())
+							break
+						}	
 						case "#weapon":
 								if (cmd.length<3 || (cmd[1]!="wield" && cmd[1]!="wear")){
 									world.Note("装备格式错误，应为 #weapon wield myblade 或 #weapon wear mystrike")
@@ -3963,7 +3967,7 @@ function on_boss(name, output, wildcards)
 			"骷髅头" : "skull", "精金" : "perfect metal", "木灵" : "perfect wood", "炎晶" : "earth fire", "玄冰" : "cold ice", 
 			"金块" : "jin kuai", "金锭" : "jin ding", "金条" : "jin tiao", "小金元宝" : "xiao yuanbao","大金元宝" : "da yuanbao", 
 			"乾坤塔符石" : "rune03", "混元道果符石" : "rune04", "傲世诀符石" : "rune02","灵通术符石" : "rune01","灵性符石" : "rune05","九龙诀符石" : "rune08","金刚伏魔符石" : "rune09",
-			"密宝奇珍" : "mibao qizhen","青龙臂铠" : "qinglong key","「守城录」":"strategy book"};
+			"密宝奇珍" : "mibao qizhen","青龙臂铠" : "qinglong key","「守城录」":"strategy book","守城录":"strategy book"};
 					
 			var item = wcs[2];
 			var id = list[item];
