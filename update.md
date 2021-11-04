@@ -1,4 +1,5 @@
 # 更新记录
+#yanjiu加入判断，不到10点潜能不研究
 加入变量cmd_jiqu,用于设置汲取命令，如#wp1on;jiqu sword-cognize.可以美合#rcmd 随机汲取武学和剑道
 加入#jiqu指令，发送cmd_jiqu到mud
 ## 21.11.01

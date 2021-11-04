@@ -1047,9 +1047,11 @@ function get_study()
 	if (lt == null || lt == "") return "";
 
 	var pot = query("hp/pot");
+	if (pot<10){
+		return "";
+	}
 	var mpot = 100 + query("other/n_yj")*50;
 	if (pot > mpot) pot = mpot;
-
 	var re = new RegExp("[^;|,:]+", "g"); 
 	lt = lt.match(re);
 	var ix = Math.floor(Math.random() * lt.length);
