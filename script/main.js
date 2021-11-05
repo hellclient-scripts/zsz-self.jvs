@@ -2033,6 +2033,7 @@ function on_step(name, output, wildcards)
 			var cmd = query("room/cmd");
 			if (cmd != "") {
 				send(cmd);
+				send("#q");
 				set("room/cmd", "");
 			}
 

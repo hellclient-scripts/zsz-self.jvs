@@ -1,4 +1,5 @@
 # 更新记录
+#解决cmd_aquest和cmd_bquest可能不触发的问题
 #yanjiu加入判断，不到10点潜能不研究
 加入变量cmd_jiqu,用于设置汲取命令，如#wp1on;jiqu sword-cognize.可以美合#rcmd 随机汲取武学和剑道
 加入#jiqu指令，发送cmd_jiqu到mud
