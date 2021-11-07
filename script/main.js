@@ -44,6 +44,7 @@ var dbase_data = {
 	"xuemo"		: {"npc" : "", "step" : 1,"target" : false,"target1" : false, "target2" : false, "target3" : false, "target4" : false, "target5" : false, "target6" : false },
 	"digong"	: {"npc" : "", "step" : 1, "g_getk" : false,"n_gman" : 0,"passwd" : "a"},
 	"trceatlu":false,
+	"lastdrunk":0,
 	"miss":{"fail":false,"until":0},
 	};    
 
@@ -1707,6 +1708,11 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy shui dai from xiao er");
 		tl = 27;
 	} else
+	if ((!check_in_3boss()) && get_var("bool_drunk" )&& query("item/jiuping") < 10) {
+		set("item/buy", "zui xunfeng from yang laoban");
+		set("nextstep/cmds", "#t+ pe_buy;buy zui xunfeng from yang laoban");
+		tl = 313;
+	} else	
 	if ((!check_in_3boss()) && query("item/food") < 5) {
 		set("item/buy", "10 gan liang from xiao er");
 		set("nextstep/cmds", "#t+ pe_buy;buy 10 gan liang from xiao er");
@@ -2512,7 +2518,7 @@ function on_kill(name, output, wildcards)
 			set("npc/find", 0);
 			set("npc/coor",-1);
 			set("npc/status", "flee");
-			if (query("hp/dispel")) {
+			if (query("hp/dispel") && !get_var("bool_drunk")) {
 				ydispel(true);
 				return;
 			}
@@ -2607,7 +2613,7 @@ function on_kill(name, output, wildcards)
 			world.EnableTriggerGroup("gkl1", 0);
 			if (npc == wcs[1]) set("npc/status", "head");
 
-			if (query("hp/dispel")) {
+			if (query("hp/dispel")&& !get_var("bool_drunk")) {
 				ydispel(true);
 				return;
 			}
@@ -2638,7 +2644,7 @@ function on_kill(name, output, wildcards)
 
 			world.EnableTriggerGroup("gkl", 0);
 			world.EnableTriggerGroup("gkl1", 0);
-			if (query("hp/dispel")) {
+			if (query("hp/dispel")&&!get_var("bool_drunk")) {
 				ydispel(true);
 				return;
 			}
@@ -2920,7 +2926,13 @@ function on_prepare(name, output, wildcards)
 			break;
 	}
 }
-
+function on_drunk(){
+	set("lastdrunk",(new Date()).getTime())
+}
+function CmdDrink(){
+	let drunked=(new Date()).getTime()-query("lastdrunk")
+	return (get_var("bool_drunk") && drunked>60000)?"drink zui xunfeng;drink zui xunfeng":"drink shui dai"
+}
 function on_hp(name, output, wildcards)
 {
 	var wcs = VBArray(wildcards).toArray();
@@ -2959,13 +2971,13 @@ function on_hp(name, output, wildcards)
 			set("hp/th", (wcs[2] - 0));
 
 			if (query("hp/food") < 150 || query("hp/water") < 150) {
-				send("halt;eat gan liang;drink shui dai;#q");
+				send("halt;eat gan liang;"+CmdDrink()+";#q");
 			} else {
 				if (query("hp/food") < 210)
 					add_room_cmd("eat gan liang");
 
 				if (query("hp/water") < 210)
-					add_room_cmd("drink shui dai");
+					add_room_cmd(CmdDrink());
 			}
 
 			if (query("hp/qi") < query("hp/max_qi") - 30)
@@ -3001,6 +3013,7 @@ function on_item(name, output, wildcards)
 			set("item/lsword", 0);
 			set("item/iblade", 0);
 			set("item/shuidai", 0);
+			set("item/jiuping", 0);
 			set("item/gift", "null");
 			set("item/cash", 0);
 			set("item/9hua", 0);
@@ -3034,6 +3047,8 @@ function on_item(name, output, wildcards)
 				set("item/cash", num);
 			else if (output.indexOf("牛皮水袋") != -1)
 				set("item/shuidai", num);
+			else if (output.indexOf("醉熏风") != -1)
+				set("item/jiuping", num);				
 			else if (output.indexOf("干粮") != -1)
 				set("item/food", num);
 			else if (output.indexOf("长剑") != -1)
@@ -3191,7 +3206,7 @@ function on_global(name, output, wildcards)
 				var eq = query("hp/eff_qi");
 				if (eq < 21) send("eat jiuhua wan;hp");
 
-				if (query("hp/dispel")) {
+				if (query("hp/dispel")&&!!get_var("bool_drunk")) {
 					ydispel(true);
 					return;
 				}
@@ -3471,7 +3486,9 @@ function on_global(name, output, wildcards)
 			break
 	}
 }
-
+function CmdDispel(){
+	return get_var("bool_drunk")?"":"yun dispel"
+}
 function on_dispel(name, output, wildcards)
 {
 	var wcs = VBArray(wildcards).toArray();
@@ -3518,7 +3535,7 @@ function on_dispel(name, output, wildcards)
 			switch (query("dispel/flag")) {
 				case "yd":
 					set("dispel/flag", "yd");
-					send("yun dispel;dazuo");
+					send(CmdDispel()+";dazuo");
 					break;
 				case "dan":
 					set("dispel/flag", "ydr");
@@ -3526,12 +3543,12 @@ function on_dispel(name, output, wildcards)
 					break;
 				case "ydr":
 					set("dispel/flag", "dazuo1");
-					send("yun recover;yun regenerate;hp;yun dispel;dazuo");
+					send("yun recover;yun regenerate;hp;"+CmdDispel()+";dazuo");
 					break;
 				case "dazuo1":
 					if (query("room/id") == query("room/chat")) {
 						set("dispel/flag", "inchat");
-						send("special yuan;yun recover;yun regenerate;hp;yun dispel;dazuo");
+						send("special yuan;yun recover;yun regenerate;hp;"+CmdDispel()+";dazuo");
 						return;
 					}
 
@@ -3572,7 +3589,7 @@ function on_dispel(name, output, wildcards)
 					if (eq < 65)
 						send("yun recover;yun regenerate;yun heal;dazuo");
 					else
-						send("yun recover;yun regenerate;yun dispel;dazuo");
+						send("yun recover;yun regenerate;"+CmdDispel()+";dazuo");
 					break;
 				case "inchat":
 					ydispel(false);
@@ -3798,6 +3815,9 @@ function on_alias(name, line, wildcards)
 		case "goto":
 			goto(wcs[0]);
 			break;
+		case "radar":
+			PrintRadar();
+			break;			
 		case "kill":
 			var npc = wcs[0];
 			var loc = wcs[1];
