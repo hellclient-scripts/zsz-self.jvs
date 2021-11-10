@@ -1900,7 +1900,7 @@ Channel = "zsz-self.jvs"
   Name = "qt_give"
   Enabled = true
   Match = "^(> )*(.{2,5})(.*)(对|看了看)你道：“(又除了一害，很好！|好极了！什么大侠，不堪一击！|干得好，漂亮！|算了，听说这人已经被杀了，你不用再辛苦了。|你干不了就算了，让别人做吧！|连这点小事都干不了？算了吧。)”"
-  Send = "dd"
+  Send = ""
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
@@ -7179,7 +7179,10 @@ Channel = "zsz-self.jvs"
   Name = "cmd_ttg"
   Desc = "听涛阁指令"
   Intro = "进入听涛阁后执行的的指令，没啥用（老牛觉得）"
-
+[[RequiredParams]]
+  Name = "cmd_master"
+  Desc = "给头后的指令"
+  Intro = "give head to master后的指令，留空发送dd"
 [[RequiredParams]]
   Name = "cmd_wait"
   Desc = "闲时命令"

@@ -1,5 +1,6 @@
 var data_familys = {
     "桃花岛"   : {"masterid" : "huang yaoshi",		"mastername" : "黄药师",	"masterloc" : 1990, "sleeploc" : 1995, "id_family" : "th",	"dazuoloc" : 1994},
+    "桃花岛(襄阳)"   : {"masterid" : "huang rong",		"mastername" : "黄蓉",	"masterloc" : 178, "sleeploc" : 1949, "id_family" : "th2",	"dazuoloc" : 1949},
     "关外胡家" : {"masterid" : "hu fei",			"mastername" : "胡斐",		"masterloc" : 2355, "sleeploc" : 2364, "id_family" : "hu",	"dazuoloc" : 1243},
     "雪山寺"   : {"masterid" : "jiumo zhi",		"mastername" : "鸠摩智",	"masterloc" : 2139, "sleeploc" : 2364, "id_family" : "xs",	"dazuoloc" : 2140},
     "神龙教"   : {"masterid" : "pang toutuo",		"mastername" : "胖头陀",	"masterloc" :   41, "sleeploc" : 2477, "id_family" : "sld",	"dazuoloc" : 40},
@@ -186,13 +187,14 @@ function quick_start(){
         "bool_echo":"t",
         "bool_miss":"f",
         "cmd_kill":"yun recover;wp2off;wp1on",
-        "cmd_mache":"mjq",
+        "cmd_mache":"#jiqu",
         "cmd_pfm":pfm=="shot"?"shot":"yun recover;"+pfm,
-        "cmd_studying":"mjq",
-        "cmd_wait":"yun recover;mjq",
+        "cmd_studying":"#jiqu",
+        "cmd_wait":"yun recover;#jiqu",
         "cmd_npcfaint":"wp1off;wp2on",
         "id_weapon":weapon,
         "id_weapon2":weapon,
+        "id_weapon3":weapon,
         "list_qask":"很远",
         "max_pot":"400",
         "max_th":"500",
@@ -214,8 +216,8 @@ function quick_start(){
     send(GetVariable("id"))
     send(GetVariable("passw"))
     send("y")
-    send("set auto_regenerate")
-    send("alias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan3 touch xxx;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu xxx jiuhua wan;alias mtc0 touch xxx;alias mtc touch xxx;alias mjq jiqu")
+    send("set auto_regenerate;set auto_drinkout")
+    send("alias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu 20 jiuhua wan;alias mjq jiqu")
     send("alias wp1on "+wieldcmd+weapon+";alias wp1off "+unwieldcmd+weapon)
     send("alias wp2on "+wieldcmd+weapon+";alias wp2off "+unwieldcmd+weapon)
     world.Note("初始化完毕，请根据实际情况调整变量和别名")

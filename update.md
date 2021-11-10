@@ -1,8 +1,13 @@
 # 更新记录
-#解决cmd_aquest和cmd_bquest可能不触发的问题
-#yanjiu加入判断，不到10点潜能不研究
-加入变量cmd_jiqu,用于设置汲取命令，如#wp1on;jiqu sword-cognize.可以美合#rcmd 随机汲取武学和剑道
-加入#jiqu指令，发送cmd_jiqu到mud
+* 血魔发本等待时由直接汲取改为发送cmd_wait
+* 解决cmd_aquest和cmd_bquest可能不触发的问题
+* yanjiu加入判断，不到10点潜能不研究
+* 加入变量cmd_jiqu,用于设置汲取命令，如#wp1on;jiqu sword-cognize.可以配合合#rcmd 随机汲取武学和剑道，留空发送mjq
+* 加入#jiqu指令，发送cmd_jiqu到mud
+* 加入bool_drunk,喝醉熏风，不yun dispel,需要配合群邪辟易天赋
+* 加入cmd_master命令，留空发送dd，给头后执行的命令
+* 调整钢镖购买和玉蜂针逻辑
+* 适当增加cmd_digong的调用次数，方便powerup等
 ## 21.11.01
 * 加入地图管理功能，在小人图标中查看
 * 加入聚贤装捡守城录

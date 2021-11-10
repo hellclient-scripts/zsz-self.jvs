@@ -1833,7 +1833,7 @@ function do_prepare()
 			if (can_fuben("xuemo") && get_var("list_boss").indexOf("xuemo") != -1) {
 				set("boss/kill", "xuemo");
 				set("xuemo/step", 1);
-				set("nextstep/cmds", "#tg+ gxm;#t+ dg_map0;#t+ dg_mape;look wall;push coffin;"+CmdMjq());
+				set("nextstep/cmds", "#tg+ gxm;#t+ dg_map0;#t+ dg_mape;look wall;push coffin;"+get_var("cmd_wait"));
 				tl = 2831;
 			} else{
 				set("nextstep/cmds", "quest " + get_var("id_master"));
@@ -2391,6 +2391,7 @@ function on_quest(name, output, wildcards)
 			break;
 		case "qt_give":	// ^(> )*(@master_name)(.*)，(对|看了看)你道：“(又除了一害，很好！|好极了！......
 			set("npc/status", "end");
+			send(get_var("cmd_master"))
 			world.SetVariable("name_npc", "aa");
 			world.EnableTrigger("qt_nobody", false);
 			if (output.indexOf("算了") != -1) {
@@ -2541,7 +2542,7 @@ function on_kill(name, output, wildcards)
 			set("npc/status", "faint");
 			//var cmd = "gzhen " + query("npc/id") + ";" + get_var("cmd_npcfaint") + ";hp;i";
 			var cmd = "";
-			if (query("item/zhen") < 399) cmd = "gzhen " + query("npc/id") + ";" 
+			if (query("item/zhen") < 699) cmd = "gzhen " + query("npc/id") + ";" 
 			set("npc/busystart",(new Date()).getTime())
 			cmd +=get_var("cmd_npcfaint") + ";i;hp";
 			var weapons=(get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon2")+";"+get_var("id_weapon3")).split(";")
@@ -3206,7 +3207,7 @@ function on_global(name, output, wildcards)
 				var eq = query("hp/eff_qi");
 				if (eq < 21) send("eat jiuhua wan;hp");
 
-				if (query("hp/dispel")&&!!get_var("bool_drunk")) {
+				if (query("hp/dispel")&&!get_var("bool_drunk")) {
 					ydispel(true);
 					return;
 				}
@@ -3494,7 +3495,7 @@ function on_dispel(name, output, wildcards)
 	var wcs = VBArray(wildcards).toArray();
 	switch (name) {
 		case "yd_dispel":	// ^(> )*(忽然浑身一阵剧痛，你中的化骨绵掌毒发了！|忽然你觉得四肢百赅是似乎有无......
-			if (query("hp/exp") < 101000)
+			if (query("hp/exp") < 101000 || get_var("bool_drunk"))
 				return;
 
 			set("hp/dispel", true);
@@ -3978,7 +3979,7 @@ function on_boss(name, output, wildcards)
 			world.EnableTimer("t_pfm", false); 
 			send("fleave");
 			if (query("boss/kill") == "digong" || query("boss/kill") == "xuemo") {
-				send(CmdMjq());
+				send(get_var("cmd_wait"));
 				dg_maze.init(1);
 			}
 			break;
@@ -4408,7 +4409,7 @@ function on_digong(name, output, wildcards)
 		case "dg_desk":	// ^(> )*当前房间分配的机关序号：(.*)
 			var n = query("digong/step");
 			var n_m = {1: "A",2: "B",3: "C",4: "D",5: "E"};
-			
+			send(get_var("cmd_digong")+";#q")			
 			if (n_m[n] == wcs[1])
 				send("move desk");
 			else 
@@ -4621,7 +4622,7 @@ function on_xuemo(name, output, wildcards)
 				set("room/id",2834);
 				set("xuemo/step",7);
 				set("xuemo/target",true);
-				set("nextstep/cmds", "give all to ding yi;freport;"+CmdMjq());
+				set("nextstep/cmds", "give all to ding yi;freport;"+get_var("cmd_wait"));
 				set("nextstep/flag", "COMMANDS");
 				dg_maze.cloc = dg_maze.leave;
 				dg_maze.tloc = -1;
@@ -4735,7 +4736,7 @@ function on_xuemo(name, output, wildcards)
 			set("xuemo/target5",true);
 			set("xuemo/target6",true);
 			//world.note("dg_maze.cloc = dg_maze.enter"+dg_maze.cloc+"dd"+dg_maze.enter);
-			send("halt;"+get_var("cmd_xm"));
+			send("halt;"+get_var("cmd_xm")+";#q");
 			
 			var tl = 2834;
 			switch (stp) {
@@ -4747,7 +4748,7 @@ function on_xuemo(name, output, wildcards)
 					set("xuemo/target1",false);
 					set("xuemo/target2",false);
 					set("xuemo/target3",false);
-					set("nextstep/cmds", "freport;"+CmdMjq());
+					set("nextstep/cmds", "freport;"+get_var("cmd_wait"));
 					set("nextstep/flag", "COMMANDS");
 					tl = 2835;
 					break;
@@ -4845,7 +4846,7 @@ function on_xuemo(name, output, wildcards)
 						send("get spirit tower;#q");
 						set("room/id",2833);
 						set("xuemo/step",4);
-						set("nextstep/cmds", "give spirit tower to ding yi;freport;"+CmdMjq());
+						set("nextstep/cmds", "give spirit tower to ding yi;freport;"+get_var("cmd_wait"));
 						set("nextstep/flag", "COMMANDS");
 						dg_maze.cloc = dg_maze.lockrm1;
 						dg_maze.tloc = -1;
