@@ -3070,7 +3070,7 @@ function on_item(name, output, wildcards)
 				set("item/qlkey", num);			
 			else if (output.indexOf("玉蜂针") != -1) {
 				set("item/zhen", num);
-				if (num > 699) send("keep 100 yufeng zhen;hand yufeng zhen");
+				if (num > 1199) send("keep 100 yufeng zhen;hand yufeng zhen");
 			}
 
 			break;
