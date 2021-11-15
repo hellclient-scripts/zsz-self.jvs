@@ -74,7 +74,7 @@ OnMods=function(name,id,code,data){
                 Userinput.alert("CallbackSanIntro","自动san武器介绍","需要有自己的房子，需要将资源存储在gift_loc的聚宝箱内。大约需要1.5w存款,200 magic water,200 renshen wan,20 feicui lan,30 puti zi,30 jiuzhuan jindan,30 xiandan,30 xisui dan。为了提高效率，请将min_jingli设为0")
                 return
             case "lian":
-                Userinput.prompt("CallbackPromptLian","请设置你的的联系命令","如 wp1off;lian unarmed 50;","")
+                Userinput.prompt("CallbackPromptLian","请设置你的的练习指令","如 wp1off;lian unarmed 50;","")
                 return
             case "warehouse":
                 Mods.Modules.warehouse.List()
