@@ -574,8 +574,10 @@ function send(str, grouped) {
 							break;
 						case "#rcmd":
 							if (cmd.length>1){
+								cmd.shift()
 								send(GetCmd(cmd[(Math.floor(Math.random() * cmd.length))]))
 							}
+							break
 						case "#setvar":
 							if (cmd.length>2 && cmd[1]){
 								world.SetVariable(cmd[1],cmd.slice(2).join(" "))
