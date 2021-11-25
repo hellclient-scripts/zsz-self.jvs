@@ -1705,7 +1705,7 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy 100 gangbiao from tie jiang");
 		tl = 66;
 	} else
-	if ((!check_in_3boss()) && query("item/shuidai") < 3) {
+	if ((!check_in_3boss()) && query("item/shuidai") < 5) {
 		set("item/buy", "shui dai from xiao er");
 		set("nextstep/cmds", "#t+ pe_buy;buy shui dai from xiao er");
 		tl = 27;
