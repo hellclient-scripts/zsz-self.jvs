@@ -7367,6 +7367,10 @@ Channel = "zsz-self.jvs"
   Name = "bool_drunk"
   Desc = "醉酒模式"
   Intro = "设为T后，不yun dispel,会买酒喝。只有 群邪辟易 的id才考虑开此模式"
+[[RequiredParams]]
+  Name = "bool_missonly"
+  Desc = "仅miss模式"
+  Intro = "设为T后，miss失败后不会进入步行模式"
 
 [[RequiredParams]]
   Name = "list_assist"

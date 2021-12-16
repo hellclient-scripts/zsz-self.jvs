@@ -250,7 +250,9 @@ function query(str,no_mfail)
 	var re = new RegExp("[^\/]+", "g");
 	var ar = str.match(re);
 	if (ar.length < 1) {
-		world.note("query():变量[" + str + "]不存在！");
+		if (!no_mfail){
+			world.note("query():变量[" + str + "]不存在！");
+		}
 		return no_mfail?null:m_FAIL;
 	}
 
@@ -258,7 +260,9 @@ function query(str,no_mfail)
 	for (var i=0; i<ar.length; i++) {
 		qr = qr[ar[i]];
 		if (qr == null) {
-			world.note("query():变量[" + str + "]不存在！");
+			if (!no_mfail){
+				world.note("query():变量[" + str + "]不存在！");
+			}
 			return no_mfail?null:m_FAIL;
 		}
 	}
@@ -355,13 +359,17 @@ function get_path(fl, tl)
 	var str, pas;
 
 	pas = get_var("id_pass");
+	if (!query("allitem/shen she",true) && pas.indexOf("bt")>-1){
+		pas=""
+	}
 	if (get_var("bool_miss") && query("stab/miss")){
 		var date = new Date();
 		var time = date.getTime();
-		if (time>query("miss/until")){
+		if (time>query("miss/until")||get_var("bool_missonly")){
 	 		pas += "," + get_var("id");
 		}
 	}
+
 	mapper.exec("mush " + fl + " " + tl + " " + pas);
 	str = mapper.result;
 	if (str == "null") {
@@ -1720,6 +1728,10 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_buy;buy 10 gan liang from xiao er");
 		tl = 27;
 	} else
+	if(get_var("id_pass").indexOf("bt")>-1 && !query("allitem/shen she",true)){
+		set("nextstep/cmds", "ask ouyang ke about 引路神蛇;i;set no_teach prepare");
+		tl=22
+	}else
 	if (query("weapons/"+get_var("id_weapon")) < 35 || (query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo"))&&!check_in_3boss()) {
 		var wp = get_var("id_weapon");
 		set("weapon/id",wp),
@@ -2169,7 +2181,7 @@ function on_walk(name, output, wildcards)
 			world.DiscardQueue();
 			world.EnableTrigger("wk_busy", false);
 			if (output.indexOf("感觉相当飘忽") != -1)
-				if (query("miss/fail")){
+				if (query("miss/fail")&&!get_var("bool_missonly")){
 					stop_all()
 					var date = new Date();
 					var time = date.getTime();

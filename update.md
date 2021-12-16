@@ -1,5 +1,8 @@
 # 更新记录
 
+## 21.12.16
+加入bool_missonly，解决天机等必须miss的门派初期的问题
+id_fam设为bt后会自动ask ouyang ke about 引路神蛇
 ## 21.11.20
 * 修正 rcmd问题
 * 购买水袋的数量+2,减少在沙漠晕的概率
