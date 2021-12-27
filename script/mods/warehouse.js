@@ -55,7 +55,7 @@
         var list=Userinput.newlist("物资管理","请选择你要管理的物资",true)
         list.append("饮食","[饮食]为计划的ID准备水袋和干粮 shuidai ganliang")
         list.append("九花","[九花]制作九花玉露丸的材料 jiuhua wan")
-        list.send("Mods.Modules.warehouse.Prompt")    
+        list.publish("Mods.Modules.warehouse.Prompt")    
     }
     warehouse.ModuleCheck=function(){
         if (!query("xiang/_max",true)){

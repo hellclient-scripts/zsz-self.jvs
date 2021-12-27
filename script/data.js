@@ -230,7 +230,7 @@ var data_locations=[
             var loc=data_locations[key]
             list.append(loc.loc,loc.name+"("+loc.id+")  @"+loc.loc+" LOC")
         }
-        list.send("callback_list_loc")
+        list.publish("callback_list_loc")
    }
    function callback_list_loc(name,id,code,data){
        if (code===0){

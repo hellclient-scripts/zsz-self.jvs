@@ -50,7 +50,7 @@ function prompt_list_fam(){
         var fam=data_familys[key]
         list.append(key,key+" "+ fam.id_family+" "+fam.mastername+fam.masterloc)
     }
-    list.send("callback_list_fam")
+    list.publish("callback_list_fam")
   }
 function callback_list_fam(name,id,code,data){
    if (code==0){
@@ -255,7 +255,7 @@ function quick_start(){
         list.append("ShowMods","扩展模块")
         
     }
-    list.send("do_script_assist")
+    list.publish("do_script_assist")
    }
 
    function do_script_assist(name,id,code,data){
@@ -348,7 +348,7 @@ function quick_start(){
         list.append("96999699","96999699 npc lv 950")
         list.append("109999699","109999699 npc lv 970")
         list.append("99999999999","99999999999 npc lv 1000")
-        list.send("callback_exp_max")
+        list.publish("callback_exp_max")
    }
    function callback_exp_max(name,id,code,data){
     if (code==0){
@@ -364,7 +364,7 @@ function quick_start(){
         var npc=data_npcs[key]
         list.append(npc.id,npc.name+"(xue "+npc.id+") @"+npc.loc)
     }
-        list.send("callback_study_loc")
+        list.publish("callback_study_loc")
    }
 
    function callback_study_loc(name,id,code,data){
@@ -510,7 +510,7 @@ function prompt_boss(){
     list.append("digong","秦皇陵墓(digong)")
     list.append("xuemo","诡异墓园(xuemo)")
     list.setvalues(get_var("list_boss").split(","))
-    list.send("callback_boss")
+    list.publish("callback_boss")
 }
 function callback_boss(name,id,code,data){
     if (code==0){
@@ -525,7 +525,7 @@ function prompt_list_assist(){
     cmds.forEach(function(data){
         list.append(data,data)
     });
-    list.send("callback_list_assist")
+    list.publish("callback_list_assist")
 
 }
 function callback_list_assist(name,id,code,data){
@@ -597,7 +597,7 @@ InfoUIDataBuiltinroomsGridOnView=function(name,id,code,data){
                 list.append(exit.to,"查看出口["+name+"]: "+exit.command)
             }
         })
-        list.send("InfoUIDataBuiltinroomsGridOnView")
+        list.publish("InfoUIDataBuiltinroomsGridOnView")
 
     }
 }

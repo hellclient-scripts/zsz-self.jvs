@@ -129,7 +129,7 @@ ShowMods=function(){
     list.append("san","自动San兵器")
     list.append("lian","练习技能/读书")
     list.append("warehouse","聚宝箱管理")
-    list.send("OnMods")
+    list.publish("OnMods")
 }
 
 Mods.Require("mods/san.js")
