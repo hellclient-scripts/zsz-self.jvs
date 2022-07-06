@@ -6,13 +6,19 @@ OnClose = ""
 OnConnect = "at_connect"
 OnDisconnect = "at_disconnect"
 OnBroadcast = "onBroadcast"
+OnHUDClick = ""
+OnResponse = ""
 OnAssist = "on_script_asssist"
+OnBuffer = ""
+OnSubneg = "OnSubneg"
+OnBufferMin = 0
+OnBufferMax = 0
 Channel = "zsz-self.jvs"
 
 [[Triggers]]
   ID = "d1d5cnq4t2kjb373fgcs2k"
   Name = "bs_sea"
-  Enabled = true
+  Enabled = false
   Match = "^  (.*)(海怪|水怪|水巨灵|海巨灵)\\((.*)\\)"
   Send = ""
   ColourChangeType = 0
@@ -167,7 +173,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2l31273fgcs2p"
   Name = "bs_sea1"
-  Enabled = true
+  Enabled = false
   Match = "^[> ]*(水怪|海怪|水巨灵|海巨灵)扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！"
   Send = ""
   ColourChangeType = 0
@@ -198,7 +204,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2l3aa73fgcs2q"
   Name = "bs_end0"
-  Enabled = true
+  Enabled = false
   Match = "^[> ]*(一阵时空的扭曲将你传送到另一个地方|虚空$)"
   Send = ""
   ColourChangeType = 0
@@ -229,7 +235,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2l3iq73fgcs2r"
   Name = "bs_end"
-  Enabled = true
+  Enabled = false
   Match = "^[> ]*(镇海神龙|僵尸道长|东方不败|血战聚贤庄|秦陵地宫|诡异墓园)(.*)副本将在30秒后消失。"
   Send = ""
   ColourChangeType = 0
@@ -260,7 +266,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2l3qv73fgcs2s"
   Name = "bs_drop"
-  Enabled = true
+  Enabled = false
   Match = "^[> ]*当(.*)一声，一(只|个|块|粒|根|颗|枚|锭|片|束|些|份|本)(.*)从天而降，掉落在你面前。"
   Send = ""
   ColourChangeType = 0
@@ -353,7 +359,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2l4l673fgcs2v"
   Name = "bs_kill"
-  Enabled = true
+  Enabled = false
   Match = "^[> ]*看起来(镇海神龙|东方不败|僵尸道长|少林僧人|江湖豪杰|丐帮弟子|西域刀客|逍遥护法|市井帮众|武当剑客|单正|游骥|游驹|玄难大师|玄寂大师|徐长老|丁一|秦始皇僵尸)想杀死你！"
   Send = ""
   ColourChangeType = 0
@@ -415,7 +421,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2l58073fgcs31"
   Name = "bs_nobusy"
-  Enabled = true
+  Enabled = false
   Match = "^[> ]*你要往这上面镶嵌什么物品？"
   Send = ""
   ColourChangeType = 0
@@ -466,6 +472,68 @@ Channel = "zsz-self.jvs"
   LinesToMatch = 0
   WildcardLowerCase = false
   Group = "xm1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1d5cnq4t2l5h373fgcs32-a"
+  Name = "on_nobusy"
+  Enabled = false
+  Match = "^你要往这上面镶嵌什么物品？"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_busy_test_nobusy"
+  SendTo = 0
+  Sequence = 10
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "busytest"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1d5cnq4t2l5h373fgcs32-b"
+  Name = "on_busy_test_busy"
+  Enabled = false
+  Match = "^先忙完了你的事情再做这件事情吧！"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_busy_test_busy"
+  SendTo = 0
+  Sequence = 10
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "busytest"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -629,96 +697,6 @@ Channel = "zsz-self.jvs"
   Italic = false
   Variable = ""
 
-[[Triggers]]
-  ID = "on_npcheal"
-  Name = "on_npcheal"
-  Enabled = false
-  Match = "^  (.{2,4})正坐在地下运功疗伤。$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_npcheal"
-  SendTo = 0
-  Sequence = 999
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "on_npc"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-[[Triggers]]
-  ID = "on_npc"
-  Name = "on_npc"
-  Enabled = false
-  Match = "^  (.{2,4})\\((.+ .+)\\)$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_npc"
-  SendTo = 0
-  Sequence = 999
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "on_npc"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-[[Triggers]]
-  ID = "on_radar"
-  Name = "on_radar"
-  Enabled = false
-  Match = "^  (.+)\\((tuobo seng|illidan stormrage)\\)$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_radar"
-  SendTo = 0
-  Sequence = 999
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "on_npc"
-  IgnoreCase = true
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""  
 [[Triggers]]
   ID = "d1d5cnq4t2l74f73fgcs38"
   Name = "sm_exit"
@@ -1619,6 +1597,37 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
+  ID = "allitem"
+  Name = "allitem"
+  Enabled = false
+  Match = "^(  |□)((\\S*)[壶|支|顶|块|朵|面|匹|位|支|颗|个|把|只|粒|张|枚|件|柄|根|块|文|两|碗|滴]){0,1}(\\S+)\\((.*)\\)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_allitem"
+  SendTo = 0
+  Sequence = 90
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gim"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
   ID = "d1d5cnq4t2lh3673fgcs45"
   Name = "im_sell"
   Enabled = false
@@ -1710,36 +1719,7 @@ Channel = "zsz-self.jvs"
   Inverse = false
   Italic = false
   Variable = ""
-[[Triggers]]
-  ID = "allitem"
-  Name = "allitem"
-  Enabled = false
-  Match = "^(  |□)((\\S*)[壶|支|顶|块|朵|面|匹|位|支|颗|个|把|只|粒|张|枚|件|柄|根|块|文|两|碗|滴]){0,1}(\\S+)\\((.*)\\)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_allitem"
-  SendTo = 0
-  Sequence = 90
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gim"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
+
 [[Triggers]]
   ID = "d1d5cnq4t2lht873fgcs48"
   Name = "im_wp"
@@ -1794,6 +1774,37 @@ Channel = "zsz-self.jvs"
   LinesToMatch = 0
   WildcardLowerCase = false
   Group = "gim"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1d5cnq4t4lhka73fgcs47-a"
+  Name = "on_trc_eatlu"
+  Enabled = false
+  Match = "^你定神一看，这才发现自己已经到了(.*)场。$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_trc_eatlu"
+  SendTo = 0
+  Sequence = 90
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -3076,7 +3087,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2ltsj73fgcs5j"
   Name = "bs_target"
-  Enabled = true
+  Enabled = false
   Match = "^杀死\\s+(.*) :\\s+(\\d+)\\/(\\d+)。"
   Send = "hp"
   ColourChangeType = 0
@@ -3166,8 +3177,6 @@ Channel = "zsz-self.jvs"
   Italic = false
   Variable = ""
 
-
-
 [[Triggers]]
   ID = "d1d5cnq4t2luvv73fgcs5n"
   Name = ""
@@ -3211,6 +3220,192 @@ Channel = "zsz-self.jvs"
   SoundFileName = ""
   SoundIfInactive = false
   Script = ""
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "deposit"
+  Name = "deposit"
+  Enabled = true
+  Match = "^┃【钱庄】(.+)两黄金(.+白银|)\\s+┃$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_global"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "drunk"
+  Name = "drunk"
+  Enabled = true
+  Match = "^你觉得脑中昏昏沉沉，身子轻飘飘地，大概是醉了。$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_drunk"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "jubaoxiang"
+  Name = "jubaoxiang"
+  Enabled = true
+  Match = "^当前聚宝箱的容量状态为 ：\\[已占\\]\\s*(\\d*)\\s*/ \\[最大\\] \\s*(\\d*)\\s*$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_jubaoxiang"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "jubaoxiang_end"
+  Name = "jubaoxiang_end"
+  Enabled = false
+  Match = "^──────────────────────────$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_jubaoxiang_end"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "jubaoxiang_item"
+  Name = "jubaoxiang_item"
+  Enabled = false
+  Match = "^\\[\\s*\\d+\\]  (.+)\\((.+)\\)\\s+(\\d+)$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_jubaoxiang_item"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "jubaoxiang_start"
+  Name = "jubaoxiang_start"
+  Enabled = false
+  Match = "^──────────────────────────$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_jubaoxiang_start"
   SendTo = 0
   Sequence = 100
   ExpandVariables = false
@@ -4535,7 +4730,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2mckd73fgcs73"
   Name = "connected"
-  Enabled = true
+  Enabled = false
   Match = "(你连线进入|重新连线完毕。)"
   Send = ""
   ColourChangeType = 0
@@ -5277,38 +5472,6 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t3movq73fgcs7q"
-  Name = "modcommand"
-  Enabled = true
-  Match = "^[> ]*设定环境变数：auto_regenerate = \"(.*)\""
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "OnModCommand"
-  SendTo = 0
-  Sequence = 130
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-
-[[Triggers]]
   ID = "d1d5cnq4t2mpcs73fgcs7r"
   Name = "weapon"
   Enabled = true
@@ -5342,7 +5505,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2mppt73fgcs7s"
   Name = "condelay"
-  Enabled = true
+  Enabled = false
   Match = "你不能在(.*)秒钟之内连续重新连线。"
   Send = ""
   ColourChangeType = 0
@@ -5402,6 +5565,37 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
+  ID = "d1d5cnq4t3movq73fgcs7q"
+  Name = "modcommand"
+  Enabled = true
+  Match = "^[> ]*设定环境变数：auto_regenerate = \"(.*)\""
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "OnModCommand"
+  SendTo = 0
+  Sequence = 130
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
   ID = "d1d5cnq4t5mgs273fgcs78"
   Name = "3boss_recon"
   Enabled = true
@@ -5431,6 +5625,7 @@ Channel = "zsz-self.jvs"
   Inverse = false
   Italic = false
   Variable = ""
+
 [[Triggers]]
   ID = "d1d5cnq4t6mgs273fgcs78"
   Name = "on_jiangshi_room"
@@ -5461,6 +5656,7 @@ Channel = "zsz-self.jvs"
   Inverse = false
   Italic = false
   Variable = ""
+
 [[Triggers]]
   ID = "d1d5cnq4t6mgs373fgcs78"
   Name = "on_seadragon_room"
@@ -5491,6 +5687,7 @@ Channel = "zsz-self.jvs"
   Inverse = false
   Italic = false
   Variable = ""
+
 [[Triggers]]
   ID = "d1d5cnq4t2ncts73fgcs7u"
   Name = "yh_busy"
@@ -5552,36 +5749,7 @@ Channel = "zsz-self.jvs"
   Inverse = false
   Italic = false
   Variable = ""
-[[Triggers]]
-  ID = "drunk"
-  Name = "drunk"
-  Enabled = true
-  Match = "^你觉得脑中昏昏沉沉，身子轻飘飘地，大概是醉了。$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_drunk"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = "" 
+
 [[Triggers]]
   ID = "d1d5cnq4t2nduj73fgcs80"
   Name = "yd_dispel"
@@ -6389,19 +6557,19 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t4lhka73fgcs47-a"
-  Name = "on_trc_eatlu"
+  ID = "on_npc"
+  Name = "on_npc"
   Enabled = false
-  Match = "^你定神一看，这才发现自己已经到了(.*)场。$"
+  Match = "^  (.{2,4})\\((.+ .+)\\)$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
   SoundFileName = ""
   SoundIfInactive = false
-  Script = "on_trc_eatlu"
+  Script = "on_npc"
   SendTo = 0
-  Sequence = 90
+  Sequence = 999
   ExpandVariables = false
   Temporary = false
   OneShot = false
@@ -6410,7 +6578,7 @@ Channel = "zsz-self.jvs"
   MultiLine = false
   LinesToMatch = 0
   WildcardLowerCase = false
-  Group = ""
+  Group = "on_npc"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -6420,19 +6588,19 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2l5h373fgcs32-a"
-  Name = "on_nobusy"
+  ID = "on_npcheal"
+  Name = "on_npcheal"
   Enabled = false
-  Match = "^你要往这上面镶嵌什么物品？"
+  Match = "^  (.{2,4})正坐在地下运功疗伤。$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
   SoundFileName = ""
   SoundIfInactive = false
-  Script = "on_busy_test_nobusy"
+  Script = "on_npcheal"
   SendTo = 0
-  Sequence = 10
+  Sequence = 999
   ExpandVariables = false
   Temporary = false
   OneShot = false
@@ -6441,7 +6609,7 @@ Channel = "zsz-self.jvs"
   MultiLine = false
   LinesToMatch = 0
   WildcardLowerCase = false
-  Group = "busytest"
+  Group = "on_npc"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -6449,112 +6617,21 @@ Channel = "zsz-self.jvs"
   Inverse = false
   Italic = false
   Variable = ""
-[[Triggers]]
-  ID = "d1d5cnq4t2l5h373fgcs32-b"
-  Name = "on_busy_test_busy"
-  Enabled = false
-  Match = "^先忙完了你的事情再做这件事情吧！"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_busy_test_busy"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "busytest"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""  
-[[Triggers]]
-  ID = "deposit"
-  Name = "deposit"
-  Enabled = true
-  Match = "^┃【钱庄】(.+)两黄金(.+白银|)\\s+┃$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_global"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""  
 
 [[Triggers]]
-  ID = "jubaoxiang"
-  Name = "jubaoxiang"
-  Enabled = true
-  Match = "^当前聚宝箱的容量状态为 ：\\[已占\\]\\s*(\\d*)\\s*/ \\[最大\\] \\s*(\\d*)\\s*$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_jubaoxiang"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = "" 
-
-[[Triggers]]
-  ID = "jubaoxiang_item"
-  Name = "jubaoxiang_item"
+  ID = "on_radar"
+  Name = "on_radar"
   Enabled = false
-  Match = "^\\[\\s*\\d+\\]  (.+)\\((.+)\\)\\s+(\\d+)$"
+  Match = "^  (.+)\\((tuobo seng|illidan stormrage)\\)$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
   SoundFileName = ""
   SoundIfInactive = false
-  Script = "on_jubaoxiang_item"
+  Script = "on_radar"
   SendTo = 0
-  Sequence = 100
+  Sequence = 999
   ExpandVariables = false
   Temporary = false
   OneShot = false
@@ -6563,93 +6640,14 @@ Channel = "zsz-self.jvs"
   MultiLine = false
   LinesToMatch = 0
   WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
+  Group = "on_npc"
+  IgnoreCase = true
   KeepEvaluating = true
   OmitFromLog = false
   OmitFromOutput = false
   Inverse = false
   Italic = false
-  Variable = "" 
-  [[Triggers]]
-  ID = "jubaoxiang_start"
-  Name = "jubaoxiang_start"
-  Enabled = false
-  Match = "^──────────────────────────$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_jubaoxiang_start"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = "" 
-  [[Triggers]]
-  ID = "jubaoxiang_end"
-  Name = "jubaoxiang_end"
-  Enabled = false
-  Match = "^──────────────────────────$"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_jubaoxiang_end"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = "" 
-
-[[Timers]]
-  ID = "on_gc"
-  Name = "on_gc"
-  Enabled = true
-  Hour = 0
-  Minute = 0
-  Second = 60.0
-  Send = ""
-  Script = "on_gc"
-  AtTime = false
-  SendTo = 0
-  ActionWhenDisconnectd = true
-  Temporary = false
-  OneShot = false
-  Group = ""
   Variable = ""
-  OmitFromLog = false
-  OmitFromOutput = false
 
 [[Timers]]
   ID = "d1d5cnq4t2nqj973fgcs8v"
@@ -6692,7 +6690,7 @@ Channel = "zsz-self.jvs"
 [[Timers]]
   ID = "d1d5cnq4t2nsc173fgcs91"
   Name = "timer1"
-  Enabled = true
+  Enabled = false
   Hour = 0
   Minute = 0
   Second = 1.0
@@ -6727,74 +6725,24 @@ Channel = "zsz-self.jvs"
   OmitFromLog = false
   OmitFromOutput = false
 
-[[Aliases]]
-  ID = "d1d5cnq4t2nop273fgcs8q"
-  Name = "kill"
+[[Timers]]
+  ID = "on_gc"
+  Name = "on_gc"
   Enabled = true
-  Match = "#kl * *"
+  Hour = 0
+  Minute = 0
+  Second = 60.0
   Send = ""
-  Script = "on_alias"
+  Script = "on_gc"
+  AtTime = false
   SendTo = 0
-  Sequence = 0
-  ExpandVariables = false
+  ActionWhenDisconnectd = true
   Temporary = false
   OneShot = false
-  Regexp = false
   Group = ""
-  IgnoreCase = false
-  KeepEvaluating = false
-  Menu = false
-  OmitFromLog = false
   Variable = ""
-  ReverseSpeedwalk = false
-  OmitFromOutput = false
-  OmitFromCommandHistory = false
-
-[[Aliases]]
-  ID = "setvar"
-  Name = "setvar"
-  Enabled = true
-  Match = "#setvar * *"
-  Send = ""
-  Script = "on_alias"
-  SendTo = 0
-  Sequence = 0
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = false
-  Menu = false
   OmitFromLog = false
-  Variable = ""
-  ReverseSpeedwalk = false
   OmitFromOutput = false
-  OmitFromCommandHistory = false
-
-[[Aliases]]
-  ID = "unsetvar"
-  Name = "unsetvar"
-  Enabled = true
-  Match = "#unsetvar *"
-  Send = ""
-  Script = "on_alias"
-  SendTo = 0
-  Sequence = 0
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = false
-  Menu = false
-  OmitFromLog = false
-  Variable = ""
-  ReverseSpeedwalk = false
-  OmitFromOutput = false
-  OmitFromCommandHistory = false
 
 [[Aliases]]
   ID = "cmd"
@@ -6820,33 +6768,10 @@ Channel = "zsz-self.jvs"
   OmitFromCommandHistory = false
 
 [[Aliases]]
-  ID = "rcmd"
-  Name = "rcmd"
+  ID = "d1d5cnq4t2nop273fgcs8q"
+  Name = "kill"
   Enabled = true
-  Match = "#rcmd *"
-  Send = ""
-  Script = "on_alias"
-  SendTo = 0
-  Sequence = 0
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = false
-  Menu = false
-  OmitFromLog = false
-  Variable = ""
-  ReverseSpeedwalk = false
-  OmitFromOutput = false
-  OmitFromCommandHistory = false
-
-[[Aliases]]
-  ID = "weapon"
-  Name = "weapon"
-  Enabled = true
-  Match = "#weapon *"
+  Match = "#kl * *"
   Send = ""
   Script = "on_alias"
   SendTo = 0
@@ -6979,6 +6904,7 @@ Channel = "zsz-self.jvs"
   ReverseSpeedwalk = false
   OmitFromOutput = false
   OmitFromCommandHistory = false
+
 [[Aliases]]
   ID = "login"
   Name = "login"
@@ -7001,11 +6927,12 @@ Channel = "zsz-self.jvs"
   ReverseSpeedwalk = false
   OmitFromOutput = false
   OmitFromCommandHistory = false
+
 [[Aliases]]
-  ID = "stab"
-  Name = "stab"
+  ID = "radar"
+  Name = "radar"
   Enabled = true
-  Match = "#stab"
+  Match = "#radar"
   Send = ""
   Script = "on_alias"
   SendTo = 0
@@ -7023,6 +6950,30 @@ Channel = "zsz-self.jvs"
   ReverseSpeedwalk = false
   OmitFromOutput = false
   OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "rcmd"
+  Name = "rcmd"
+  Enabled = true
+  Match = "#rcmd *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
 [[Aliases]]
   ID = "repeat"
   Name = "repeat"
@@ -7045,11 +6996,81 @@ Channel = "zsz-self.jvs"
   ReverseSpeedwalk = false
   OmitFromOutput = false
   OmitFromCommandHistory = false
+
 [[Aliases]]
-  ID = "radar"
-  Name = "radar"
+  ID = "setvar"
+  Name = "setvar"
   Enabled = true
-  Match = "#radar"
+  Match = "#setvar * *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "stab"
+  Name = "stab"
+  Enabled = true
+  Match = "#stab"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "unsetvar"
+  Name = "unsetvar"
+  Enabled = true
+  Match = "#unsetvar *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 0
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "weapon"
+  Name = "weapon"
+  Enabled = true
+  Match = "#weapon *"
   Send = ""
   Script = "on_alias"
   SendTo = 0
@@ -7088,7 +7109,6 @@ Channel = "zsz-self.jvs"
   Desc = "房屋信息"
   Intro = "设置后会将1933-1949设置为对应的房屋信息\n格式为'包子铺 bzp 1558'"
 
-
 [[RequiredParams]]
   Name = "cmd_aquest"
   Desc = "接Quest前命令"
@@ -7098,22 +7118,27 @@ Channel = "zsz-self.jvs"
   Name = "cmd_bquest"
   Desc = "接Quest后命令"
   Intro = "接QM任务后的命令研究+练习，新手期这里请慎重，内力不够，频繁研究练习会导致效率降低，建议：吸气吸精就可以）"
+
 [[RequiredParams]]
   Name = "cmd_pre"
   Desc = "重连后命令"
   Intro = "副本任务或重新连线后的设置"
+
 [[RequiredParams]]
   Name = "cmd_3boss"
   Desc = "3小副本准备命令"
   Intro = "打3个小BOSS副本进入前的设置（例如切换pfm，yun powerup等）"
+
 [[RequiredParams]]
   Name = "cmd_jxz"
   Desc = "聚贤庄准备命令"
   Intro = "聚贤庄副本进入前的设置（例如切换pfm，yun powerup等）"
+
 [[RequiredParams]]
   Name = "cmd_digong"
   Desc = "地宫准备命令"
   Intro = "地宫副本进入前的设置（例如切换pfm，yun powerup等）"
+
 [[RequiredParams]]
   Name = "cmd_xm"
   Desc = "血魔准备命令"
@@ -7143,18 +7168,22 @@ Channel = "zsz-self.jvs"
   Name = "cmd_pfm"
   Desc = "QM任务绝招"
   Intro = "QM任务PFM设置，（吸气+p）"
+
 [[RequiredParams]]
   Name = "cmd_backstab"
   Desc = "强力攻击"
   Intro = "面对强大的敌人时的强力攻击，在打有特防的npc/巫妖/血魔时使用。留空会发送 pfm 到游戏"
+
 [[RequiredParams]]
   Name = "cmd_cheapshot"
   Desc = "偷袭"
   Intro = "面对强大的敌人时的第一次攻击，在打有特防的npc/巫妖时使用，一般设置为 普通攻击+Busy技能，用于打破对手yun powerup的busy并busy对方。留空会发送 pfm_lich 到游戏"
+
 [[RequiredParams]]
   Name = "cmd_jiqu"
   Desc = "汲取指令"
   Intro = "汲取的指令，留空发送mjq"
+
 [[RequiredParams]]
   Name = "bool_smartmode"
   Desc = "智能模式"
@@ -7179,10 +7208,12 @@ Channel = "zsz-self.jvs"
   Name = "cmd_ttg"
   Desc = "听涛阁指令"
   Intro = "进入听涛阁后执行的的指令，没啥用（老牛觉得）"
+
 [[RequiredParams]]
   Name = "cmd_master"
   Desc = "给头后的指令"
   Intro = "give head to master后的指令，留空发送dd"
+
 [[RequiredParams]]
   Name = "cmd_wait"
   Desc = "闲时命令"
@@ -7347,26 +7378,32 @@ Channel = "zsz-self.jvs"
   Name = "bool_3boss_recon"
   Desc = "三小boss重连"
   Intro = "打3小boss时时候重连开关，适用于较弱的id。注意，不建议开seadragons,容易卡海怪"
+
 [[RequiredParams]]
   Name = "bool_cungift"
   Desc = "保存奖品"
   Intro = "每个任务奖品都会保存，用于gift大米每个任务都尝试兑换礼物后尽快保存"
+
 [[RequiredParams]]
   Name = "bool_nohelp"
   Desc = "禁用帮助找NPC功能"
   Intro = "设为T后，不会请求帮助和帮助寻找npc"
+
 [[RequiredParams]]
   Name = "bool_showbusy"
   Desc = "显示busy"
-  Intro = "设为T后，会显示任务的平均busy时间(npc昏倒到npc死亡)"  
+  Intro = "设为T后，会显示任务的平均busy时间(npc昏倒到npc死亡)"
+
 [[RequiredParams]]
   Name = "bool_gangbiao"
   Desc = "自动买钢镖"
   Intro = "设为T后，自动买钢镖"
+
 [[RequiredParams]]
   Name = "bool_drunk"
   Desc = "醉酒模式"
   Intro = "设为T后，不yun dispel,会买酒喝。只有 群邪辟易 的id才考虑开此模式"
+
 [[RequiredParams]]
   Name = "bool_missonly"
   Desc = "仅miss模式"
