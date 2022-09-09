@@ -1124,7 +1124,7 @@ function kill_cmd()
 	if (id == "no body") {
 		cmd = "#t+ kl_nobody;id here;halt;kill no body;#q";
 	} else {
-		cmd = "#t+ kl_nobody;halt;kill " + id;
+		cmd = "#t+ kl_nobody;halt;kill " + id.toLowerCase();
 		var tmp = get_var("cmd_kill");
 		if (query("hp/eff_qi") > 70) {
 			cmd += ";" + tmp;
@@ -1967,7 +1967,7 @@ function do_askyou()
 			npc_id[i] = sn + " " + npc_id[i];
 
 		set("askyou/idpt", 0);
-		set("npc/id", npc_id[0]);
+		set("npc/id", npc_id[0].toLowerCase());
 			
 	}
 
@@ -2455,7 +2455,7 @@ function on_kill(name, output, wildcards)
 
 			if (name == "kl_npc") {
 				if (wcs[1].indexOf(" ") == -1) return;
-				set("npc/id", wcs[1]);
+				set("npc/id", wcs[1].toLowerCase());
 			}
 		case "kl_npc1":		// ^  (@npc_name)正坐在地下
 			set("askyou/count", 0);
@@ -2475,7 +2475,7 @@ function on_kill(name, output, wildcards)
 			break;
 		case "kl_npc2":		// ^(@npc_name)( )*= (.*)
 			var id = wcs[2].split("、");
-			set("npc/id", id[0]);
+			set("npc/id", id[0].toLowerCase());
 			break;
 		case "kl_fight1":	// ^(> )*你对著(@npc_name)喝道：(.*)
 			//var rm = query("room/id");
@@ -2556,7 +2556,9 @@ function on_kill(name, output, wildcards)
 			set("npc/status", "faint");
 			//var cmd = "gzhen " + query("npc/id") + ";" + get_var("cmd_npcfaint") + ";hp;i";
 			var cmd = "";
-			if (query("item/zhen") < 699) cmd = "gzhen " + query("npc/id") + ";" 
+			if (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao")){
+				if (query("item/zhen") < 699) cmd = "gzhen " + query("npc/id") + ";" 
+			}
 			set("npc/busystart",(new Date()).getTime())
 			cmd +=get_var("cmd_npcfaint") + ";i;hp";
 			var weapons=(get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon2")+";"+get_var("id_weapon3")).split(";")
@@ -2765,7 +2767,7 @@ function on_info(name, output, wildcards)
 			}
 
 			set("askyou/idpt", ix);
-			set("npc/id", npc_id[ix]);
+			set("npc/id", npc_id[ix].toLowerCase());
 			send("ask you xun about " + npc_id[ix]);
 			break;
 	}
@@ -2948,6 +2950,7 @@ function CmdDrink(){
 	let drunked=(new Date()).getTime()-query("lastdrunk")
 	return (get_var("bool_drunk") && drunked>60000)?"drink zui xunfeng;drink zui xunfeng":"drink shui dai"
 }
+
 function on_hp(name, output, wildcards)
 {
 	var wcs = VBArray(wildcards).toArray();
@@ -3496,7 +3499,7 @@ function on_global(name, output, wildcards)
 			send(get_var("cmd_ttg"));
 			break;
 		case "deposit":
-			var deposit=number(wcs[0])
+			var deposit=wcs[0]-0
 			set("deposit",deposit)
 			break
 	}
@@ -4025,7 +4028,7 @@ function on_boss(name, output, wildcards)
 			world.EnableTrigger("bs_sea", false);
 			world.EnableTrigger("bs_sea1", true);
 			send(get_var("cmd_3boss"))
-			send("kill " + wcs[2] + ";" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
+			send("kill " + wcs[2].toLowerCase() + ";" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
 			open_pfm();
 			break;
 
@@ -4393,7 +4396,7 @@ function on_digong(name, output, wildcards)
 				world.EnableTrigger("dg_npc", false);
 				world.EnableTrigger("dg_nobody", true);	
 				world.EnableTrigger("dg_kill", true);	
-				send("kill "+ nn +";#ts+ t_pfm;"+get_var("cmd_pfm"));	
+				send("kill "+ nn.toLowerCase() +";#ts+ t_pfm;"+get_var("cmd_pfm"));	
 			} else
 				send(do_digong());		
 			break;
@@ -4612,7 +4615,7 @@ function on_xuemo(name, output, wildcards)
 */
 			world.EnableTimer("timer1", false);
 			world.EnableTimer("t_pfm", false);
-			var nn = query("xuemo/npc");
+			var nn = query("xuemo/npc").toLowerCase();
 			//set("xuemo/npc","end");
 			world.note("npc:"+nn);
 			world.EnableTrigger("xm_nobusy", false);
@@ -4627,8 +4630,12 @@ function on_xuemo(name, output, wildcards)
 				world.EnableTrigger("xm_nobody", true);	
 				world.EnableTrigger("xm_target", true);	
 				var pp = get_var("cmd_pfm");
-				if (nn == "skeleton lich") pp = CmdPfmlich("skeleton lich");
-				send("hp;n;look;kill "+ nn +";#ts+ t_pfm;"+pp+";#t+ xm_nobusy;jiqu 300");	
+				if (nn == "skeleton lich"){
+					pp = CmdPfmlich("skeleton lich");
+					send("hp;n;#t- kl_nobody;look;kill "+ nn +";kill lord zombie;kill ghost devil;#ts+ t_pfm;"+pp+";#t+ xm_nobusy;jiqu 300");	
+				}else{
+					send("hp;n;#t- kl_nobody;look;kill "+ nn +";#ts+ t_pfm;"+pp+";#t+ xm_nobusy;jiqu 300");	
+				}
 				if (query("xuemo/step") == 8) send("freport");
 			} else {
 				world.EnableTimer("t_pfm", false);
@@ -4704,7 +4711,7 @@ function on_xuemo(name, output, wildcards)
 			if (stp >= 6 && wcs[1] != "巫妖") b_k = true;
 			if (b_k) 
 			 {
-				set("xuemo/npc", wcs[2]);
+				set("xuemo/npc", wcs[2].toLowerCase());
 				//world.note("新npc:"+wcs[2]);
 				if (wcs[1] == "巫妖") {
 					world.EnableTrigger("xm_npc", false);
@@ -4809,7 +4816,7 @@ function on_xuemo(name, output, wildcards)
 				world.EnableTrigger("xm_npc", false);
 				world.EnableTrigger("xm_nobody", true);	
 				world.EnableTrigger("xm_target", true);	
-				send("kill "+ nn +";#ts+ t_pfm;"+get_var("cmd_pfm"));	
+				send("kill "+ nn.toLowerCase() +";#ts+ t_pfm;"+get_var("cmd_pfm"));	
 			} else
 				send(do_xuemo());		
 			break;
