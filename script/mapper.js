@@ -161,7 +161,7 @@ mapper.search=function(fl, tl, fm){
     var tags=fm.split(",")
     Mapper.flashtags()
     Mapper.settags(tags)
-    var result=Mapper.getpath(fl,1,[tl])
+    var result=Mapper.getpath(fl,1,tl.split(","))
     var steps=[]
     if (result){
         result.forEach(function(data){
