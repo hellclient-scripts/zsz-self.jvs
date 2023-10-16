@@ -1803,7 +1803,7 @@ function do_prepare()
 		set("nextstep/cmds", "#t+ pe_jiqu1;#t+ pe_jiqu3;yun recover;yun regenerate;"+CmdMjq());
 		tl = get_var("loc_dazuo");
 	} else
-	if (query("hp/exp") > get_var("max_exp")) {
+	if (get_var("max_exp") && query("hp/exp") > get_var("max_exp")) {
 		set("nextstep/cmds", "#t+ pe_fangqi;fangqi exp");
 		tl = get_var("loc_dazuo");
 	} else
