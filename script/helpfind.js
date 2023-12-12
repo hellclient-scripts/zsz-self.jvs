@@ -142,12 +142,16 @@ function on_npcheal(name, output, wildcards){
     OnNPC(wcs[0],"",query("room/id"))
 }
 function on_gc(name){
-    var t=(new Date()).getTime()
+    //借宝地一用	
+	var t=(new Date()).getTime()
     for (var key in data_helpfind) {
         if (t-data_helpfind[key]>60000){
             delete data_helpfind[key]
         }
     }
+	t = query("other/todo") -0;
+	if (t>0)
+		set("other/todo",t-1);
 }
 
 function PrintRadar(){

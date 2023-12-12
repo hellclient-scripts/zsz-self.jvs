@@ -38,7 +38,7 @@ var dbase_data = {
 	"timer"      : {"count" : 0, "time" : 0, "flag" : "null", "cmd" : "null", "pfm" : 0, "idle" : false},
 	"other"      : {"nextstep" : "", "loc" : "", "focus" : true, "heal" : "", "sleep" : 0, "jiqu" : 0, "study" : 0, "n_yj" : 0, "n_lx" : 0,
 			"qiankun" : false, "brief" : false, "trace" : false, "walk" : false, "backup" : false, "touch" : true, "mtc":false,
-			"getw" : 0, "tell" : 0, "loc1" : ""},
+			"getw" : 0, "tell" : 0, "loc1" : "", "todo" : -1,"todo_cmd" : "",},
 	"askyou"     : {"flag" : false, "loc" : null, "index" : 0, "idpt" : 0, "count" : 0, "none" : false},
 	"boss"       : {"start" : false, "name":"","kill" : "", "step" : 0, "seadragon" : 0, "dongfang" : 0, "jiangshi" : 0, "juxianzhuang" : 1, "digong" : 0, "xuemo" : 0, "target1" : 0, "target2" : 0, "target3" : 0, "target4" : 0, "target5" : 0, "target6" : 0},
 	"xuemo"		: {"npc" : "", "step" : 1,"target" : false,"target1" : false, "target2" : false, "target3" : false, "target4" : false, "target5" : false, "target6" : false },
@@ -68,6 +68,8 @@ eval( Include( "weak.js" ),"weak.js");
 eval( Include( "helpfind.js" ),"helpfind.js");
 eval( Include( "notify.js" ),"helpfind.js");
 eval( Include( "mods.js" ),"mods.js");
+eval( Include( "hud.js" ),"hud.js");
+eval( Include( "push.js" ),"push.js");
 //--------------------------------------------------------------------------------
 function Include( FileName ) {
 	var FileScriptingObject = new ActiveXObject("Scripting.FileSystemObject");
@@ -566,6 +568,12 @@ function send(str, grouped) {
 						case "#yanjiu":
 							send(get_study());
 							break;
+						case "#yj":
+							var rd = query("room/id");
+							if (query("hp/pot") > get_var("min_pot") && rd != 1946 && rd != 2452) {
+								send(get_study2(cmd[1],cmd[2]));								
+							}
+							break;
 						case "#yj2":
 							var rd = query("room/id");
 							if (query("hp/pot") > get_var("min_pot") && rd != 1946 && rd != 2452) {
@@ -723,7 +731,12 @@ function get_var(str)
 		if (res == "true" || res == "yes" || res == "y" || res == "t") res = true;
 		else if (res == "false" || res == "no" || res == "n"  || res == "f") res = false;
 	}
-
+	if (str == "loc_study" && !can_study() && world.GetVariable("loc_study2") != null && world.GetVariable("study_cmd2") != null && world.GetVariable("list_skill2") != null) {
+		res = world.GetVariable("loc_study2");
+	}
+	if (str == "list_skill" && !can_study() && world.GetVariable("loc_study2") != null && world.GetVariable("study_cmd2") != null && world.GetVariable("list_skill2") != null) {
+		res = world.GetVariable("list_skill2");
+	}
 	return res;
 }
 
@@ -736,6 +749,15 @@ function set_status()
 		var time2 = date.getTime();
 		var time1 = 0;
 		var time = 0;
+		
+		var lastk=query("npc/busystart");
+		var num_lk =(time2-lastk)/1000;		
+		str += "距离上次干npc:" + num_lk+"秒";
+		
+		if (query("other/todo")>= 0)
+		{
+			str += "【"+query("other/todo")+"分钟后需做:"+query("other/todo_cmd")+"】";
+		}
 	str += " |npc:" + query("npc/name") + ", loc:" + query("npc/loc");
 	if (query("npc/loc") == "很远") {
 		var fx = query("quest/far");
@@ -753,6 +775,7 @@ function set_status()
 		str += "，线报率:"+rate.toFixed(2)+"%"; 
 	}
 	world.SetStatus(str);
+	updateHUD();
 }
 
 function add_log(str)
@@ -945,7 +968,20 @@ function to_kill(init)
 		world.note(loc + "是无效城市！");
 		return;
 	}
-
+// 出发前判断内力
+	if (query("hp/neili") < get_var("min_neili")) {
+		if (query("room/id") == 65) {
+			set("nextstep/flag", "COMMANDS");
+			set("nextstep/cmds", "hp;set no_teach fill neili");
+			tl = 1927;
+			goto(tl);
+			return;
+		} else {
+			send("yun recover;yun regenerate;hp;set no_teach fill neili");
+			return;
+		} 
+			
+	}
 	set("npc/status", "start");
 	set("search/flag", "AREA1");
 	do_search();
@@ -1005,6 +1041,7 @@ function telldm(flag)
 		case "faint":
 			cnt = "晕倒了:" + query("npc/loc") + "." + query("room/name")
 				+ "." + query("room/id");
+			world.note("晕倒地点:"+cnt);
 			add_log(cnt);
 			break;
 		case "dispel":
@@ -1067,9 +1104,38 @@ function get_study()
 	lt = lt.match(re);
 	var ix = Math.floor(Math.random() * lt.length);
 
-	return get_var("cmd_study") + " " + lt[ix] + " " + pot;
+	if (!can_study() && world.GetVariable("loc_study2") != null && world.GetVariable("study_cmd2") != null && world.GetVariable("list_skill2") != null)  {
+		return get_var("cmd_study2") + " " + lt[ix] + " " + pot;
+	} else {
+		return get_var("cmd_study") + " " + lt[ix] + " " + pot;
+	}
 }
+function get_study2(sk,num)
+{
+	var lt;
+	if (sk == "list_skill" || sk == "" || sk == null) {
+		lt = get_var("list_skill");}
+	else if (sk == "list_skill2" ){
+		lt = get_var("list_skill2");}
+	else 
+		lt = sk;
+		
+	if (lt == null || lt == "") return "";
 
+	var pot = query("hp/pot");
+	if (pot<10){
+		return "";
+	}
+	var mpot = 100 + query("other/n_yj")*50;
+	if (pot > mpot) pot = mpot;
+	if (num > 0 && num < 300) pot = num;
+	
+	var re = new RegExp("[^;|,:]+", "g"); 
+	lt = lt.match(re);
+	var ix = Math.floor(Math.random() * lt.length);
+	return "yanjiu " + lt[ix] + " " + pot;
+
+}
 function do_lian(num)
 {
 	var lst, ix, tmp1, tmp2, str;
@@ -1340,7 +1406,7 @@ function can_sleep()
 
 	return true;
 }
-
+//修改成study1 study2
 function can_study()
 {
 	var time = (new Date()).getTime();
@@ -1795,15 +1861,16 @@ function do_prepare()
 			set("nextstep/cmds", "#t+ pe_dazuo;#t+ pe_dazuof;dazuo " + get_var("num_dazuo"));
 			tl = get_var("loc_dazuo");
 		}
-	} else	if (query("other/backup") || ((!check_in_3boss())&&can_study() && query("hp/pot") > get_var("max_pot"))) {
-		set("nextstep/cmds", "#t+ pe_study;hp;set no_teach study");
+//	} else	if (query("other/backup") || ((!check_in_3boss())&&can_study() && query("hp/pot") > get_var("max_pot"))) {
+	} else	if (query("other/backup") || ((!check_in_3boss()) && query("hp/pot") > get_var("max_pot"))) {
+		set("nextstep/cmds", "#t+ pe_study;#t+ skfull;hp;set no_teach study");
 		tl = get_var("loc_study");
 	} else
 	if (query("hp/th") > get_var("max_th") && can_jiqu()) {
 		set("nextstep/cmds", "#t+ pe_jiqu1;#t+ pe_jiqu3;yun recover;yun regenerate;"+CmdMjq());
 		tl = get_var("loc_dazuo");
 	} else
-	if (get_var("max_exp") && query("hp/exp") > get_var("max_exp")) {
+	if (query("hp/exp") > get_var("max_exp")) {
 		set("nextstep/cmds", "#t+ pe_fangqi;fangqi exp");
 		tl = get_var("loc_dazuo");
 	} else
@@ -2246,6 +2313,7 @@ function on_walk(name, output, wildcards)
 			var exp = query("hp/exp");
 			if (exp < (num * 10000)) {
 				telldm("Help kill " + npc);
+				world.doafter(1, "look");
 				return;
 			} 
 
@@ -2282,6 +2350,9 @@ function on_walk(name, output, wildcards)
 		case "wk_crossf":	// ^(> )*你的内力不够，还是休息一下再说吧。
 			open_timer1(2, "busy", "cross;piao");
 			break;
+		case "wk_xiwall":	// ^(> )*你太累了，还是休息一会儿吧。
+			open_timer1(2, "busy", "yun recover;"+ get_step());
+			break;			
 		case "wk_yell":	// ^(> )*你(.*)一声：“船家！”		
 			world.EnableTrigger("wk_dcbusy", true);
 			world.EnableTrigger("wk_dcready", true);
@@ -3149,16 +3220,25 @@ function on_global(name, output, wildcards)
 			else if (wcs[0] == "study") {
 				set("other/touch", true);
 				if (query("quest/flag") == "null") return;
-
+				if (query("room/id") != get_var("loc_study")) {
+					send("halt");
+					set("nextstep/flag", "COMMANDS");
+					set("nextstep/cmds", "#t+ pe_study;#t+ skfull;hp;set no_teach study");
+					tl = get_var("loc_study");
+					goto(tl);
+					return;
+				}
 				var pot = query("hp/pot") - 0;
-				if ((pot < get_var("min_pot") && query("hp/neili") < get_var("min_neili")) || pot < 100 || !can_study()) {
+				if ((pot < get_var("min_pot") && query("hp/neili") < get_var("min_neili")) || pot < 100) {
 					world.EnableTrigger("pe_study", false);
+					world.EnableTrigger("skfull", false);
 					send("halt;yun regenerate;hp;set no_teach prepare");
 					return;
 				}
 
 				if (query("hp/jing") < 45 && query("hp/neili") < 30 && can_sleep()) {
 					world.EnableTrigger("pe_study", false);
+					world.EnableTrigger("skfull", false);
 					send("halt;yun regenerate;hp;set no_teach prepare");
 					return;
 				}
@@ -3206,7 +3286,19 @@ function on_global(name, output, wildcards)
 					set("room/id", -1);
 					goto(query("nextstep/loc"));
 			}
-			}else if(wcs[0]=="eatlu.check"){
+			}
+						
+			else if (wcs[0] == "fill neili") {
+				if (query("hp/neili") < get_var("min_neili")) {
+					send("hp;dazuo "+get_var("num_dazuo"));
+					world.doafter(1, "set no_teach fill neili");
+					
+				} else {
+					send("halt");
+					to_kill();
+				}			
+			}
+			else if(wcs[0]=="eatlu.check"){
 				send("i;set no_teach eatlu.checked")
 			}else if(wcs[0]=="eatlu.checked"){
 				if (query("allitem/magic water",true)){
@@ -3413,7 +3505,7 @@ function on_global(name, output, wildcards)
 					set("room/id", -1);
 					set("hp/faint", "null");
 					set("quest/flag", "kill");
-					send("#t+ level;cha;hp;i;unset keep_idle;unset map_prompt");
+					send("#t+ level;skills1;hp;i;unset keep_idle;unset map_prompt");
 					close_fb();
 					world.doafter(1, "set no_teach prepare");
 					break;
@@ -3804,10 +3896,11 @@ function on_alias(name, line, wildcards)
 			set("hp/faint", "null");
 			set("quest/flag", "kill");
 			set("other/n_yj",3);
+			set("other/study",1);
 			set("other/n_lx",2);
 			world.EnableTrigger("ga", true);
 			send(get_var("cmd_pre"))
-			send("#t+ level;cha;hp;i;unset keep_idle");
+			send("#t+ level;skills1;hp;i;unset keep_idle");
 			open_timer1(1, "busy", "set no_teach prepare");
 			world.EnableTrigger("setting", true);
 			break;
@@ -3857,6 +3950,19 @@ function on_alias(name, line, wildcards)
 			world.note("别名格式: #kl npc中文 loc中文");
 			to_kill(true);
 			break;
+			
+		case "todo":
+			var time = wcs[0]-0;
+			var todo_cmd = wcs[1];
+			if (time >0) {
+				set("other/todo", time);
+				set("other/todo_cmd", todo_cmd);				
+			} else {
+				set("other/todo", -1);
+				set("other/todo_cmd", "");					
+			}
+
+			break;			
 		case "setvar":
 			var varname=wcs[0]
 			var varvalue=wcs[1]
@@ -3891,6 +3997,22 @@ function on_alias(name, line, wildcards)
 			world.send(get_var("passw"))
 			world.send("y")
 			break;
+		case "exstudycmd":
+			var lsc=get_var("cmd_study"); 
+			world.SetVariable("cmd_study",get_var("cmd_study2"));
+			world.SetVariable("cmd_study2",lsc);
+			
+			lsc=get_var("loc_study");
+			world.SetVariable("loc_study",get_var("loc_study2"));
+			world.SetVariable("loc_study2",lsc);
+			
+			lsc=get_var("list_skill");
+			world.SetVariable("list_skill",get_var("list_skill2"));
+			world.SetVariable("list_skill2",lsc);
+			world.Note("学习指令交换完毕！")
+			world.Note("学习指令1:【"+get_var("cmd_study")+"】【"+get_var("loc_study")+"】【"+get_var("list_skill")+"】")
+			world.Note("学习指令2:【"+get_var("cmd_study2")+"】【"+get_var("loc_study2")+"】【"+get_var("list_skill2")+"】")
+			break;			
 		case "repeat":
 			var times=wcs[0]
 			var cmds=wcs[1]

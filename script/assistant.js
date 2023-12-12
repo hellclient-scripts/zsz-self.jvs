@@ -217,7 +217,7 @@ function quick_start(){
     send(GetVariable("passw"))
     send("y")
     send("set auto_regenerate;set auto_drinkout")
-    send("alias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu 20 jiuhua wan;alias mjq jiqu")
+    send("alias menter0 enter guanjia;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu 20 jiuhua wan;alias mjq jiqu")
     send("alias wp1on "+wieldcmd+weapon+";alias wp1off "+unwieldcmd+weapon)
     send("alias wp2on "+wieldcmd+weapon+";alias wp2off "+unwieldcmd+weapon)
     world.Note("初始化完毕，请根据实际情况调整变量和别名")
@@ -245,6 +245,7 @@ function quick_start(){
         list.append("listskill","设置学习内容")
         list.append("prompt_weapon1","设置主武器")
         list.append("prompt_weapon2","设置副武器")
+		list.append("prompt_todo","设置todo")
         list.append("prompt_min_neili","设置内力")
         list.append("prompt_house","设置房屋")
         list.append("prompt_boss","设置Boss")
@@ -253,7 +254,7 @@ function quick_start(){
 
         }
         list.append("ShowMods","扩展模块")
-        
+        list.append('android_notify','设置安卓客户端通知(试验）')
     }
     list.publish("do_script_assist")
    }
@@ -294,6 +295,9 @@ function quick_start(){
         case "prompt_weapon1":
             prompt_weapon1()
             break
+        case "prompt_todo":
+            prompt_todo()
+            break			
         case "prompt_weapon2":
                 prompt_weapon2()
                 break            
@@ -311,6 +315,9 @@ function quick_start(){
             break;
         case "prompt_list_assist":
             prompt_list_assist()
+            break
+        case 'android_notify':
+            push.TPush.setup()
             break
     }
    }
@@ -442,6 +449,7 @@ function callback_weapon1(name,id,code,data){
 function prompt_weapon2(){
     Userinput.prompt("callback_weapon2","设置副武器","格式为 wield weapon 或 wear weapon","")
 }
+
 function callback_weapon2(name,id,code,data){
     if (code==0){
         var cmd=SplitN(data," ",2)
@@ -461,6 +469,37 @@ function callback_weapon2(name,id,code,data){
         send("alias")
         Userinput.alert("","主武器设置成功","id_weapon2设置为 "+cmd[1]+"别名 wp2on和wp2off 更新")
     }
+}
+function prompt_todo(){
+    Userinput.prompt("callback_todo","设置几分钟后备忘录","填写数字，单位分钟，大于0。否则备忘取消","")
+}
+function callback_todo(name,id,code,data){
+	if (code==0){
+	   if(data>0) {	
+			set("other/todo", data);
+				Userinput.alert("callback_todo_next","设置"+data+"分钟后备忘录","暂时只支持文本显示，不支持执行命令！")		
+	   }else {
+		   set("other/todo", -1);
+		   Userinput.alert("","备忘录已取消","备忘录已取消 ")
+	   }     
+	   
+	}
+}
+function callback_todo_next(name,id,code,data){
+	if (code==0){
+		prompt_todo_cmd()
+	}
+}
+function prompt_todo_cmd(name,id,code,data){
+	var comment=query("other/todo_cmd")
+	Userinput.prompt("callback_todo_cmd","设置备忘录，暂时只支持文本显示。",comment?comment:"无备注",query("other/todo_cmd"))
+}
+
+function callback_todo_cmd(name,id,code,data){
+	if (code==0){
+		set("other/todo_cmd",data)
+		Userinput.alert("","设置备忘录成功","已经设置为: "+query("other/todo_cmd"))
+	}
 }
 
 function prompt_min_neili(){

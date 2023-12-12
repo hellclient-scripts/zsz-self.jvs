@@ -671,7 +671,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2l6ro73fgcs37"
   Name = "step"
-  Enabled = true
+  Enabled = false
   Match = "^    这里(唯一的出口是|明显的出口是|没有任何明显的出路)(.*)"
   Send = ""
   ColourChangeType = 0
@@ -694,7 +694,7 @@ Channel = "zsz-self.jvs"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
-  OmitFromOutput = false
+  OmitFromOutput = true
   Inverse = false
   Italic = false
   Variable = ""
@@ -1105,7 +1105,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2lala73fgcs3l"
   Name = "wk_miss"
-  Enabled = true
+  Enabled = false
   Match = "^(> )*你口中念念有词，转瞬天际一道长虹划过，你驾彩虹而走。"
   Send = ""
   ColourChangeType = 0
@@ -1198,7 +1198,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2ldf573fgcs3o"
   Name = "wk_busy"
-  Enabled = true
+  Enabled = false
   Match = "^(> )*(.*> )*(你的动作还没有完成，不能移动|你逃跑失败|你被拦住了去路|什么都等你忙完了再说吧|等你忙完了再说吧|等你打完了架再说吧|你正忙，等有空了再说。|你觉得(.*)的感觉相当飘忽|你发现有洞穴内并不安全，还是还先清理掉虾兵虾将在走也不迟)"
   Send = ""
   ColourChangeType = 0
@@ -1291,7 +1291,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2lef573fgcs3r"
   Name = "wk_shhu"
-  Enabled = true
+  Enabled = false
   Match = "^(> )*你(突然发现眼前的景象有些迷乱|纵身而起，离|使劲儿一蹦，离|奋力一跃，却离)"
   Send = ""
   ColourChangeType = 0
@@ -1322,7 +1322,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2leni73fgcs3s"
   Name = "wk_missf"
-  Enabled = true
+  Enabled = false
   Match = "^(> )*你摸着(.*)，发了半天的呆。|^(> )*你无法追寻(.*)。|^(> )*你不知道如何追寻这个物品。|^(> )*你穷尽精力，也无法感应到这个物品。"
   Send = ""
   ColourChangeType = 0
@@ -1353,7 +1353,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2levo73fgcs3t"
   Name = "wk_noexit"
-  Enabled = true
+  Enabled = false
   Match = "^(> )*这个方向没有出路。"
   Send = ""
   ColourChangeType = 0
@@ -3273,6 +3273,68 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
+  ID = "d1f2l0p6v2u7ro71rofcr0"
+  Name = "qt_lilian"
+  Enabled = true
+  Match = "^(> )*(.{2,5})摆摆手，对你道：“我现在这里倒是有一些事情，不过待你外出历"
+  Send = "ask @id_master about 历练\nquest @id_master"
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = ""
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1f35l2qp9rfgo73r6rtek"
+  Name = "wk_xiwall"
+  Enabled = true
+  Match = "^(> )*你太累了，还是休息一会儿吧。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_walk"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
   ID = "deposit"
   Name = "deposit"
   Enabled = true
@@ -3369,7 +3431,7 @@ Channel = "zsz-self.jvs"
   ID = "jubaoxiang_end"
   Name = "jubaoxiang_end"
   Enabled = false
-  Match = "^──────────────────────────$"
+  Match = "^----------------------------------------------------$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -3400,7 +3462,7 @@ Channel = "zsz-self.jvs"
   ID = "jubaoxiang_item"
   Name = "jubaoxiang_item"
   Enabled = false
-  Match = "^\\[\\s*\\d+\\]  (.+)\\((.+)\\)\\s+(\\d+)$"
+  Match = "^\\[\\s*\\d+\\](.+)\\((.+)\\)\\s+(\\d+)$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -3431,7 +3493,7 @@ Channel = "zsz-self.jvs"
   ID = "jubaoxiang_start"
   Name = "jubaoxiang_start"
   Enabled = false
-  Match = "^──────────────────────────$"
+  Match = "^----------------------------------------------------$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -3711,7 +3773,7 @@ Channel = "zsz-self.jvs"
   Name = "info"
   Enabled = false
   Match = "^(> )*(@name_info)说道：(.*)(好像听人说过是在|他不是在|据说是躲到|好像去了|已经躲到|好像是去了|但是也有人说他在|有人说在|不过听人说在|听说是在|不过听说他好像在|现在应该是去了)(.*)"
-  Send = ""
+  Send = "yun regenerate"
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
@@ -5352,7 +5414,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2mn0r73fgcs7m"
   Name = "skfull"
-  Enabled = true
+  Enabled = false
   Match = "^[> ]*(也许是缺乏实战经验，你对.*的回答总是无法领会|这项技能你的程度已经不输你师父了)。"
   Send = ""
   ColourChangeType = 0
@@ -5787,7 +5849,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2nduj73fgcs80"
   Name = "yd_dispel"
   Enabled = true
-  Match = "^(> )*(忽然浑身一阵剧痛，你中的|忽然一股寒流夹着一阵灼热涌上心来，你中的生死符发作了！|忽然你觉得四肢百赅是似乎有无数小虫在游走|结果你一个不慎，被火星溅到了衣衫，哪知碧焰|结果只听扑的一声，你被他一掌拍中！一时间|你惊慌失措，连忙后退，然而没能避开|你只觉得伤口一阵灼伤，随即便跟着麻木起来|你只觉全身灼热无比，全身的燃起的碧焰直焚心髓|“喀喇”一声响，你大声惨叫，连退数步|你见滔天热浪扑面涌来，只觉眼前一片通红|你中的剧毒发作了|你只感内息顿滞，真气不畅，一张脸涨得通红|你只感内息顿滞，全身血液竟渐渐的开始凝固起来|你觉得肢体末端一阵僵直|你的脸蛋烧得通红|你嘶哑着嗓子咳了两声|你打了个冷战，头昏沉沉的|你觉得胸臆之间一阵翻腾|你感到胸口处传来阵阵刺痛，全身血液竟似要凝结住一般。|你只觉丹田处有如火焚，便似有千万钢针一齐扎入体内。|你只觉得一股寒意袭上心头，浑身说不出得难受。|忽然你觉得四肢百赅是似乎有无数小虫在游走，麻痒难忍！)"
+  Match = "^(> )*(忽然浑身一阵剧痛，你中的|忽然一股寒流夹着一阵灼热涌上心来，你中的生死符发作了！|忽然你觉得四肢百赅是似乎有无数小虫在游走|结果你一个不慎，被火星溅到了衣衫，哪知碧焰|结果只听扑的一声，你被他一掌拍中！一时间|你惊慌失措，连忙后退，然而没能避开|你只觉得伤口一阵灼伤，随即便跟着麻木起来|你只觉全身灼热无比，全身的燃起的碧焰直焚心髓|“喀喇”一声响，你大声惨叫，连退数步|你见滔天热浪扑面涌来，只觉眼前一片通红|你中的剧毒发作了|你只感内息顿滞，真气不畅，一张脸涨得通红|你只感内息顿滞，全身血液竟渐渐的开始凝固起来|你觉得肢体末端一阵僵直|你的脸蛋烧得通红|你嘶哑着嗓子咳了两声|你打了个冷战，头昏沉沉的|你觉得胸臆之间一阵翻腾|你感到胸口处传来阵阵刺痛，全身血液竟似要凝结住一般。|你只觉丹田处有如火焚，便似有千万钢针一齐扎入体内。|你只觉得一股寒意袭上心头，浑身说不出得难受。)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6158,7 +6220,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2nir473fgcs8c"
   Name = "ga"
-  Enabled = true
+  Enabled = false
   Match = "(游客|古定剑|紫骝马|黄骠马|枣红马|武将|官兵|趟子手|流氓|男孩|女孩|看起来好多|装备效果|装备类型|装备品级|炼制而成|上面镶嵌着|⊙|一道道|一道光圈|一道火光|一面|一串|成了蜂窝|一圈|无法自拔|摇晃不定|兹兹作响|托付些重任|飞沙走石|四下飞舞|神情恍惚|难以醒目|不住的点头|金钱撒地|凶险的紧|枯木回春|山石之雨|赞许|山摇地动|一阵强风|强风破|金黄耀目|翡翠梦境|无数枝干|刮出一阵|跳了下来|─────≡)"
   Send = ""
   ColourChangeType = 0
@@ -6315,7 +6377,7 @@ Channel = "zsz-self.jvs"
   Name = ""
   Enabled = true
   Match = "^(> )*你(觉得河面太宽，没有十足的把握跃过去|看着奔腾不息的白河，心里有点紧张，不敢乱来)"
-  Send = "give 1 silver to chuan fu"
+  Send = "give 1 silver to chuan fu\ngive 1 gold to chuan fu"
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
@@ -6592,7 +6654,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "on_npc"
   Name = "on_npc"
-  Enabled = true
+  Enabled = false
   Match = "^    (.{2,8})\\((.+ .+)\\)$"
   Send = ""
   ColourChangeType = 0
@@ -6623,7 +6685,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "on_npcheal"
   Name = "on_npcheal"
-  Enabled = true
+  Enabled = false
   Match = "^    (.{2,8})正坐在地下运功疗伤。$"
   Send = ""
   ColourChangeType = 0
@@ -6654,7 +6716,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "on_radar"
   Name = "on_radar"
-  Enabled = true
+  Enabled = false
   Match = "^    (.+)\\((tuobo seng|illidan stormrage)\\)$"
   Send = ""
   ColourChangeType = 0
@@ -6726,7 +6788,7 @@ Channel = "zsz-self.jvs"
   Enabled = false
   Hour = 0
   Minute = 0
-  Second = 0.1
+  Second = 1.0
   Send = ""
   Script = "on_timer"
   AtTime = false
@@ -6742,7 +6804,7 @@ Channel = "zsz-self.jvs"
 [[Timers]]
   ID = "d1d5cnq4t2nsvd73fgcs92"
   Name = "t_kmg"
-  Enabled = true
+  Enabled = false
   Hour = 0
   Minute = 0
   Second = 45.0
@@ -6751,6 +6813,25 @@ Channel = "zsz-self.jvs"
   AtTime = false
   SendTo = 0
   ActionWhenDisconnectd = false
+  Temporary = false
+  OneShot = false
+  Group = ""
+  Variable = ""
+  OmitFromLog = false
+  OmitFromOutput = false
+
+[[Timers]]
+  ID = "d1f7oin24vkv6973pc4jfl"
+  Name = "updatehud"
+  Enabled = false
+  Hour = 0
+  Minute = 0
+  Second = 60.0
+  Send = ""
+  Script = "updateHUD()"
+  AtTime = false
+  SendTo = 0
+  ActionWhenDisconnectd = true
   Temporary = false
   OneShot = false
   Group = ""
@@ -7122,6 +7203,52 @@ Channel = "zsz-self.jvs"
   OmitFromOutput = false
   OmitFromCommandHistory = false
 
+[[Aliases]]
+  ID = "d1f3mq74ja69c471hu24pg"
+  Name = "todo"
+  Enabled = true
+  Match = "#todo * *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "d1f3n2opoi3peo71i0o5ok"
+  Name = "exstudycmd"
+  Enabled = true
+  Match = "#exstudycmd"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
 [[RequiredParams]]
   Name = "bool_accept"
   Desc = "接信开关"
@@ -7228,11 +7355,6 @@ Channel = "zsz-self.jvs"
   Intro = "由|分割的命令列表，格式为 yp:yun powerup|ys:yun shield|mpf:xxxx,可以在send时通过#cmd mpf 的形式发送"
 
 [[RequiredParams]]
-  Name = "cmd_study"
-  Desc = "学习指令"
-  Intro = "需要执行的学习研究任务的前缀命令(yanjiu或者xue xxxx)"
-
-[[RequiredParams]]
   Name = "cmd_studying"
   Desc = "学习间隔指令"
   Intro = "2次学习间隔的命令（#lian + 吸气+汲取或者吐纳）"
@@ -7308,11 +7430,6 @@ Channel = "zsz-self.jvs"
   Intro = "问游讯 NPC位置的命令（一般填 很远 ）"
 
 [[RequiredParams]]
-  Name = "list_skill"
-  Desc = "学习列表"
-  Intro = "需要学习或者研究武功名字"
-
-[[RequiredParams]]
   Name = "loc_dazuo"
   Desc = "休整坐标"
   Intro = "打坐吃药或者砍错头等信的坐标"
@@ -7333,14 +7450,39 @@ Channel = "zsz-self.jvs"
   Intro = "师门任务，师傅的坐标"
 
 [[RequiredParams]]
-  Name = "loc_sleep"
-  Desc = "睡觉坐标"
-  Intro = "睡觉的坐标"
+  Name = "cmd_study"
+  Desc = "学习指令"
+  Intro = "需要执行的学习研究任务的前缀命令(yanjiu或者xue suxing)"
 
 [[RequiredParams]]
   Name = "loc_study"
   Desc = "学习坐标"
   Intro = "学习的坐标，学习的话是npc位置，研究的话听涛阁的位置是1949"
+
+[[RequiredParams]]
+  Name = "list_skill"
+  Desc = "学习列表"
+  Intro = "需要学习或者研究武功名字"
+
+[[RequiredParams]]
+  Name = "cmd_study2"
+  Desc = "第二种学习指令"
+  Intro = "第一种学习skfull的情况下，执行2。如果需要使用，请同时保证 loc_study2,study_cmd2,list_skill2 三个变量都不为空"
+
+[[RequiredParams]]
+  Name = "loc_study2"
+  Desc = "第二种学习的地点"
+  Intro = "第一种学习skfull的情况下，执行2。如果需要使用，请同时保证 loc_study2,study_cmd2,list_skill2 三个变量都不为空"
+
+[[RequiredParams]]
+  Name = "list_skill2"
+  Desc = "第二种学习指令列表"
+  Intro = "第一种学习skfull的情况下，执行2。如果需要使用，请同时保证 loc_study2,study_cmd2,list_skill2 三个变量都不为"
+
+[[RequiredParams]]
+  Name = "loc_sleep"
+  Desc = "睡觉坐标"
+  Intro = "睡觉的坐标"
 
 [[RequiredParams]]
   Name = "max_exp"
@@ -7358,14 +7500,14 @@ Channel = "zsz-self.jvs"
   Intro = "最大体会"
 
 [[RequiredParams]]
-  Name = "min_gold"
-  Desc = "最少黄金"
-  Intro = "身上携带GOLD下限"
-
-[[RequiredParams]]
   Name = "min_jingli"
   Desc = "最小精力"
   Intro = "最小精力"
+
+[[RequiredParams]]
+  Name = "min_gold"
+  Desc = "最少黄金"
+  Intro = "身上携带GOLD下限"
 
 [[RequiredParams]]
   Name = "min_neili"

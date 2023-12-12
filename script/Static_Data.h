@@ -65,12 +65,12 @@ var loc_list = {
 	"福州" : {"id" :  203, "sh" : "fz", "map" : "map_fz", "info" : "24;26;56;21"},
 	"泉州" : {"id" :  212, "sh" : "qz", "map" : "map_qz", "info" : "26;24;21"},
 	"华山" : {"id" :  989, "sh" : "hs", "map" : "map_hs", "info" : "18;20;19;47;02"},
-	"天山" : {"id" : 1165, "sh" : "ts", "map" : "map_ts", "info" : "16;17;48;58;59;60;61;62;63;64;65;66;67;68;69;70;71;72;73;74;75;76;77;78;79;80;81;82;83;84;85"},
-	"星宿" : {"id" : 1158, "sh" : "xx", "map" : "map_xx", "info" : "17;16;48;58;59;60;61;62;63;64;65;66;67;68;69;70;71;72;73;74;75;76;77;78;79;80;81;82;83;84;85"},
+	"天山" : {"id" : 1165, "sh" : "ts", "map" : "map_ts", "info" : "16;17;48"},
+	"星宿" : {"id" : 1158, "sh" : "xx", "map" : "map_xx", "info" : "17;16;48"},
 	"灵州" : {"id" : 1202, "sh" : "lz", "map" : "map_lz", "info" : "37;38"},
 	"关外" : {"id" : 1216, "sh" : "gw", "map" : "map_gw", "info" : "36"},
 	"大理" : {"id" :  443, "sh" : "dl", "map" : "map_dl", "info" : "32;21;33;34;35"},
-	"西域" : {"id" : 1150, "sh" : "xy", "map" : "map_xy", "info" : "16;17;48;49;44;39;50;58;59;60;61;62;63;64;65;66;67;68;69;70;71;72;73;74;75;76;77;78;79;80;81;82;83;84;85"}
+	"西域" : {"id" : 1150, "sh" : "xy", "map" : "map_xy", "info" : "16;17;48;49;44;39;50"}
 	};
 
 var far_list = new Array("佛山","南海","泉州","福州","汝州","嵩山","星宿","天山","武功","灵州","长安","华山","襄阳","扬州","苏州","杭州","成都","终南","关外","大理","西域");
@@ -131,35 +131,7 @@ var info_list = {
 	"54" : {"name" : "店小二",   "id" : "xiao er",          "area" : "bj", "loc" : 1297},
 	"55" : {"name" : "店小二",   "id" : "xiao er",          "area" : "bj", "loc" : 1321},
 	"56" : {"name" : "店小二",   "id" : "xiao er",          "area" : "fz", "loc" : 236},
-	"57" : {"name" : "店小二",   "id" : "xiao er",          "area" : "fs", "loc" : 1542},
-	"58" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1156},
-	"59" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1151},
-	"60" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1142},
-	"61" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1157},
-	"62" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1155},
-	"63" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1154},
-	"64" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1153},
-	"65" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1152},
-	"66" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1158},
-	"67" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1159},
-	"68" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1163},
-	"69" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1139},
-	"70" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1140},
-	"71" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1141},
-	"72" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1143},
-	"73" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1144},
-	"74" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1145},
-	"75" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1146},
-	"76" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1147},
-	"77" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1148},
-	"78" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1149},
-	"79" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1160},
-	"80" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1161},
-	"81" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1162},
-	"82" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1164},
-	"83" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1165},
-	"84" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1166},
-	"85" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1167}
+	"57" : {"name" : "店小二",   "id" : "xiao er",          "area" : "fs", "loc" : 1542}
 	};
 
 //--------------------------------------------------------------------------------
