@@ -1,96 +1,118 @@
 //--------------------------------------------------------------------------------
-var Dir_sh = {"east" : "e", "south" : "s", "west" : "w", "north" : "n", "southeast" : "se", "southwest" : "sw", 
-		"northeast" : "ne", "northwest" : "nw", "eastup" : "eu", "eastdown" : "ed", "southup" : "su", 
-		"southdown" : "sd", "westup" : "wu", "westdown" : "wd", "northup" : "nu", "northdown" : "nd", 
-		"up" : "u", "down" : "d", "enter" : "enter", "out" : "out", "cross" : "cross"};
+var Dir_sh = {
+	"east": "e", "south": "s", "west": "w", "north": "n", "southeast": "se", "southwest": "sw",
+	"northeast": "ne", "northwest": "nw", "eastup": "eu", "eastdown": "ed", "southup": "su",
+	"southdown": "sd", "westup": "wu", "westdown": "wd", "northup": "nu", "northdown": "nd",
+	"up": "u", "down": "d", "enter": "enter", "out": "out", "cross": "cross"
+};
 
-var Dir_re = {"e" : "w", "s" : "n", "w" : "e", "n" : "s", "se" : "nw", "sw" : "ne", "ne" : "sw", "nw" : "se", 
-		"eu" : "wd", "ed" : "wu", "su" : "nd", "sd" : "nu", "wu" : "ed", "wd" : "eu", "nu" : "sd", 
-		"nd" : "su", "u" : "d", "d" : "u", "enter" : "out", "out" : "enter", "cross" : "cross"};
+var Dir_re = {
+	"e": "w", "s": "n", "w": "e", "n": "s", "se": "nw", "sw": "ne", "ne": "sw", "nw": "se",
+	"eu": "wd", "ed": "wu", "su": "nd", "sd": "nu", "wu": "ed", "wd": "eu", "nu": "sd",
+	"nd": "su", "u": "d", "d": "u", "enter": "out", "out": "enter", "cross": "cross"
+};
 
 //--------------------------------------------------------------------------------
 // 全局变量。
 var dbase_data = {
-	"walk"       : "null",
-	"xiang":{},
-	"search"     : {"flag" : ""},
-	"maze"       : {"count" : 0, "dir" : "null"},
-	"room"       : {"name" : "null", "id" : -1, "dir" : "", "cmd" : "", "miss" : 2763, "chat" : 2046},
-	"nextstep"   : {"flag" : "", "cmds" : "", "loc" : 0},
-	"quest"      : {"flag" : "null", "far" : 0, "info" : 0, "count" : 0, "master" : true, "letter" : false},
-	"stat"       : {"stime" : 0, "minute" : 0, "count" : 0, "eff" : 0,"helped":0,"busy":0,"busycount":0,"busyeff":0},
-	"info"       : {"id" : "", "list" : ""},
-	"npc"        : {"name" : "null", "id" : "", "loc" : "", "find" : 0, "coor" : -1, "status" : "null", "wd" : 0,
-			"corpse" : 0, "head" : 0,"onkill" : "","busystart":0},
-	"dispel"     : {"flag" : "", "next" : "", "count" : 0, "count1" : 0},
-	"connect"    : {"cmds" : "", "auto" : false},
-	"stab"       : {"flag" : true, "miss" : true, "index" : 0},
-	"weapon":	{"id":"","dur":0},
-	"weapons":{},
-	"deposit":0,
-	"allitem":{},
-	"item"       : {"food" : 0, "shuidai" : 0, "silver" : 0, "zhen" : 0, 
-			"gold" : 0, "9hua" : 0, "qlkey" : 0, "money" : 0, "buy" : "null", "arrow" : 0, "gong" : 0, "lsword" : 0,"iblade":0, "gangbiao" : 0, "cash" : 0,
-			"sell" : "null", "gift" : "null", "wuqi" : 1, "qu" : "null", "flag" : false, "load" : false},
-	"hp"         : {"exp" : 1, "pot" : 1, "neili" : 1, "qi" : 1, "eff_qi" : 90, "eff_jing" : 90, "max_jing" : 100, 
-			"max_qi" : 100, "max_neili" : 1, "max_jingli" : 1, "food" : 1, "water" : 1, "jing" : 1, 
-			"jingli" : 1, "th" : 1, "dispel" : false, "faint" : "null", "pot_full" : false, "level" : 0},
-	"timer"      : {"count" : 0, "time" : 0, "flag" : "null", "cmd" : "null", "pfm" : 0, "idle" : false},
-	"other"      : {"nextstep" : "", "loc" : "", "focus" : true, "heal" : "", "sleep" : 0, "jiqu" : 0, "study" : 0, "n_yj" : 0, "n_lx" : 0,
-			"qiankun" : false, "brief" : false, "trace" : false, "walk" : false, "backup" : false, "touch" : true, "mtc":false,
-			"getw" : 0, "tell" : 0, "loc1" : "", "todo" : -1,"todo_cmd" : "",},
-	"askyou"     : {"flag" : false, "loc" : null, "index" : 0, "idpt" : 0, "count" : 0, "none" : false},
-	"boss"       : {"start" : false, "name":"","kill" : "", "step" : 0, "seadragon" : 0, "dongfang" : 0, "jiangshi" : 0, "juxianzhuang" : 1, "digong" : 0, "xuemo" : 0, "target1" : 0, "target2" : 0, "target3" : 0, "target4" : 0, "target5" : 0, "target6" : 0},
-	"xuemo"		: {"npc" : "", "step" : 1,"target" : false,"target1" : false, "target2" : false, "target3" : false, "target4" : false, "target5" : false, "target6" : false },
-	"digong"	: {"npc" : "", "step" : 1, "g_getk" : false,"n_gman" : 0,"passwd" : "a"},
-	"trceatlu":false,
-	"lastdrunk":0,
-	"miss":{"fail":false,"until":0},
-	};    
+	"walk": "null",
+	"xiang": {},
+	"search": { "flag": "" },
+	"maze": { "count": 0, "dir": "null" },
+	"room": { "name": "null", "id": -1, "dir": "", "cmd": "", "miss": 2763, "chat": 2046 },
+	"nextstep": { "flag": "", "cmds": "", "loc": 0 },
+	"need_do": { "cmds": "", "loc": -1 },
+	"quest": { "flag": "null", "far": 0, "info": 0, "count": 0, "master": true, "letter": false, "exp": 0, "pot": 0, "ccount": 0 },
+	"stat": { "stime": 0, "minute": 0, "count": 0, "eff": 0, "helped": 0, "busy": 0, "busycount": 0, "busyeff": 0, "eff_exp": 0, "eff_pot": 0 },
+	"info": { "id": "", "list": "" },
+	"npc": {
+		"name": "null", "id": "", "loc": "", "find": 0, "coor": -1, "status": "null", "wd": 0,
+		"corpse": 0, "head": 0, "onkill": "", "busystart": 0
+	},
+	"dispel": { "flag": "", "next": "", "count": 0, "count1": 0 },
+	"connect": { "cmds": "", "auto": false, "time": 0 },
+	"stab": { "flag": true, "miss": true, "index": 0 },
+	"weapon": { "id": "", "dur": 0 },
+	"weapons": {},
+	"deposit": 0,
+	"allitem": {},
+	"item": {
+		"food": 0, "shuidai": 0, "silver": 0, "zhen": 0,
+		"gold": 0, "9hua": 0, "qlkey": 0, "money": 0, "buy": "null", "arrow": 0, "gong": 0, "lsword": 0, "iblade": 0, "gangbiao": 0, "cash": 0,
+		"sell": "null", "gift": "null", "wuqi": 1, "qu": "null", "flag": false, "load": false
+	},
+	"hp": {
+		"exp": 1, "pot": 1, "neili": 1, "qi": 1, "eff_qi": 90, "eff_jing": 90, "max_jing": 100,
+		"max_qi": 100, "max_neili": 1, "max_jingli": 1, "food": 1, "water": 1, "jing": 1, "limit_jingli": 1, "limit_neilili": 1, "limit_pot": 100, "limit_th": 100,
+		"jingli": 1, "th": 1, "dispel": false, "faint": "null", "pot_full": false, "level": 0
+	},
+	"timer": { "count": 0, "time": 0, "flag": "null", "cmd": "null", "pfm": 0, "idle": false },
+	"other": {
+		"nextstep": "", "loc": "", "focus": true, "heal": "", "sleep": 0, "jiqu": 0, "study": 0, "n_yj": 0, "n_lx": 0,
+		"qiankun": false, "brief": false, "trace": false, "walk": false, "backup": false, "touch": true, "mtc": false,
+		"getw": 0, "tell": 0, "loc1": "", "todo": -1, "todo_cmd": "",
+	},
+	"askyou": { "flag": false, "loc": null, "index": 0, "idpt": 0, "count": 0, "none": false },
+	"protect": { "ready": false, "step": 0, "atime": 0, "ctime": 0, "name": "null", "id": "", "loc_no": 0, "loc": -1, "enemyid": "", "count": 0, "ccount": 0, "exp": 0, "pot": 0, "eff": 0, "eff_exp": 0, "eff_pot": 0 },
+	"lgt": { "time": 0, "flag": false, "ready": false, "cmd": "", "floor": 0, "door": 0, "npc": "", "charm": 99 },
+	"qinling": { "ready": false, "flag": false, "line": 0, "step": 0, "count": 0, "ccount": 0, "cmds": "", "stime": 0, "ctime": 0, "all_time": 0, "c_eff": 0, "t_eff": 0 },
+	"fuben": { "type": "", "infb": false },
+	"trceatlu": false,
+	"lastdrunk": 0,
+	"miss": { "fail": false, "until": 0 },
+};
 
-var npc_id       = new Array();
-var cmd_count    = new Array();             
-var step_walk    = new MyArray();        
-var auto_search  = new MySearch(3);
+var npc_id = new Array();
+var cmd_count = new Array();
+var step_walk = new MyArray();
+var auto_search = new MySearch(3);
 //var mapper       = new ActiveXObject("mapper.path");
-eval(Include("mapper.js"),"mapper.js")
+eval(Include("mapper.js"), "mapper.js")
 mapper.open("rooms.h")
 mapper.setmissloc(get_var("list_mloc"))
 mapper.addhouse(get_var("house"))
-var m_FAIL       = "-333";
-var dg_maze      = new MyMaze(10);
-//--------------------------------------------------------------------------------
-eval( Include( "Static_Data.h" ) ,"Static_Data.h");	
-eval( Include( "queue.js" ),"queue.js");
-eval( Include( "data.js" ),"data.js");
-eval( Include( "assistant.js" ),"assistant.js");
-eval( Include( "weak.js" ),"weak.js");
-eval( Include( "helpfind.js" ),"helpfind.js");
-eval( Include( "notify.js" ),"helpfind.js");
-eval( Include( "mods.js" ),"mods.js");
-eval( Include( "hud.js" ),"hud.js");
-eval( Include( "push.js" ),"push.js");
-//--------------------------------------------------------------------------------
-function Include( FileName ) {
-	var FileScriptingObject = new ActiveXObject("Scripting.FileSystemObject");
-	var path = world.GetInfo(35);
-	path = path.substring(0, path.lastIndexOf("\\"));
-	var File = FileScriptingObject.OpenTextFile( path + "\\" + FileName, 1);
-	var Code = File.ReadAll(); 
-	world.Note("Include Script File: " + FileName); 
-	File.Close();
-	return( Code );
-} 
+var m_FAIL = "-333";
 
-function MySearch(dp)
-{
+//--------------------------------------------------------------------------------
+eval(Include("Static_Data.h"), "Static_Data.h");
+eval(Include("queue.js"), "queue.js");
+eval(Include("data.js"), "data.js");
+eval(Include("assistant.js"), "assistant.js");
+eval(Include("weak.js"), "weak.js");
+eval(Include("helpfind.js"), "helpfind.js");
+eval(Include("notify.js"), "helpfind.js");
+eval(Include("mods.js"), "mods.js");
+eval(Include("mods/system.js"), "mods/system.js");
+eval(Include("mods/maze.js"), "mods/maze.js");
+eval(Include("mods/protect.js"), "mods/protect.js");
+eval(Include("mods/lgt.js"), "mods/lgt.js");
+eval(Include("mods/qinling.js"), "mods/qinling.js");
+eval(Include("rideto.js"), "rideto.js");
+eval(Include("hud.js"), "hud.js");
+eval(Include("mods/wudusuck.js"), "mods/wudusuck.js");
+//--------------------------------------------------------------------------------
+function Include(FileName) {
+	// var FileScriptingObject = new ActiveXObject("Scripting.FileSystemObject");
+	// var path = world.GetInfo(35);
+	// path = path.substring(0, path.lastIndexOf("\\"));
+	// var File = FileScriptingObject.OpenTextFile(path + "\\" + FileName, 1);
+	// var Code = File.ReadAll();
+	// world.Note("Include Script File: " + FileName);
+	// File.Close();
+	// return (Code);
+	var Code=world.ReadFile(FileName);
+	world.Note("Include Script File: " + FileName);
+	return Code;
+}
+
+function MySearch(dp) {
 	this.data = new Array(dp);
-	this.exit = new Array(dp+1);
+	this.exit = new Array(dp + 1);
 	this.index = 0;
 	this.depth = dp;
 	this.dir = "";
 
-	this.back = function() {
+	this.back = function () {
 		var ix = this.index;
 		var dr = dir_reverse(this.dir);
 		if (dr != m_FAIL)
@@ -99,21 +121,21 @@ function MySearch(dp)
 		return dr;
 	};
 
-	this.next = function(ex) {
+	this.next = function (ex) {
 		var et = "";
 		var fg = false;
 		var ix = this.index;
-		if (this.exit[ix] == null) 
+		if (this.exit[ix] == null)
 			this.exit[ix] = "";
 
 		//判断当前房间的出口是否已经走过。			
-		for (var i=0; i<ex.length; i++)
+		for (var i = 0; i < ex.length; i++)
 			if (this.exit[ix].indexOf(("-" + ex[i] + "-")) == -1) {
-				et = ex[i];	
+				et = ex[i];
 				fg = true;
-				break;								
+				break;
 			}
-		
+
 		//如果当前房间的出口都走过并且为起点房间则结束。
 		if (!fg && ix == 0)
 			return m_FAIL;
@@ -125,7 +147,7 @@ function MySearch(dp)
 			this.dir = et;
 			this.index++;
 			return et;
-		} 
+		}
 
 		et = dir_reverse(this.data[ix - 1]);
 		this.dir = et;
@@ -134,16 +156,15 @@ function MySearch(dp)
 	};
 }
 
-function MyArray(pra)
-{
+function MyArray(pra) {
 	this.data = pra;
 	this.index = 0;
 	this.dir = "";
 	this.stepnum = 0;
 	this.blockend = 0;
 
-	this.back = function() {
-		if (this.index <= 0) 
+	this.back = function () {
+		if (this.index <= 0)
 			return m_FAIL;
 
 		this.index--;
@@ -151,29 +172,29 @@ function MyArray(pra)
 		return this.dir;
 	};
 
-	this.eof = function() {
+	this.eof = function () {
 		if (this.index >= this.data.length)
 			return true;
 		else
 			return false;
 	};
 
-	this.eob = function() {
+	this.eob = function () {
 		if (this.index >= this.blockend)
 			return true;
 		else
 			return false;
 	};
 
-	this.next = function() {
+	this.next = function () {
 		if (this.index >= this.data.length)
 			return m_FAIL;
-		
+
 		this.dir = this.data[this.index++];
 		return this.dir;
 	};
 
-	this.block = function(ns) {
+	this.block = function (ns) {
 		var bk;
 		var num = 0;
 		var st = this.index;
@@ -181,14 +202,15 @@ function MyArray(pra)
 		if (ed >= this.data.length)
 			ed = this.data.length;
 
-		if (st >= ed) 
+		if (st >= ed)
 			return m_FAIL;
 
-		for (var i=st; i<ed; i++) {
+		for (var i = st; i < ed; i++) {
 			num++;
 			if (this.data[i].indexOf("goto") != -1
-			|| this.data[i].indexOf("cross") != -1
-			|| this.data[i].indexOf("。") != -1) {
+				|| this.data[i].indexOf("cross") != -1
+				|| this.data[i].indexOf("rideto") != -1
+				|| this.data[i].indexOf("。") != -1) {
 				bk = this.data.slice(st, (i + 1));
 				this.stepnum = num;
 				this.blockend = i + 1;
@@ -203,16 +225,14 @@ function MyArray(pra)
 }
 
 //--------------------------------------------------------------------------------
-function init_cmd_count()
-{
+function init_cmd_count() {
 	var num = get_var("num_cmds") - 0;
 	cmd_count = new Array(num);
-	for (var i=0; i<num; i++) 
-		cmd_count[i] = 0;		
+	for (var i = 0; i < num; i++)
+		cmd_count[i] = 0;
 }
 
-function get_cmd_delay()
-{
+function get_cmd_delay() {
 	var date = new Date();
 	var time = date.getTime();
 	var num = get_var("num_cmds") - 0;
@@ -229,19 +249,18 @@ function get_cmd_delay()
 	return delay;
 }
 
-function query(str,no_mfail)
-{
+function query(str, no_mfail) {
 	if (str == null) {
 		var qr = "";
 		world.note("=-----------查询结果-----------=");
 		for (ky in dbase_data) {
 			if (dbase_data[ky].constructor == Object) {
-				qr += ky + " = {"; 
+				qr += ky + " = {";
 				for (ky2 in dbase_data[ky])
 					qr += ky2 + " : " + dbase_data[ky][ky2] + ", ";
 
 				qr += "}\n";
-			} else 
+			} else
 				qr += ky + " = " + dbase_data[ky] + "\n";
 		}
 
@@ -252,35 +271,34 @@ function query(str,no_mfail)
 	var re = new RegExp("[^\/]+", "g");
 	var ar = str.match(re);
 	if (ar.length < 1) {
-		if (!no_mfail){
+		if (!no_mfail) {
 			world.note("query():变量[" + str + "]不存在！");
 		}
-		return no_mfail?null:m_FAIL;
+		return no_mfail ? null : m_FAIL;
 	}
 
 	var qr = dbase_data;
-	for (var i=0; i<ar.length; i++) {
+	for (var i = 0; i < ar.length; i++) {
 		qr = qr[ar[i]];
 		if (qr == null) {
-			if (!no_mfail){
+			if (!no_mfail) {
 				world.note("query():变量[" + str + "]不存在！");
 			}
-			return no_mfail?null:m_FAIL;
+			return no_mfail ? null : m_FAIL;
 		}
 	}
 
 	return qr;
 }
 
-function set(flag, value)
-{
+function set(flag, value) {
 	if (flag == null || flag == "")
 		return;
 
 	var re = new RegExp("[^\/]+", "g");
 	var ar = flag.match(re);
 	switch (ar.length) {
-		case 1: 
+		case 1:
 			dbase_data[ar[0]] = value;
 			break;
 		case 2:
@@ -297,18 +315,18 @@ function set(flag, value)
 			break;
 	}
 
-	if (ar[0] == "quest" || ar[0] == "npc" || ar[0] == "nextstep")
+	if (ar[0] == "quest" || ar[0] == "npc" || ar[0] == "nextstep" || ((ar[0] == "hp") && (ar[1] == "th")))
 		set_status();
 }
 
-var newlinere=/\n/g
+var newlinere = /\n/g
 
-function GetCmd(name){
-	var list=world.GetVariable("list_cmd").replace(newlinere,"|").split("|")
-    for (var index in list) {
-		var data=world.SplitN(list[index],":",2)
-		if (data.length>1){
-			if (data[0]==name){
+function GetCmd(name) {
+	var list = world.GetVariable("list_cmd").replace(newlinere, "|").split("|")
+	for (var index in list) {
+		var data = world.SplitN(list[index], ":", 2)
+		if (data.length > 1) {
+			if (data[0] == name) {
 				return data[1]
 			}
 		}
@@ -316,8 +334,7 @@ function GetCmd(name){
 	return ""
 }
 //--------------------------------------------------------------------------------
-function get_room(str)
-{
+function get_room(str) {
 	mapper.exec("mush " + str);
 	var res = mapper.result;
 	if (res == null) {
@@ -335,8 +352,11 @@ function get_room(str)
 	return res;
 }
 
-function get_exit_id(id, dir)
-{
+function get_exit_id(id, dir) {
+	//因为为了节约内存，加入了ride-pet的虚拟房间，所以获取出口时需要从ride-pet获取实际出口
+	if (dir.startsWith("rideto ")) {
+		id = "ride-pet"
+	}
 	mapper.exec("mush exitid " + id + ":" + dir);
 	var res = mapper.result;
 
@@ -344,16 +364,14 @@ function get_exit_id(id, dir)
 	return res - 0;
 }
 
-function get_room_id(nm)
-{
+function get_room_id(nm) {
 	mapper.exec("mush " + nm);
 	var res = mapper.result;
 	if (res == null || res == "null") return m_FAIL;
 	return res.split(",");
 }
 
-function get_path(fl, tl)
-{
+function get_path(fl, tl) {
 	if (fl == -1 || tl == -1) return m_FAIL;
 
 	if (("," + tl + ",").indexOf("," + fl + ",") != -1) return "";
@@ -361,17 +379,20 @@ function get_path(fl, tl)
 	var str, pas;
 
 	pas = get_var("id_pass");
-	if (!query("allitem/shen she",true) && pas.indexOf("bt")>-1){
-		pas=""
+	if (!query("allitem/shen she", true) && pas.indexOf("bt") > -1) {
+		pas = ""
 	}
-	if (get_var("bool_miss") && query("stab/miss")){
+	if (get_var("bool_miss") && query("stab/miss")) {
 		var date = new Date();
 		var time = date.getTime();
-		if (time>query("miss/until")||get_var("bool_missonly")){
-	 		pas += "," + get_var("id");
+		if (time > query("miss/until") || get_var("bool_missonly")) {
+			pas += "," + get_var("id");
 		}
 	}
-
+	var ridetag = rideto.getTag()
+	if (ridetag) {
+		pas = pas + "," + ridetag
+	}
 	mapper.exec("mush " + fl + " " + tl + " " + pas);
 	str = mapper.result;
 	if (str == "null") {
@@ -385,18 +406,18 @@ function get_path(fl, tl)
 		str = str.replace(re, "。");
 		re = /#nu;/g;
 		str = str.replace(re, "");
+		world.note("get_path:" + fl + "->" + tl + "：" + str);
 		return str;
 	}
 }
 
-function get_area_path(lcs, dep)
-{
+function get_area_path(lcs, dep) {
 	mapper.exec("mush areapath " + lcs + " " + dep);
 	var str = mapper.result;
 	if (str == "null") {
 		world.note("getareapath:没有路径！");
 		add_log("getareapath:" + query("room/id") + " 没有路径！");
-		return m_FAIL; 
+		return m_FAIL;
 	} else {
 		var re = /·/g;
 		str = str.replace(re, "");
@@ -406,9 +427,8 @@ function get_area_path(lcs, dep)
 	}
 }
 
-function dir_short(dir)
-{
-	if (dir == null || dir == "") return m_FAIL; 
+function dir_short(dir) {
+	if (dir == null || dir == "") return m_FAIL;
 
 	var res;
 	dir = dir.replace(/。/g, "");
@@ -417,19 +437,17 @@ function dir_short(dir)
 	return m_FAIL;
 }
 
-function dir_reverse(dir)
-{
-	if (dir == null || dir == "") return m_FAIL; 
+function dir_reverse(dir) {
+	if (dir == null || dir == "") return m_FAIL;
 
 	var res;
 	dir = dir.replace(/。/g, "");
 	if ((res = Dir_sh[dir]) != null) dir = res;
 	if ((res = Dir_re[dir]) != null) return res;
-	return m_FAIL; 
+	return m_FAIL;
 }
 
-function exit_filt(str, type)
-{
+function exit_filt(str, type) {
 	var rid, num, tmp, tmp1;
 
 	rid = query("room/id");
@@ -438,7 +456,7 @@ function exit_filt(str, type)
 	tmp = "";
 	var re = new RegExp("[a-z]*[^、 和]", "g");
 	var rm = str.match(re);
-	for (var i=0; i<rm.length; i++) {
+	for (var i = 0; i < rm.length; i++) {
 		var dir = dir_short(rm[i]);
 		if (dir != m_FAIL) {
 			var num = Math.floor(Math.random() * 2);
@@ -455,8 +473,7 @@ function exit_filt(str, type)
 }
 
 
-function get_step()
-{
+function get_step() {
 	switch (query("walk")) {
 		case "auto":
 			return auto_search.dir;
@@ -464,14 +481,13 @@ function get_step()
 			return auto_search.dir;
 		case "multi":
 			return step_walk.block(1);
-		default :
+		default:
 			world.note("get_step:walk flag无效。");
 			break;
 	}
 }
 
-function get_info_key(index)
-{
+function get_info_key(index) {
 	var loc = query("npc/loc");
 	if (loc == "很远") {
 		loc = incity(query("npc/coor"));
@@ -491,17 +507,17 @@ function get_info_key(index)
 		il += ";46";
 
 	var io = il.split(";");
-	if (index >= io.length || index < 0) 
+	if (index >= io.length || index < 0)
 		return m_FAIL;
- 
-	return io[index]; 
+
+	return io[index];
 }
 
 var _linesre = new RegExp("[^;\n]+", "g");
 var _cmdsre = new RegExp("[^、。]+", "g");
-var _groupre=new RegExp("[;\n]", "g");
-function groupcmds(str){
-	if (str == "" || str == null || str == m_FAIL){
+var _groupre = new RegExp("[;\n]", "g");
+function groupcmds(str) {
+	if (str == "" || str == null || str == m_FAIL) {
 		return str;
 	}
 	return str.replace(_groupre, "、")
@@ -518,16 +534,16 @@ function send(str, grouped) {
 		EchoInput = 1;
 	else
 		EchoInput = 0;
-	Metronome.setbeats(world.GetVariable("num_cmds")/2)
+	Metronome.setbeats(world.GetVariable("num_cmds") / 2)
 	for (var i = 0; i < cmds.length; i++) {
 		var commands = cmds[i].match(_cmdsre)
-		var buf=[]
+		var buf = []
 		commands.forEach(function (cmd) {
 			if (cmd != "" && cmd != null) {
 				if (cmd.indexOf("#") == 0) {
-					if (buf.length){
+					if (buf.length) {
 						Metronome.push(buf, true, fg)
-						buf=[]
+						buf = []
 					}
 					cmd = cmd.split(" ");
 					switch (cmd[0]) {
@@ -571,7 +587,7 @@ function send(str, grouped) {
 						case "#yj":
 							var rd = query("room/id");
 							if (query("hp/pot") > get_var("min_pot") && rd != 1946 && rd != 2452) {
-								send(get_study2(cmd[1],cmd[2]));								
+								send(get_study2(cmd[1], cmd[2]));
 							}
 							break;
 						case "#yj2":
@@ -589,41 +605,52 @@ function send(str, grouped) {
 							send(GetCmd(cmd[1]))
 							break;
 						case "#rcmd":
-							if (cmd.length>1){
+							if (cmd.length > 1) {
 								cmd.shift()
 								send(GetCmd(cmd[(Math.floor(Math.random() * cmd.length))]))
 							}
 							break
+						case "#set":
+							if (cmd.length > 2 && cmd[1]) {
+
+								set(cmd[1], cmd.slice(2).join(" "));
+								world.note("设置data变量:" + cmd[1] + "为" + cmd.slice(2).join(" "));
+							}
+							break
+						case "#to":
+							goto(cmd[1]);
+							break;
 						case "#setvar":
-							if (cmd.length>2 && cmd[1]){
-								world.SetVariable(cmd[1],cmd.slice(2).join(" "))
+							if (cmd.length > 2 && cmd[1]) {
+								world.SetVariable(cmd[1], cmd.slice(2).join(" "));
+								world.note("设置游戏设置变1量:" + cmd[1] + "为" + cmd.slice(2).join(" "));
 							}
 							break
 						case "#unsetvar":
-							if (cmd.length>1 && cmd[1]){
-								world.SetVariable(cmd[1],"")
+							if (cmd.length > 1 && cmd[1]) {
+								world.SetVariable(cmd[1], "")
 							}
 							break
-						case "#jiqu":{
+						case "#jiqu": {
 							send(CmdMjq())
 							break
-						}	
+						}
 						case "#weapon":
-								if (cmd.length<3 || (cmd[1]!="wield" && cmd[1]!="wear")){
-									world.Note("装备格式错误，应为 #weapon wield myblade 或 #weapon wear mystrike")
-									break;
-								}
-								let weapon=cmd.slice(2).join(" ")
-								let wieldcmd=cmd[1] +" " +weapon
-								let unwieldcmd
-								if (cmd[1]=="wield"){
-									unwieldcmd="unwield "+weapon
-								}else{
-									unwieldcmd="remove "+weapon
-								}
-								send("wp2off;wp1off;alias wp1on "+wieldcmd+";alias wp1off "+unwieldcmd+";wp1on;#q")
-								world.SetVariable("id_weapon",weapon)
-						break							
+							if (cmd.length < 3 || (cmd[1] != "wield" && cmd[1] != "wear")) {
+								world.Note("装备格式错误，应为 #weapon wield myblade 或 #weapon wear mystrike")
+								break;
+							}
+							let weapon = cmd.slice(2).join(" ")
+							let wieldcmd = cmd[1] + " " + weapon
+							let unwieldcmd
+							if (cmd[1] == "wield") {
+								unwieldcmd = "unwield " + weapon
+							} else {
+								unwieldcmd = "remove " + weapon
+							}
+							send("wp2off;wp1off;alias wp1on " + wieldcmd + ";alias wp1off " + unwieldcmd + ";wp1on;#q")
+							world.SetVariable("id_weapon", weapon)
+							break
 						case "#roomid":
 							if (cmd[1] != null && cmd[1] != "") set("room/id", cmd[1] - 0)
 							break
@@ -633,30 +660,31 @@ function send(str, grouped) {
 				}
 			}
 		})
-		if (buf.length){
+		if (buf.length) {
 			Metronome.push(buf, true, fg)
-			buf=[]
+			buf = []
 		}
 	}
 }
 
-function number(str)
-{
-	var num = {"一" : 1, "二" : 2, "三" : 3, "四" : 4, "五" : 5, "六" : 6,
-		 "七" : 7, "八" : 8, "九" : 9};	
+function number(str) {
+	var num = {
+		"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6,
+		"七": 7, "八": 8, "九": 9
+	};
 	var unit = 1;
 	var wan = 1;
 	var result = 0;
 	var char;
 
-	for (var i=(str.length-1); i>=0; i--) {
+	for (var i = (str.length - 1); i >= 0; i--) {
 		char = str.charAt(i);
 		switch (char) {
 			case "十":
 				unit = 10 * wan;
-				if (i == 0) 
+				if (i == 0)
 					result += unit;
-				else if (num[str.charAt(i-1)] == null)
+				else if (num[str.charAt(i - 1)] == null)
 					result += unit;
 				break;
 			case "百":
@@ -671,8 +699,8 @@ function number(str)
 				break;
 			default:
 				if (num[char] != null)
-					result += num[char] * unit;			
-	
+					result += num[char] * unit;
+
 				break;
 		}
 	}
@@ -680,26 +708,26 @@ function number(str)
 	return result;
 }
 
-function step_trace(dir)
-{
-	if (dir == "" || dir == null) 
-		return;
-
-	var id = query("room/id");
-	if (id != -1) {
-		var rmid = get_exit_id(id, dir);
-		set("room/id", rmid - 0);
+function step_trace(dir) {
+	if (dir == "" || dir == null) return;
+	if (query("qinling/flag"))
+		ql_steptrace(dir);
+	else {
+		var id = query("room/id");
+		if (id != -1) {
+			var rmid = get_exit_id(id, dir);
+			set("room/id", rmid - 0);
+		}
 	}
 }
 
-function goto(tl)
-{
+function goto(tl) {
 	set("other/touch", true);
-	set("miss/fail",false)
+	set("miss/fail", false)
 	var tmp = tl + "";
 	tmp = tmp.split(",");
-	for (var i=0; i<tmp.length; i++) {
-		if (isNaN(tmp[i])){	
+	for (var i = 0; i < tmp.length; i++) {
+		if (isNaN(tmp[i])) {
 			stop_all();
 			world.note("err(goto()): tl为无效地点！");
 			add_log("err(goto()): " + tl + "为无效地点！");
@@ -711,15 +739,14 @@ function goto(tl)
 	var fl = query("room/id");
 	if (fl == -1) {
 		world.note("err(goto()): fl为无效地点！");
-		do_autosearch(8, "find");
+		do_autosearch(13, "find");
 	} else {
 		var pa = get_path(fl, tl);
-		if(pa != m_FAIL) do_walk(pa.split(";"));
+		if (pa != m_FAIL) do_walk(pa.split(";"));
 	}
 }
 
-function get_var(str)
-{
+function get_var(str) {
 	var res = world.GetVariable(str);
 	if (res == null) {
 		world.note("get_var():变量[" + str + "]不存在");
@@ -729,7 +756,22 @@ function get_var(str)
 	if (str.indexOf("bool") != -1) {
 		res = res.toLowerCase();
 		if (res == "true" || res == "yes" || res == "y" || res == "t") res = true;
-		else if (res == "false" || res == "no" || res == "n"  || res == "f") res = false;
+		else if (res == "false" || res == "no" || res == "n" || res == "f") res = false;
+	}
+	if (str == "max_exp" && res == "max") {
+		res = 9999999999;
+	}
+	if (str == "max_pot") {
+		if (res == "max")
+			res = query("hp/limit_pot");
+		else if (res == "false")
+			res = 987654321;
+	}
+	if (str == "max_th") {
+		if (res == "max")
+			res = query("hp/limit_th");
+		else if (res == "false")
+			res = 987654321;
 	}
 	if (str == "loc_study" && !can_study() && world.GetVariable("loc_study2") != null && world.GetVariable("study_cmd2") != null && world.GetVariable("list_skill2") != null) {
 		res = world.GetVariable("loc_study2");
@@ -739,71 +781,103 @@ function get_var(str)
 	}
 	return res;
 }
+function set_var(str, val) {
+	return world.SetVariable(str, val);
+}
 
-function set_status()
-{
+function set_status() {
 	if (!query("other/focus"))
 		return;
 	var str = "【ID:" + get_var("id") + "】 ";
-		var date = new Date();
-		var time2 = date.getTime();
-		var time1 = 0;
-		var time = 0;
-		
-		var lastk=query("npc/busystart");
-		var num_lk =(time2-lastk)/1000;		
-		str += "距离上次干npc:" + num_lk+"秒";
-		
-		if (query("other/todo")>= 0)
-		{
-			str += "【"+query("other/todo")+"分钟后需做:"+query("other/todo_cmd")+"】";
-		}
+	var date = new Date();
+	var time2 = date.getTime();
+	var time1 = 0;
+	var time = 0;
+	str += ((rideto.mode == 0 || rideto.mode == 1) && (get_var("cmd_ride") || "").trim()) ? "【有马】" : "【无马】"
+	var lastk = query("npc/busystart");
+	var num_lk = (time2 - lastk) / 1000;
+	str += "距离上次干npc:" + num_lk + "秒";
+
+	if (query("other/todo") >= 0) {
+		str += "【" + query("other/todo") + "分钟后需做:" + query("other/todo_cmd") + "】";
+	}
+
+	if (get_var("list_boss").indexOf("protect") != -1) {
+		str += "保护【" + query("protect/name") + "】";
+		str += "数量【" + query("protect/count") + "】";
+		str += "效率【" + query("protect/eff") + "/小时】";
+		str += "经验【" + query("protect/exp") + "】";
+		str += "效率【" + query("protect/eff_exp") + "/小时】";
+		str += "潜能【" + query("protect/pot") + "】";
+		str += "效率【" + query("protect/eff_pot") + "/小时】";
+	};
+	if (!can_study()) { str += "-------学习1已完成，请及时调整学习策略--------" };
 	str += " |npc:" + query("npc/name") + ", loc:" + query("npc/loc");
 	if (query("npc/loc") == "很远") {
 		var fx = query("quest/far");
 		str += ", 当前" + fx + ":" + far_list[fx];
 	}
-
-	str += ", 完成:" +  query("quest/count") + ", quest:" + query("quest/flag"); 
-	str += ", 效率:" +  query("stat/eff") + "/小时, 用时:" + query("stat/minute") + "分钟"; 
-	var busyeff=query("stat/busyeff")
-	if (busyeff && get_var("bool_showbusy")){
-		str +=", 平均 busy:"+busyeff.toFixed(2)
+	str += "quest【" + query("quest/flag") + "】";
+	str += "完成【" + query("quest/count") + "】";
+	str += "效率【" + query("stat/eff") + "/小时】";
+	str += "经验【" + query("quest/exp") + "】";
+	str += "效率【" + query("stat/eff_exp") + "/小时】";
+	str += "潜能【" + query("quest/pot") + "】";
+	str += "效率【" + query("stat/eff_pot") + "/小时】";
+	str += "用时:" + query("stat/minute") + "分钟";
+	//	str += ", 完成:" +  query("quest/count") + ", quest:" + query("quest/flag"); 
+	//	str += ", 效率:" +  query("stat/eff") + "/小时, 用时:" + query("stat/minute") + "分钟"; 
+	var busyeff = query("stat/busyeff")
+	if (busyeff && get_var("bool_showbusy")) {
+		str += ", 平均 busy:" + busyeff.toFixed(2)
 	}
-	if (!get_var("bool_nohelp") && query("stat/count")){
-		var rate=query("stat/helped")*100/query("stat/count")
-		str += "，线报率:"+rate.toFixed(2)+"%"; 
+	if (!get_var("bool_nohelp") && query("stat/count")) {
+		var rate = query("stat/helped") * 100 / query("stat/count")
+		str += "，线报率:" + rate.toFixed(2) + "%";
 	}
 	world.SetStatus(str);
 	updateHUD();
 }
 
-function add_log(str)
-{
-	if (str == null || str == "") 
+function add_log(str) {
+	if (str == null || str == "")
 		return;
 
 	var path = world.GetInfo(35);
 	path = path.substring(0, path.lastIndexOf("\\"));
 	var fname = path + "\\log(" + get_var("id") + ").txt";
-  	var dt = new Date();
-	str = dt.toLocaleString() + "> " + str; 
+	var dt = new Date();
+	str = dt.toLocaleString() + "> " + str;
 	world.openlog(fname, true);
-	world.writelog(str);	
+	world.writelog(str);
 	world.closelog();
 }
 
-function tongji(flag)
-{
+function tongji(flag) {
 	if (flag == 0) {
 		set("stat/stime", 0);
 		set("stat/minute", 0);
-		set("stat/count", 0);
-		set("stat/eff", 0);
-		set("stat/helped",0)
-		set("stat/busy",0)
-		set("stat/busycount",0)
+
+		set("stat/helped", 0)
+		set("stat/busy", 0)
+		set("stat/busycount", 0)
 		set("stat/busyeff", 0);
+
+		set("quest/exp", 0);
+		set("quest/pot", 0);
+		set("stat/count", 0);
+
+		set("stat/eff", 0);
+		set("stat/eff_exp", 0);
+		set("stat/eff_pot", 0);
+
+		set("protect/exp", 0);
+		set("protect/pot", 0);
+		set("protect/ccount", 0);
+
+		set("protect/eff", 0);
+		set("protect/eff_exp", 0);
+		set("protect/eff_pot", 0);
 		return;
 	}
 
@@ -821,13 +895,25 @@ function tongji(flag)
 	var cnt = query("stat/count") - 0 + 1;
 	set("stat/count", cnt);
 	set("stat/eff", Math.floor(cnt * 3600 * 1000 / time));
+	cnt = query("quest/exp") - 0;
+	set("stat/eff_exp", Math.floor(cnt * 3600 * 1000 / time));
+	cnt = query("quest/pot") - 0;
+	set("stat/eff_pot", Math.floor(cnt * 3600 * 1000 / time));
+
+	cnt = query("protect/ccount") - 0;
+	set("protect/eff", Math.floor(cnt * 3600 * 1000 / time));
+	cnt = query("protect/exp") - 0;
+	set("protect/eff_exp", Math.floor(cnt * 3600 * 1000 / time));
+	cnt = query("protect/pot") - 0;
+	set("protect/eff_pot", Math.floor(cnt * 3600 * 1000 / time));
+
 	set("stat/minute", Math.floor(time / 60000));
 	set_status();
+
 }
 
 //--------------------------------------------------------------------------------
-function stop_all(force)
-{
+function stop_all(force) {
 	set("other/walk", false);
 	world.EnableTriggerGroup("gwk", 0);
 	world.EnableTriggerGroup("gsm", 0);
@@ -836,12 +922,13 @@ function stop_all(force)
 	world.EnableTriggerGroup("gyd", 0);
 	world.EnableTimer("timer1", false);
 	world.EnableTimer("t_pfm", false);
+	world.EnableTimer("t_lgt", false);
+	world.EnableTimer("t_qinling", false);
 	world.EnableTrigger("io_nobody", false);
 	world.DiscardQueue(force);
 }
 
-function open_timer1(time, flag, cmd)
-{
+function open_timer1(time, flag, cmd) {
 	if (cmd != "" && cmd != null)
 		set("timer/cmd", cmd);
 	else
@@ -850,9 +937,9 @@ function open_timer1(time, flag, cmd)
 	set("timer/count", 0);
 	set("timer/time", time);
 	set("timer/flag", flag);
-	if (world.GetGlobalOption ("TimerInterval") == 0 && flag == "busy0") 
+	if (world.GetGlobalOption("TimerInterval") == 0 && flag == "busy0")
 		world.SetTimerOption("timer1", "second", "0.1");
-	else if (world.GetGlobalOption ("TimerInterval") == 0 && flag == "busy5") 
+	else if (world.GetGlobalOption("TimerInterval") == 0 && flag == "busy5")
 		world.SetTimerOption("timer1", "second", "0.5");
 	else
 		world.SetTimerOption("timer1", "second", "1");
@@ -860,14 +947,12 @@ function open_timer1(time, flag, cmd)
 	world.EnableTimer("timer1", true);
 }
 
-function open_pfm()
-{
+function open_pfm() {
 	world.EnableTimer("t_pfm", true)
 	world.ResetTimer("t_pfm");
 }
 
-function reconnect(cmd)
-{
+function reconnect(cmd) {
 	world.EnableTimer("timer1", false);
 	world.EnableTrigger("kl_help", false);
 	world.EnableTrigger("kl_help1", false);
@@ -877,36 +962,39 @@ function reconnect(cmd)
 	set("connect/auto", false);
 	set("connect/cmds", cmd);
 	world.Disconnect();
+	/*
+	var ttimer1 = (new Date()).getTime();
+	ttimer1 = (ttimer1 - query("connect/time"))/1000;
+	ttimer1 = 31 - ttimer1;
+	if (ttimer1 < 2)
+		ttimer1 = 2;
+	world.note("等待"+ttimer1+"秒后重连");*/
 	if (query("hp/faint") == "faint")
 		open_timer1(120, "con_delay", null);
 	else
 		open_timer1(2, "con_delay", null);
 }
 
-function autoconnect()
-{
+function autoconnect() {
 	if (!query("connect/auto")) {
 		world.EnableTimer("t_con", false);
 		return;
 	}
 
 	var cmd = get_var("id") + ";" + get_var("passw") + ";y";
-	if (query("boss/start") && query("xuemo/step") > 4)
-		cmd += ";halt;hp;i;fquest;set no_teach xuemo connect";
-	else if (query("quest/flag") != "null")
+	if (query("quest/flag") != "null")
 		cmd += ";halt;hp;i;#t+ qt_none;quest;set no_teach auto connect";
 
 	set("room/id", -1);
 	set("connect/cmds", cmd);
 	world.DiscardQueue();
-	world.Connect();	
+	world.Connect();
 }
 
-function at_connect()
-{
+function at_connect() {
 	world.EnableTimer("t_con", false);
 	set("npc/find", 0);
-	set("npc/coor",-1);
+	set("npc/coor", -1);
 	send(query("connect/cmds"));
 	world.EnableTrigger("faint", true);
 	world.EnableTrigger("hurt", true);
@@ -916,8 +1004,7 @@ function at_connect()
 	world.EnableTrigger("condelay", true);
 }
 
-function at_disconnect()
-{
+function at_disconnect() {
 	world.EnableTimer("t_pfm", false);
 	world.EnableTimer("timer3", false);
 	world.EnableTimer("t_kmg", false);
@@ -925,26 +1012,23 @@ function at_disconnect()
 	world.EnableTimer("t_con", true);
 }
 
-function get_focus()
-{
+function get_focus() {
 	set("other/focus", true);
 	set_status();
 }
 
-function lose_focus()
-{
+function lose_focus() {
 	set("other/focus", false);
 }
 
-function to_kill(init)
-{
-	if (init){
+function to_kill(init) {
+	if (init) {
 		set("npc/find", 0);
-		set("npc/coor",-1);
+		set("npc/coor", -1);
 		set("quest/far", 0);
 		set("quest/info", 0);
 	}
-	if (query("npc/find")==-1){
+	if (query("npc/find") == -1) {
 		kill_npc()
 		return
 	}
@@ -958,7 +1042,7 @@ function to_kill(init)
 	var loc = query("npc/loc");
 
 	if ((query("askyou/count") == 0 && ("," + get_var("list_qask") + ",").indexOf("," + loc + ",") != -1)
-	|| (!query("askyou/none") && query("askyou/count") > 0 && query("askyou/count") < 3)) {
+		|| (!query("askyou/none") && query("askyou/count") > 0 && query("askyou/count") < 3)) {
 		var num = query("askyou/count") + 1;
 		world.note("-----第" + num + "次找游讯问 " + query("npc/name") + " 下落-----");
 		do_askyou();
@@ -968,7 +1052,7 @@ function to_kill(init)
 		world.note(loc + "是无效城市！");
 		return;
 	}
-// 出发前判断内力
+	// 出发前判断内力
 	if (query("hp/neili") < get_var("min_neili")) {
 		if (query("room/id") == 65) {
 			set("nextstep/flag", "COMMANDS");
@@ -979,8 +1063,8 @@ function to_kill(init)
 		} else {
 			send("yun recover;yun regenerate;hp;set no_teach fill neili");
 			return;
-		} 
-			
+		}
+
 	}
 	set("npc/status", "start");
 	set("search/flag", "AREA1");
@@ -988,38 +1072,29 @@ function to_kill(init)
 	world.note("-----去" + loc + "追杀" + query("npc/name") + "-----");
 }
 
-function kill_npc()
-{
+function kill_npc() {
 	stop_all();
 	set("npc/find", 0);
 	if (query("npc/coor") == query("room/id")) {
-		world.Note("找到 "+query("npc/name")+" ，原地击毙")
+		world.Note("找到 " + query("npc/name") + " ，原地击毙")
 		send(kill_cmd());
-	} 
+	}
 	else {
-		world.Note("前往 "+query("npc/coor")+" 击杀 "+query("npc/name"))
+		world.Note("前往 " + query("npc/coor") + " 击杀 " + query("npc/name"))
 		set("nextstep/flag", "COMMANDS");
 		set("nextstep/cmds", kill_cmd());
 		goto(query("npc/coor"));
 	}
 }
 
-function InSmartMode(){
-	return get_var("bool_smartmode") && !query("boss/start")
-}
 
-function IsXuemoBoss(){
-	return query("boss/start")&&query("boss/kill")=="xuemo"&&query("boss/name")=="丁一"&&get_var("cmd_backstab");
-}
-
-function perform()
-{
+function perform() {
 	set("other/touch", true);
 	var pfm = get_var("cmd_pfm");
-	if (pfm == "shot") 
-		pfm = "shot " + query("npc/id") + " with arrow"; 
+	if (pfm == "shot")
+		pfm = "shot " + query("npc/id") + " with arrow";
 	else {
-		if (IsXuemoBoss() || query("npc/wd") == 1 || InSmartMode()){
+		if (query("npc/wd") == 1) {
 			pfm = CmdMpf();
 		}
 
@@ -1028,20 +1103,16 @@ function perform()
 			pfm = "get " + get_var("id_weapon") + ";wield " + get_var("id_weapon") + ";" + pfm;
 		}
 	}
-	if (query("boss/start")){
-		pfm = pfm + "\nenchase 1";
-	}
 	return pfm;
 }
 
-function telldm(flag)
-{
+function telldm(flag) {
 	var cnt = flag;
 	switch (flag) {
 		case "faint":
 			cnt = "晕倒了:" + query("npc/loc") + "." + query("room/name")
 				+ "." + query("room/id");
-			world.note("晕倒地点:"+cnt);
+			world.note("晕倒地点:" + cnt);
 			add_log(cnt);
 			break;
 		case "dispel":
@@ -1050,12 +1121,12 @@ function telldm(flag)
 			add_log(cnt);
 			break;
 		case "idle":
-			cnt = "发呆了:" + query("room/id") + "." + query("other/nextstep") 
+			cnt = "发呆了:" + query("room/id") + "." + query("other/nextstep")
 				+ "." + query("nextstep/flag") + "." + query("nextstep/cmds");
 			add_log(cnt);
 			cnt = "发呆了！";
 			break;
-		default :
+		default:
 			break;
 	}
 	var dm = get_var("list_control").split(",")[0];
@@ -1067,8 +1138,7 @@ function telldm(flag)
 		world.SendImmediate("tell " + dm + " " + cnt);
 }
 
-function ydispel(par)
-{
+function ydispel(par) {
 	if (par) {
 		var nt = "cancel";
 		if (query("npc/status") == "flee")
@@ -1089,70 +1159,70 @@ function ydispel(par)
 	}
 }
 
-function get_study()
-{
+function get_study() {
 	var lt = get_var("list_skill");
 	if (lt == null || lt == "") return "";
 
 	var pot = query("hp/pot");
-	if (pot<10){
+	if (pot < 10) {
 		return "";
 	}
-	var mpot = 100 + query("other/n_yj")*50;
+	var mpot = 100 + query("other/n_yj") * 50;
 	if (pot > mpot) pot = mpot;
-	var re = new RegExp("[^;|,:]+", "g"); 
+	var re = new RegExp("[^;|,:]+", "g");
 	lt = lt.match(re);
 	var ix = Math.floor(Math.random() * lt.length);
 
-	if (!can_study() && world.GetVariable("loc_study2") != null && world.GetVariable("study_cmd2") != null && world.GetVariable("list_skill2") != null)  {
+	if (!can_study() && world.GetVariable("loc_study2") != null && world.GetVariable("study_cmd2") != null && world.GetVariable("list_skill2") != null) {
 		return get_var("cmd_study2") + " " + lt[ix] + " " + pot;
 	} else {
 		return get_var("cmd_study") + " " + lt[ix] + " " + pot;
 	}
 }
-function get_study2(sk,num)
-{
+function get_study2(sk, num) {
 	var lt;
-	if (sk == "list_skill" || sk == "" || sk == null) {
-		lt = get_var("list_skill");}
-	else if (sk == "list_skill2" ){
-		lt = get_var("list_skill2");}
-	else 
+	//if (sk == "list_skill" || sk == "" || sk == null) {
+	if ((sk == "" || sk == null || sk == "list_skill") && get_var("cmd_study") == "yanjiu") {
+		lt = get_var("list_skill");
+	}
+	else if ((sk == "" || sk == null || sk == "list_skill2") && get_var("cmd_study2") == "yanjiu") {
+		lt = get_var("list_skill2");
+	}
+	else
 		lt = sk;
-		
+
 	if (lt == null || lt == "") return "";
 
 	var pot = query("hp/pot");
-	if (pot<10){
+	if (pot < 10) {
 		return "";
 	}
-	var mpot = 100 + query("other/n_yj")*50;
+	var mpot = 100 + query("other/n_yj") * 50;
 	if (pot > mpot) pot = mpot;
 	if (num > 0 && num < 300) pot = num;
-	
-	var re = new RegExp("[^;|,:]+", "g"); 
+
+	var re = new RegExp("[^;|,:]+", "g");
 	lt = lt.match(re);
 	var ix = Math.floor(Math.random() * lt.length);
 	return "yanjiu " + lt[ix] + " " + pot;
 
 }
-function do_lian(num)
-{
+function do_lian(num) {
 	var lst, ix, tmp1, tmp2, str;
 
 	lst = get_var("list_lian");
 	if (lst == null || lst == "") return;
 
 	num = num - 1;
-	lst = lst.replace(newlinere,"|").split("|");
+	lst = lst.replace(newlinere, "|").split("|");
 	if (num >= lst.length) return;
 
 	var res = new Array;
-	for (var i=0; i<lst.length; i++) {
+	for (var i = 0; i < lst.length; i++) {
 		if (num != i && num >= 0) continue;
 
 		tmp1 = lst[i].split(":");
-		var mlx = 50 + query("other/n_lx")*50;
+		var mlx = 50 + query("other/n_lx") * 50;
 		str = "lian " + tmp1[0] + " " + mlx;
 		if (tmp1.length < 2) {
 			res[res.length] = str;
@@ -1160,10 +1230,10 @@ function do_lian(num)
 		}
 
 		if (tmp1.length == 3) str = tmp1[2] + ";" + str;
-		else if (tmp1.length > 3) str = tmp1[2] + ";" + str  + ";" + tmp1[3];
+		else if (tmp1.length > 3) str = tmp1[2] + ";" + str + ";" + tmp1[3];
 
 		tmp2 = tmp1[1].split(",");
-		for (var j=0; j<tmp2.length; j++) {
+		for (var j = 0; j < tmp2.length; j++) {
 			if (tmp2[j] != "") res[res.length] = "jifa " + tmp1[0] + " " + tmp2[j] + ";" + str;
 			else res[res.length] = str;
 		}
@@ -1173,16 +1243,15 @@ function do_lian(num)
 
 	ix = Math.floor(Math.random() * res.length);
 	//send(res[ix]);
-	send(res[ix],true);
+	send(res[ix], true);
 	// Metronome.push(res[ix],true,get_var("bool_each")?1:0)
 }
 
-function kill_cmd()
-{
+function kill_cmd() {
 	var id = "";
 	var cmd = "";
 	var pfm = perform();
-	set("npc/busybusy",0)
+	set("npc/busybusy", 0)
 	id = query("npc/id");
 	if (id == "" || id == null) id = "no body";
 
@@ -1190,48 +1259,33 @@ function kill_cmd()
 	if (id == "no body") {
 		cmd = "#t+ kl_nobody;id here;halt;kill no body;#q";
 	} else {
-		cmd = "#t+ kl_nobody;halt;kill " + id.toLowerCase();
+		cmd = "#t+ kl_nobody;#tg+ gkl;halt;kill " + id.toLowerCase();
 		var tmp = get_var("cmd_kill");
 		if (query("hp/eff_qi") > 70) {
 			cmd += ";" + tmp;
 		} else {
 			tmp = tmp.split(";");
-			for (var i=0; i<tmp.length; i++) {
+			for (var i = 0; i < tmp.length; i++) {
 				if (tmp[i].indexOf("jingang") == -1) cmd += ";" + tmp[i];
 			}
 		}
 		if (pfm != "") cmd += ";" + pfm;
 		cmd += ";#q";
 	}
-	var on_kill=query("npc/onkill")
-	if (!on_kill || on_kill!=query("npc/name")){
-		cmd=groupcmds(cmd)
+	var on_kill = query("npc/onkill")
+	if (!on_kill || on_kill != query("npc/name")) {
+		cmd = groupcmds(cmd)
 	}
 	return cmd;
 }
 
 
-function enter_maze(dir)
-{
+function enter_maze(dir) {
 	var rn;
 	rn = query("room/name");
 	if (rn == "渡船" || rn == "小舟" || rn == "大海") return true;
-	if (rn != "大沙漠" && rn != "南疆沙漠" && rn != "戈壁滩" && rn != "秦陵地宫" && rn != "诡异墓园") return false;
+	if (rn != "大沙漠" && rn != "南疆沙漠" && rn != "戈壁滩" && rn != "桃花迷阵") return false;
 
-//秦陵内宫
-	if (rn == "秦陵地宫") {
-		set("digong/npc","");
-		send(do_digong());
-		return true;
-	}
-//end digong
-//诡异墓园
-	if (rn == "诡异墓园") {
-		set("xuemo/npc","");
-		send(do_xuemo());
-		return true;
-	}
-//end xuemo	
 	if (query("walk") == "multi") {
 		if (dir != null) step_walk.block(1);
 		else dir = step_walk.block(1);
@@ -1240,6 +1294,7 @@ function enter_maze(dir)
 		if (rn == "戈壁滩") dir = "e";
 		else if (rn == "大沙漠") dir = "w";
 		else if (rn == "南疆沙漠") dir = "sw";
+		else if (rn == "桃花迷阵") dir = "n";
 	}
 
 	if (dir == m_FAIL || dir == null) {
@@ -1253,28 +1308,27 @@ function enter_maze(dir)
 	set("maze/dir", dir);
 	set("maze/count", 0);
 	send("hp;set no_teach maze");
-	world.EnableTriggerGroup("on_npc",false);
+	world.EnableTriggerGroup("on_npc", false);
 	world.EnableTrigger("step", false);
 	world.EnableTriggerGroup("gsm", 1);
 	return true;
 }
-function incity(coor, cy)
-{
+function incity(coor, cy) {
 	if (Trim(coor) == "")
 		return false;
 
-	if (cy == "很远"){
-		for (var key in loc_list){
-			if (incity(coor,key)){
-			return true;
+	if (cy == "很远") {
+		for (var key in loc_list) {
+			if (incity(coor, key)) {
+				return true;
 			}
 		}
 		return false
 	}
-								 
 
-	if (cy == "长安" && ((coor >= 244 && coor <= 381) || coor == 20 || coor == 709 || coor == 909 
-	|| coor == 1010 || coor == 1139))
+
+	if (cy == "长安" && ((coor >= 244 && coor <= 381) || coor == 20 || coor == 709 || coor == 909
+		|| coor == 1010 || coor == 1139))
 		return true;
 
 	if (cy == "成都" && ((coor >= 659 && coor <= 708) || coor == 1610 || coor == 1611))
@@ -1290,15 +1344,15 @@ function incity(coor, cy)
 		return true;
 
 	if (cy == "关外" && (coor >= 1211 && coor <= 1248))
-																
+
 		return true;
 
-	if (cy == "杭州" && ((coor >= 190 && coor <= 194) || (coor >= 785 && coor <= 891) || coor == 911 
-	|| coor == 986 || coor == 1573 || coor == 1672 || coor == 1673))
+	if (cy == "杭州" && ((coor >= 190 && coor <= 194) || (coor >= 785 && coor <= 891) || coor == 911
+		|| coor == 986 || coor == 1573 || coor == 1672 || coor == 1673))
 		return true;
 
-	if (cy == "华山" && ((coor >= 248 && coor <= 251) || (coor >= 987 && coor <= 1005) 
-	|| (coor >= 1025 && coor <= 1065) 	|| coor == 1712))
+	if (cy == "华山" && ((coor >= 248 && coor <= 251) || (coor >= 987 && coor <= 1005)
+		|| (coor >= 1025 && coor <= 1065) || coor == 1712))
 		return true;
 
 	if (cy == "灵州" && ((coor >= 1175 && coor <= 1207) || coor == 1659 || coor == 1660))
@@ -1316,50 +1370,51 @@ function incity(coor, cy)
 	if (cy == "嵩山" && (coor >= 1068 && coor <= 1138) || (coor >= 2499 && coor <= 2503))
 		return true;
 
-	if (cy == "苏州" && ((coor >= 190 && coor <= 194) || (coor >= 785 && coor <= 787) 
-	|| (coor >= 911 && coor <= 986) || coor == 68 || coor == 69 || coor == 1564 
-	|| coor == 1573 || coor == 1574 || coor == 1577 || coor == 1681))
+	if (cy == "苏州" && ((coor >= 190 && coor <= 194) || (coor >= 785 && coor <= 787)
+		|| (coor >= 911 && coor <= 986) || coor == 68 || coor == 69 || coor == 1564
+		|| coor == 1573 || coor == 1574 || coor == 1577 || coor == 1681))
 		return true;
 
 	if (cy == "天山" && ((coor >= 1157 && coor <= 1167) || coor == 1150))
 		return true;
 
-	if (cy == "武功" && ((coor >= 276 && coor <= 279) || (coor >= 709 && coor <= 728) 
-	|| (coor >= 892 && coor <= 909)))
+	if (cy == "武功" && ((coor >= 276 && coor <= 279) || (coor >= 709 && coor <= 728)
+		|| (coor >= 892 && coor <= 909)))
 		return true;
 
-	if (cy == "西域" && ((coor >= 700 && coor <= 707) || (coor >= 1139 && coor <= 1172) 
-	|| (coor >= 1632 && coor <= 1654) || (coor >= 1753 && coor <= 1786) 
-	|| (coor >= 1808 && coor <= 1811) || coor == 301 || coor == 666 || coor == 1797 || coor == 2764))
+	if (cy == "西域" && ((coor >= 700 && coor <= 707) || (coor >= 1139 && coor <= 1172)
+		|| (coor >= 1632 && coor <= 1654) || (coor >= 1753 && coor <= 1786)
+		|| (coor >= 1808 && coor <= 1811) || coor == 301 || coor == 666 || coor == 1797 || coor == 2764))
 		return true;
 
-	if (cy == "襄阳" && ((coor >= 77 && coor <= 189) || coor == 19 || coor == 20 || coor == 244 
-	|| coor == 1566 || coor == 1567))
+	if (cy == "襄阳" && ((coor >= 77 && coor <= 189) || coor == 19 || coor == 20 || coor == 244
+		|| coor == 1566 || coor == 1567))
 		return true;
 
 	if (cy == "星宿" && (coor >= 1140 && coor <= 1172))
 		return true;
 
-	if (cy == "扬州" && ((coor >= 0 && coor <= 78) || (coor >= 190 && coor <= 193) 
-	|| (coor >= 244 && coor <= 247) || (coor >= 1025 && coor <= 1039) 
-	|| (coor >= 1454 && coor <= 1459) || (coor >= 1558 && coor <= 1565) 
-	|| (coor >= 1681 && coor <= 1686) || (coor >= 1733 && coor <= 1739) 
-	|| (coor >= 2490 && coor <= 2496) || coor == 147 || coor == 382 || coor == 785 
-	|| coor == 786 || coor == 1143 || coor == 1713))
+	if (cy == "扬州" && ((coor >= 0 && coor <= 78) || (coor >= 190 && coor <= 193)
+		|| (coor >= 244 && coor <= 247) || (coor >= 1025 && coor <= 1039)
+		|| (coor >= 1454 && coor <= 1459) || (coor >= 1558 && coor <= 1565)
+		|| (coor >= 1681 && coor <= 1686) || (coor >= 1733 && coor <= 1739)
+		|| (coor >= 2490 && coor <= 2496) || coor == 147 || coor == 382 || coor == 785
+		|| coor == 786 || coor == 1143 || coor == 1713))
 		return true;
 
-	if (cy == "终南" && ((coor >= 276 && coor <= 279) || (coor >= 709 && coor <= 784) 
-	|| (coor >= 892 && coor <= 909)))
+	if (cy == "终南" && ((coor >= 276 && coor <= 279) || (coor >= 709 && coor <= 784)
+		|| (coor >= 892 && coor <= 909)))
 		return true;
 
 	return false;
 }
 
-function can_accept()
-{
+function can_accept() {
 	if (query("quest/flag") != "kill") return false;
 
-	if (query("hp/dispel"))	return false;
+	if (check_in_fb()) return false;
+
+	if (query("hp/dispel")) return false;
 
 	if (query("item/load")) return false;
 
@@ -1367,7 +1422,7 @@ function can_accept()
 
 	if (query("weapon/dur") < 35) return false;
 
-	if (query("item/food") < 5) return false;
+	if (query("item/food") < 10) return false;
 
 	if (query("item/shuidai") < 2) return false;
 
@@ -1379,94 +1434,83 @@ function can_accept()
 
 	if (query("item/arrow") < 9 && get_var("cmd_pfm") == "shot")
 		return false;
-	
+
 	if (query("hp/neili") < get_var("min_neili"))
 		return false;
 
 	if (query("hp/jingli") < get_var("min_jingli"))
 		return false;
 
-	if (query("hp/pot") > get_var("max_pot")) 
+	if (query("hp/pot") > get_var("max_pot"))
 		return false;
-	
-	if (query("hp/exp") > get_var("max_exp")) 
+
+	if (query("hp/exp") > get_var("max_exp"))
 		return false;
-	
+
 	return true;
 }
 
 
-function can_sleep()
-{
-	if (query("other/mtc")){
+function can_sleep() {
+	if (get_var("loc_sleep") == "") {
 		return false
 	}
 	var time = (new Date()).getTime();
-	if (time < query("other/sleep") - 0 + 55*1000) return false;
+	if (time < query("other/sleep") - 0 + 55 * 1000) return false;
 
 	return true;
 }
 //修改成study1 study2
-function can_study()
-{
+function can_study() {
 	var time = (new Date()).getTime();
-	if (time < query("other/study") - 0 + 15*60*1000) return false;
+	if (time < query("other/study") - 0 + 15 * 60 * 1000) return false;
 
 	return true;
 }
 
-function can_jiqu()
-{
+function can_jiqu() {
 	if (query("hp/exp") < 100000) return false;
 
 	var time = (new Date()).getTime();
-	if (time < query("other/jiqu") - 0 + 45*60*1000) return false;
+	if (time < query("other/jiqu") - 0 + 45 * 60 * 1000) return false;
 
 	return true;
 }
 
-function can_fuben(bs)
-{
-	if (check_in_3boss()&& query("boss/kill")==bs){
-		return true
-	}
+function can_fuben(bs) {
+
+	//接受了保护任务，暂时不下大副本
+	if ((bs == "lgt") && query("protect/step") > 0) return false;
+	if (bs == "lgt" && (query("hp/exp") < 100 * 10000)) return false;
+	if (bs == "qinling" && (query("hp/exp") < 5000 * 10000)) return false;
 	var time = (new Date()).getTime();
 	var time1;
 	if (get_var("list_boss").indexOf(bs) == -1) return false;
-	if (bs == "seadragon")
-		time1 =  query("boss/seadragon") - 0 + 60*60*1000;
-	else if (bs == "dongfang")
-		time1 = query("boss/dongfang") - 0 + 60*60*1000;
-	else if (bs == "jiangshi")
-		time1 = query("boss/jiangshi") - 0 + 60*60*1000;
-	else if (bs == "juxianzhuang")
-		time1 = query("boss/juxianzhuang") - 0 + 60*60*1000;
-	else if (bs == "digong")
-		time1 = query("boss/digong") - 0 + 80*60*1000;
-	else if (bs == "xuemo")
-		time1 = query("boss/xuemo") - 0 + 120*60*1000;	
-		//time1 = query("boss/xuemo") - 0 + 1*60*1000;	
-	if (time < time1) 
+	else if (bs == "lgt")
+		time1 = get_var("lgt_time") - 0 + 8 * 60 * 60 * 1000;
+	//time1 = query("lgt/time") - 0 + 8*60*60*1000;
+	else if (bs == "qinling")
+		time1 = query("qinling/ctime") - 0 + 2 * 55 * 1000;
+	//灵感塔8小时尝试一次
+
+	if (time < time1)
 		return false;
 	else
 		return true;
 }
 
-function add_room_cmd(cmd)
-{
+function add_room_cmd(cmd) {
 	var cmd1 = query("room/cmd");
 	if (cmd1 == "") {
 		set("room/cmd", cmd);
-	} else
-	if (cmd1.indexOf(cmd) == -1) {
+	} else if (cmd1.indexOf(cmd) == -1) {
 		cmd = cmd1 + ";" + cmd;
 		set("room/cmd", cmd);
 	}
 }
 
 //--------------------------------------------------------------------------------
-function do_nextstep()
-{
+function do_nextstep() {
 	stop_all();
 
 	var lc1 = query("room/id");
@@ -1484,7 +1528,7 @@ function do_nextstep()
 			do_prepare();
 			break;
 		case "SEARCH":
-			do_search(); 
+			do_search();
 			break;
 		case "SEARCH_END":
 			do_searchend();
@@ -1500,16 +1544,15 @@ function do_nextstep()
 			break;
 		case "COMMANDS":
 			send(query("nextstep/cmds"));
-			break;		
-		default :
+			break;
+		default:
 			world.note("warning: nextstep无效！");
-			break;	 
+			break;
 	}
 }
 
-function do_walk(path)
-{
-	if (path == "" || path == null) {	
+function do_walk(path) {
+	if (path == "" || path == null) {
 		do_nextstep();
 		return;
 	}
@@ -1524,13 +1567,13 @@ function do_walk(path)
 		set("other/brief", true);
 		world.SendImmediate("set brief 3");
 	}
-	
+
 	step_walk = new MyArray(path);
 	set("walk", "multi");
 	set("other/walk", true);
 	set("other/trace", true);
 	add_room_cmd("#t- wk_miss");
-	world.EnableTriggerGroup("on_npc",true);
+	world.EnableTriggerGroup("on_npc", true);
 	world.EnableTrigger("step", true);
 	world.EnableTrigger("wk_busy", true);
 	world.EnableTrigger("wk_shhu", true);
@@ -1541,8 +1584,7 @@ function do_walk(path)
 	if (!enter_maze()) send(step_walk.block(1));
 }
 
-function do_autosearch(dp, flag)
-{
+function do_autosearch(dp, flag) {
 	stop_all();
 	auto_search = new MySearch(dp);
 	switch (flag) {
@@ -1561,7 +1603,7 @@ function do_autosearch(dp, flag)
 	send("look");
 	set("other/walk", true);
 	set("other/trace", true);
-	world.EnableTriggerGroup("on_npc",true);
+	world.EnableTriggerGroup("on_npc", true);
 	world.EnableTrigger("step", true);
 	world.EnableTrigger("wk_busy", true);
 	world.EnableTrigger("wk_shhu", true);
@@ -1569,8 +1611,7 @@ function do_autosearch(dp, flag)
 	world.EnableTrigger("wk_noexit", true);
 }
 
-function do_search()
-{
+function do_search() {
 	var sfg, str, loc, map, tol;
 	HelpFind(query("npc/name"))
 	world.SetVariable("name_npc", query("npc/name"));
@@ -1594,7 +1635,7 @@ function do_search()
 		map = map_list[loc_list[loc]["map"]];
 		str = "do_search():开始五步搜索[" + loc + "]";
 	}
-	
+
 	if (map == "") set("search/flag", "END");
 	if (sfg == "END") {
 		map = map_list[loc_list[loc]["map"]];
@@ -1614,16 +1655,19 @@ function do_search()
 	do_walk(map.split(";"));
 }
 
-function do_searchend()
-{
+function do_searchend() {
 	var loc = query("npc/loc");
-	if (loc == "很远") { 
+	if (loc == "很远") {
+		far_list = [...raw_far_list]
 		var le = far_list.length;
 		var exp = query("hp/exp") - 0;
 		if (exp < 150000) le = le - 4;
 		else if (exp < 400000) le = le - 2;
 		else if (exp < 700000) le = le - 1;
-
+		else {
+			//根据help found优化，优先找线报少的西域
+			far_list.unshift(far_list.pop())
+		}
 		var fx = query("quest/far") - 0 + 1;
 		if (fx >= le || fx < 0) {
 			set("npc/status", "end");
@@ -1644,8 +1688,7 @@ function do_searchend()
 	do_askinfo();
 }
 
-function do_areasearch()
-{
+function do_areasearch() {
 	set("nextstep/flag", "SEARCH");
 	var rmid = query("room/id");
 	var rn = query("room/name");
@@ -1659,13 +1702,12 @@ function do_areasearch()
 	do_autosearch(2, "auto");
 }
 
-function do_gpssearch()
-{
+function do_gpssearch() {
 	var ix = query("askyou/index") - 0;
 	var lc = query("askyou/loc");
 	if (ix >= lc.length || lc == null) {
 		var ct = query("askyou/count") - 0 + 1;
-		add_log("do_gpssearch:" + query("npc/id") + "." + query("npc/status") + "." +query("npc/loc") + "." + query("other/loc1") + "(" + lc + ")" + "没有找到。");
+		add_log("do_gpssearch:" + query("npc/id") + "." + query("npc/status") + "." + query("npc/loc") + "." + query("other/loc1") + "(" + lc + ")" + "没有找到。");
 		set("askyou/loc", null);
 		set("askyou/index", 0);
 		set("askyou/flag", false);
@@ -1674,7 +1716,7 @@ function do_gpssearch()
 		return;
 	}
 
-	if (lc[ix] == -1 || lc[ix] == null){
+	if (lc[ix] == -1 || lc[ix] == null) {
 		set("askyou/index", (ix + 1));
 		do_gpssearch();
 		return;
@@ -1684,7 +1726,7 @@ function do_gpssearch()
 	var fl = query("room/id");
 	var tl = lc[ix];
 	if (fl == tl) {
-	//	world.note("GPS开始搜索." + query("other/loc1") + ":" + tl);
+		//	world.note("GPS开始搜索." + query("other/loc1") + ":" + tl);
 		set("askyou/index", (ix + 1));
 		set("nextstep/flag", "GPS_SEARCH");
 		var rn = query("room/name");
@@ -1710,25 +1752,27 @@ function do_gpssearch()
 	goto(tl);
 }
 
-function NpcAlive(){
-	return query("npc/status")=="start" ||query("npc/status")=="flee" ||query("npc/status")=="disp"
+function NpcAlive() {
+	return query("npc/status") == "start" || query("npc/status") == "flee" || query("npc/status") == "disp"
 }
 
-function do_prepare()
-{
+function do_prepare() {
 	var tl;
 
 	var ll = query("hp/level") - 3;
 	set("nextstep/flag", "COMMANDS");
-	if (get_var("max_exp") < ll*ll*ll/10) {
+	if (get_var("max_exp") < ll * ll * ll / 10) {
 		world.note("-----变量max_exp设置有问题！-----");
 		return;
-	} else
-	if (query("hp/dispel")) {
+	} else if ((!check_in_fb()) && query("need_do/cmds") != "" && query("need_do/loc") != -1) {
+		set("nextstep/cmds", query("need_do/cmds"));
+		tl = query("need_do/loc");
+		set("need_do/loc", -1);
+		set("need_do/cmds", "");
+	} else if (query("hp/dispel")) {
 		set("nextstep/cmds", "hp;set no_teach heal");
 		tl = get_var("loc_dazuo");
-	} else
-	if (query("hp/eff_qi") < 21) {
+	} else if (query("hp/eff_qi") < 21) {
 		if (get_var("id_pass") == "xy") {
 			set("nextstep/cmds", "#t+ pe_cures;#t+ pe_nobody;ask xue muhua about 疗伤");
 			tl = 1722;
@@ -1736,201 +1780,170 @@ function do_prepare()
 			set("nextstep/cmds", "mdan2;hp;set no_teach heal");
 			tl = 65;
 		}
-	} else
-	if (query("hp/eff_qi") < 85) {
+	} else if (query("hp/eff_qi") < 85) {
 		set("nextstep/cmds", "#t+ pe_heal;#t+ pe_healf;yun heal");
 		tl = get_var("loc_dazuo");
-	} else
-	if (query("item/gold") < get_var("min_gold")) {
+	} else if (query("item/gold") < get_var("min_gold")) {
 		var num = get_var("min_gold") - query("item/gold") + 10;
 		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu " + num + " gold");
 		set("nextstep/cmds", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu " + num + " gold");
 		tl = 23;
-	} else
-	if (query("item/cash") < 15 && get_var("list_qask") != "") {	
-		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 100 cash");	
+	} else if (query("item/cash") < 15 && get_var("list_qask") != "") {
+		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 100 cash");
 		set("nextstep/cmds", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 100 cash");
 		tl = 23;
-	} else
-	
-
-	if (query("item/gong") < 1 && get_var("cmd_pfm") == "shot") {
+	} else if (query("item/gong") < 1 && get_var("cmd_pfm") == "shot") {
 		set("item/buy", "long bow from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy long bow from tie jiang");
 		tl = 66;
-	} else
-	if (query("item/lsword") < 1 && get_var("id_weapon") == "long sword") {
+	} else if (query("item/lsword") < 1 && get_var("id_weapon") == "long sword") {
 		set("item/buy", "long sword from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy long sword from tie jiang");
 		tl = 66;
-	} else
-	if (query("item/iblade") < 1 && get_var("id_weapon") == "iron blade") {
+	} else if (query("item/iblade") < 1 && get_var("id_weapon") == "iron blade") {
 		set("item/buy", "iron blade from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy iron blade from tie jiang");
 		tl = 66;
-	} else
-	if (query("item/arrow") < 9 && get_var("cmd_pfm") == "shot") {
+	} else if (query("item/arrow") < 9 && get_var("cmd_pfm") == "shot") {
 		set("item/buy", "50 狼牙箭 from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy 50 狼牙箭 from tie jiang");
 		tl = 66;
-	} else
-	if ((query("item/gangbiao") - 0 + query("item/zhen")) < 400 && (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao")))	 {
+	} else if ((query("item/gangbiao") - 0 + query("item/zhen")) < 400 && (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao"))) {
 		set("item/buy", "100 gangbiao from tie jiang");
 		set("nextstep/cmds", "#t+ pe_buy;buy 100 gangbiao from tie jiang");
 		tl = 66;
-	} else
-	if ((!check_in_3boss()) && query("item/shuidai") < 5) {
+	} else if ((!check_in_fb()) && query("item/shuidai") < 7) {
 		set("item/buy", "shui dai from xiao er");
 		set("nextstep/cmds", "#t+ pe_buy;buy shui dai from xiao er");
 		tl = 27;
-	} else
-	if ((!check_in_3boss()) && get_var("bool_drunk" )&& query("item/jiuping") < 10) {
+	} else if ((!check_in_fb()) && get_var("bool_drunk") && query("item/jiuping") < 10) {
 		set("item/buy", "zui xunfeng from yang laoban");
 		set("nextstep/cmds", "#t+ pe_buy;buy zui xunfeng from yang laoban");
 		tl = 313;
-	} else	
-	if ((!check_in_3boss()) && query("item/food") < 5) {
-		set("item/buy", "10 gan liang from xiao er");
-		set("nextstep/cmds", "#t+ pe_buy;buy 10 gan liang from xiao er");
+	} else if ((!check_in_fb()) && query("item/food") < 15) {
+		set("item/buy", "20 gan liang from xiao er");
+		set("nextstep/cmds", "#t+ pe_buy;buy 20 gan liang from xiao er");
 		tl = 27;
-	} else
-	if(get_var("id_pass").indexOf("bt")>-1 && !query("allitem/shen she",true)){
+	} else if (get_var("id_pass").indexOf("bt") > -1 && !query("allitem/shen she", true)) {
 		set("nextstep/cmds", "ask ouyang ke about 引路神蛇;i;set no_teach prepare");
-		tl=22
-	}else
-	if (query("weapons/"+get_var("id_weapon")) < 35 || (query("weapons/"+get_var("id_weapon"))<98) && (can_fuben("juxianzhuang") || can_fuben("digong") || can_fuben("xuemo"))&&!check_in_3boss()) {
+		tl = 22
+	} else if (query("weapons/" + get_var("id_weapon")) < 35 || ((query("weapons/" + get_var("id_weapon")) < 98) && (can_fuben("lgt")||can_fuben("qinling")))) {
 		var wp = get_var("id_weapon");
-		set("weapon/id",wp),
+		set("weapon/id", wp),
+			set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
+		tl = 66;
+	} else if ((!check_in_fb()) && query("weapon/dur") < 30 && query("weapon/id")) {
+		var wp = query("weapon/id")
 		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
 		tl = 66;
-	} else
-	if ((!check_in_3boss()) && query("weapon/dur") < 30 && query("weapon/id") ){
-		var wp=query("weapon/id")
-		set("nextstep/cmds", "#t+ pe_repair;repair " + wp + ";repair " + wp + ";l " + wp + " of me;i;set no_teach prepare");
-		tl = 66;
-	} else
-	if ((!check_in_3boss()) && query("item/9hua") < 10 && get_var("loc_jiuhua") != "") {
+	} else if ((!check_in_fb()) && query("item/9hua") < 10 && get_var("loc_jiuhua") != "") {
 		set("nextstep/cmds", "gdan0;i;set no_teach prepare");
 		tl = get_var("loc_jiuhua");
-	} else		
-	if (query("item/load") && query("item/sell") != "null") {
+	} else if ((get_var("bool_cungift") || query("item/load")) && query("item/sell") != "null") {
 		set("nextstep/cmds", "sell " + query("item/sell") + ";i;set no_teach prepare");
 		tl = 48;
-	} else
-	if (query("item/cash") > 2000) {
+	} else if (query("item/cash") > 2000) {
 		set("nextstep/cmds", "i;set no_teach cun money");
 		tl = 23;
-	} else
-	if (query("item/load") && (query("item/silver") > 300 || query("item/gold") > get_var("min_gold") - 0 + 200 || query("item/cash") > 300)) {
+	} else if (query("item/load") && (query("item/silver") > 300 || query("item/gold") > get_var("min_gold") - 0 + 200 || query("item/cash") > 300)) {
 		set("nextstep/cmds", "i;set no_teach cun money");
 		tl = 23;
-	} else
-	if (query("deposit")>30000) {	
-		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 2001 cash;score;i");	
+	} else if (query("deposit") > 80000) {
+		set("item/qu", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 2001 cash;score;i");
 		set("nextstep/cmds", "#t+ pe_silver;#t+ pe_quf;#t+ pe_qub;qu 2001 cash;score;i");
 		tl = 23;
-	} else
-	if (query("trceatlu")){
+	} else if (query("trceatlu")) {
 		set("nextstep/cmds", "set no_teach eatlu.check");
 		tl = 306;
-	}else
-	if ((get_var("bool_cungift") || query("item/load")) && query("item/gift") != "null") {
+	} else if ((get_var("bool_cungift") || query("item/load")) && query("item/gift") != "null") {
 		tl = get_var("loc_gift");
 		if (tl == 2682) set("nextstep/cmds", "#t+ pe_drop;cun " + query("item/gift"));
-		else set("nextstep/cmds", "#t+ pe_drop;give " + query("item/gift") + " to " + get_var("list_control").split(",")[0] +";drop " + query("item/gift"));
+		else set("nextstep/cmds", "#t+ pe_drop;give " + query("item/gift") + " to " + get_var("list_control").split(",")[0]);
 
-	} else
-	if (query("hp/jingli") < get_var("min_jingli")) {
-		set("nextstep/cmds", "#t+ pe_tuna;#t+ pe_tunab;mdan1;hp;tuna "+get_var("num_tuna"));
+	} else if (query("hp/jingli") < get_var("min_jingli")) {
+		set("nextstep/cmds", "#t+ pe_tuna;#t+ pe_tunab;mdan1;hp;tuna " + get_var("num_tuna"));
 		tl = get_var("loc_dazuo");
-	} else
-
-	if (!query("stab/miss") && query("stab/flag")) {
+	} else if (!query("stab/miss") && query("stab/flag")) {
 		do_stab();
 		return;
-	} else 
-	if (query("hp/neili") < get_var("min_neili") && get_var("loc_sleep") != "") {
-		if (query("other/mtc")){
-			send("hp;set no_teach prepare")
-			return
-		}
-		if (can_sleep() && !check_in_3boss()) {
+	} else if (query("hp/neili") < get_var("min_neili") && get_var("loc_sleep") != "") {
+		if (can_sleep() && !check_in_fb()) {
 			set("nextstep/cmds", "#t+ pe_sleep;sleep");
 			tl = get_var("loc_sleep");
 		} else {
 			set("nextstep/cmds", "#t+ pe_dazuo;#t+ pe_dazuof;dazuo " + get_var("num_dazuo"));
 			tl = get_var("loc_dazuo");
 		}
-//	} else	if (query("other/backup") || ((!check_in_3boss())&&can_study() && query("hp/pot") > get_var("max_pot"))) {
-	} else	if (query("other/backup") || ((!check_in_3boss()) && query("hp/pot") > get_var("max_pot"))) {
+		//	} else	if (query("other/backup") || ((!check_in_fb())&&can_study() && query("hp/pot") > get_var("max_pot"))) {
+	} else if (query("other/backup") || ((!check_in_fb()) && query("hp/pot") > get_var("max_pot"))) {
 		set("nextstep/cmds", "#t+ pe_study;#t+ skfull;hp;set no_teach study");
 		tl = get_var("loc_study");
-	} else
-	if (query("hp/th") > get_var("max_th") && can_jiqu()) {
-		set("nextstep/cmds", "#t+ pe_jiqu1;#t+ pe_jiqu3;yun recover;yun regenerate;"+CmdMjq());
-		tl = get_var("loc_dazuo");
-	} else
-	if (query("hp/exp") > get_var("max_exp")) {
+	} else if (query("hp/th") > get_var("max_th") && can_jiqu()) {
+		if (query("hp/pot") > get_var("min_pot") + 2000) {
+			set("nextstep/cmds", "#t+ pe_study;#t+ skfull;hp;set no_teach study");
+			tl = get_var("loc_study");
+		} else {
+			set("nextstep/cmds", "#t+ pe_jiqu1;#t+ pe_jiqu3;yun recover;yun regenerate;" + CmdMjq());
+			tl = get_var("loc_dazuo");
+		}
+	} else if (query("hp/exp") > get_var("max_exp")) {
 		set("nextstep/cmds", "#t+ pe_fangqi;fangqi exp");
 		tl = get_var("loc_dazuo");
-	} else
-	if (Mods.Check()){
+	} else if (can_wud_suck()) {
+		do_wud_suck();
+		return;
+	} else if (Mods.Check()) {
 		return;
 	} else {
 		world.EnableTriggerGroup("gpe", 0);
 		set("item/load", false);
-		if (query("quest/flag") == "kill") {
-			if(NpcAlive()){
-				do_continue()
-				return
-			}	else 
-			if (can_fuben("seadragon") && get_var("list_boss").indexOf("seadragon") != -1 ) {
-				set("boss/kill", "seadragon");
-				set("nextstep/cmds", get_var("cmd_3boss")+";kill sea dragon king;" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
-				tl = 2767;
-			} else
-			if (can_fuben("dongfang") && get_var("list_boss").indexOf("dongfang") != -1) {
-				set("boss/kill", "dongfang");
-				set("nextstep/cmds", get_var("cmd_3boss")+";kill dongfang bubai;" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
-				tl = 2769;
-			} else
-			if (can_fuben("jiangshi") && get_var("list_boss").indexOf("jiangshi") != -1 ) {
-				set("boss/kill", "jiangshi");
-				set("nextstep/cmds", get_var("cmd_3boss")+";kill jiangshi daozhang;" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
-				tl = 2771;
-			} else 
-			if (can_fuben("juxianzhuang") == 1 && get_var("list_boss").indexOf("juxianzhuang") != -1) {
-				set("boss/kill", "juxianzhuang");
-				set("boss/step", 1);
-				set("nextstep/cmds", "ask nan xian about 英雄帖");
-				tl = 1551;
-			} else
-			if (can_fuben("digong") && get_var("list_boss").indexOf("digong") != -1) {
-				set("boss/kill", "digong");
-				set("digong/step", 1);
-				set("nextstep/cmds", get_var("cmd_digong")+";#tg+ dg1;look wall");
-				tl = 2819;
-			} else
-			if (can_fuben("xuemo") && get_var("list_boss").indexOf("xuemo") != -1) {
-				set("boss/kill", "xuemo");
-				set("xuemo/step", 1);
-				set("nextstep/cmds", "#tg+ gxm;#t+ dg_map0;#t+ dg_mape;look wall;push coffin;"+get_var("cmd_wait"));
-				tl = 2831;
-			} else{
-				set("nextstep/cmds", "quest " + get_var("id_master"));
-				tl = get_var("loc_master");
-			}
-		} else {
-			set("nextstep/flag", "");
-			world.note("=====任务结束！=====");
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", false);
-			world.EnableTrigger("ga", false);
+		////保护人质 副本为开，如果开的话，记得大副本要在非保护状态下去。
+		if (can_accept_protect() || can_go_protect()) {
+			initprotect();
+			do_protect();
 			return;
-		}
+		} else
+			////保护人质
+			if (query("quest/flag") == "kill") {
+				if (NpcAlive()) {
+					do_continue()
+					return
+				} else if (can_fuben("lgt") && get_var("list_boss").indexOf("lgt") != -1) {
+					initlgt();
+					//set("lgt/flag","start");
+					set("nextstep/flag", "COMMANDS");
+					cmd = "#t+ lgt_start;shou yang xiaoxie";
+					set("nextstep/cmds", cmd);
+					tl = 2902;
+				} else if (can_fuben("qinling") && get_var("list_boss").indexOf("qinling") != -1) {
+					initqinling();
+					go_qinling();
+					return;
+				} else if (get_var("list_boss").indexOf("doctor") != -1) {
+					set("nextstep/flag", "COMMANDS");
+					cmd = "set no_teach doctor";
+					set("nextstep/cmds", cmd);
+					tl = get_var("loc_dazuo");
+				} else if (get_var("list_boss").indexOf("lianxi") != -1) {
+					set("nextstep/flag", "COMMANDS");
+					cmd = "set no_teach lianxi";
+					set("nextstep/cmds", cmd);
+					tl = get_var("loc_dazuo");
+				} else {
+					set("nextstep/cmds", "quest " + get_var("id_master"));
+					tl = get_var("loc_master");
+				}
+			} else {
+				set("nextstep/flag", "");
+				world.note("=====任务结束！=====");
+				world.EnableTriggerGroup("on_npc", false);
+				world.EnableTrigger("step", false);
+				world.EnableTrigger("ga", false);
+				return;
+			}
 	}
-	if (check_in_3boss()&& (tl==get_var("loc_dazuo"))){
-		var cmd=query("nextstep/cmds");
+	if (check_in_fb() && (tl == get_var("loc_dazuo"))) {
+		var cmd = query("nextstep/cmds");
 		set("nextstep/cmds", "");
 		send(cmd)
 		return
@@ -1938,22 +1951,20 @@ function do_prepare()
 	goto(tl);
 }
 
-function do_quest()
-{
+function do_quest() {
 	if (query("npc/status") == "head")
-		var cmd = "#t+ qt_nobody;give head to "+ get_var("id_master");
+		var cmd = "#t+ qt_nobody;give head to " + get_var("id_master");
 	else
 		var cmd = "quest " + get_var("id_master");
 
 	set("npc/status", "end");
 	set("nextstep/cmds", cmd);
-	set("nextstep/flag", "COMMANDS");	
+	set("nextstep/flag", "COMMANDS");
 	goto(get_var("loc_master"));
 }
 
-function do_askinfo()
-{
-	if (query("npc/find")==-1){
+function do_askinfo() {
+	if (query("npc/find") == -1) {
 		kill_npc()
 		return
 	}
@@ -1983,9 +1994,8 @@ function do_askinfo()
 	}
 }
 
-function do_askyou()
-{
-	if (query("npc/find")==-1){
+function do_askyou() {
+	if (query("npc/find") == -1) {
 		kill_npc()
 		return
 	}
@@ -1995,16 +2005,16 @@ function do_askyou()
 		var sn = "";
 		var pt = 2;
 		var name = query("npc/name");
-		if ((sn = cn_sname[name.substr(0,2)]) == null) {
+		if ((sn = cn_sname[name.substr(0, 2)]) == null) {
 			pt--;
-			if ((sn = cn_sname[name.substr(0,1)]) == null) {
+			if ((sn = cn_sname[name.substr(0, 1)]) == null) {
 				add_log("do_askbei:找不到" + name + "的id。");
 				return;
 			}
 		}
 
 		var tmp = new Array();
-		for (var i=pt; i<name.length; i++) {
+		for (var i = pt; i < name.length; i++) {
 			tmp[i - pt] = new Array();
 			for (ky in cn_pname) {
 				if (cn_pname[ky].indexOf(name.substr(i, 1)) != -1)
@@ -2013,29 +2023,29 @@ function do_askyou()
 		}
 
 		var tmp1, ct;
-		for (var i=0; i<tmp.length; i++) {
+		for (var i = 0; i < tmp.length; i++) {
 			npc_id = new Array();
-			for (var j=0; j<tmp[i].length; j++) {
+			for (var j = 0; j < tmp[i].length; j++) {
 				if (i == 0)
 					npc_id[npc_id.length] = tmp[i][j];
 				else {
 					ct = tmp1.length;
-					for (var k=0; k<ct; k++)
+					for (var k = 0; k < ct; k++)
 						npc_id[npc_id.length] = tmp1[k] + tmp[i][j];
 				}
 			}
-	
+
 			tmp1 = new Array();
-			for (var l=0; l<npc_id.length; l++)
+			for (var l = 0; l < npc_id.length; l++)
 				tmp1[tmp1.length] = npc_id[l];
 		}
 
-		for (var i=0; i<npc_id.length; i++)
+		for (var i = 0; i < npc_id.length; i++)
 			npc_id[i] = sn + " " + npc_id[i];
 
 		set("askyou/idpt", 0);
 		set("npc/id", npc_id[0].toLowerCase());
-			
+
 	}
 
 	set("askyou/none", false);
@@ -2044,17 +2054,15 @@ function do_askyou()
 	goto(26);
 }
 
-function do_wait()
-{
-	if (query("hp/eff_qi") < 90)
-		send("yun heal");
-	else
-		send(get_var("cmd_wait"));
+function do_wait() {
+	//	if (query("hp/eff_qi") < 90)
+	//		send("yun heal");
+	//	else
+	send(get_var("cmd_wait"));
 	open_timer1(15, "quest_end", null);
 }
 
-function do_stab()
-{
+function do_stab() {
 	var lt = get_var("list_mloc");
 	if (lt == m_FAIL || lt == "") {
 		set("stab/flag", false);
@@ -2068,7 +2076,7 @@ function do_stab()
 	if (ix >= lt.length) {
 		wp = get_var("id_weapon");
 		set("stab/miss", true);
-		send(get_var("cmd_pre")+";wield " + wp + ";wear " + wp + ";set no_teach prepare");
+		send(get_var("cmd_pre") + ";wield " + wp + ";wear " + wp + ";set no_teach prepare");
 	} else {
 		lt = lt[ix].split(":");
 		set("nextstep/flag", "COMMANDS");
@@ -2080,13 +2088,12 @@ function do_stab()
 //--------------------------------------------------------------------------------
 // 触发函数。
 // ^    这里(.*)的出口是(.*)。
-function on_step(name, output, wildcards)
-{
+function on_step(name, output, wildcards) {
 	var wcs, mdir;
-	wcs = VBArray(wildcards).toArray();
+	wcs = wildcards;
 	world.speedwalkdelay = 0;
 	if (query("other/trace")) {
-		switch (query("walk")) { 
+		switch (query("walk")) {
 			case "auto":
 				mdir = auto_search.dir;
 				step_trace(mdir);
@@ -2100,31 +2107,34 @@ function on_step(name, output, wildcards)
 
 	if (!query("other/walk")) return;
 
-	switch (query("walk")) { 
+	switch (query("walk")) {
 		case "auto":
 			world.EnableTimer("timer1", false);
 			if (enter_maze(mdir)) return;
 			var exs = exit_filt(wcs[1]);
 			var dir = auto_search.next(exs.split(","));
 			if (dir == m_FAIL) {
-				world.note("-----autosearch end!-----"); 
+				world.note("-----autosearch end!-----");
 				do_nextstep();
 				return;
 			}
-			open_timer1(1,"step_fail",null)
+			open_timer1(1, "step_fail", null)
 			send(dir);
 			break;
 		case "multi":
 			if (enter_maze(mdir)) return;
 
 			var cmd = query("room/cmd");
-			if (cmd != "") {
+			var no_cmd = ",1928,2309,2312,2315,2340,2343,26,2046,";
+
+			//			if (cmd != "" && query("room/id")!= 1928) {
+			if (cmd != "" && no_cmd.indexOf("," + query("room/id") + ",") == -1) {
 				send(cmd);
 				send("#q");
 				set("room/cmd", "");
 			}
 
-			if ((step_walk.eof() || step_walk.eob()) && (query("npc/find") == -1)&&NpcAlive()) {
+			if ((step_walk.eof() || step_walk.eob()) && (query("npc/find") == -1) && NpcAlive()) {
 				kill_npc();
 				return;
 			}
@@ -2147,43 +2157,20 @@ function on_step(name, output, wildcards)
 				world.note("---无法定位---");
 				return;
 			}
-			open_timer1(1,"step_fail",null)
+			open_timer1(1, "step_fail", null)
 			send(dir);
 			break;
 	}
 }
 
-function on_maze(name, output, wildcards)
-{
+function on_maze(name, output, wildcards) {
 	switch (name) {
 		case "sm_exit":	// ^    这里(.*)的出口是(.*)。
 			var rn = query("room/name");
 			if (rn == "戈壁滩")
 				send("set no_teach maze");
-			else if (rn == "大沙漠" || rn == "南疆沙漠")
+			else if (rn == "大沙漠" || rn == "南疆沙漠" || rn == "桃花迷阵")
 				send("hp;set no_teach maze");
-			else if (rn == "诡异墓园") {
-				if (dg_maze.trace()) {
-					set("xuemo/npc", "");
-					send(do_xuemo());
-				} else {
-					stop_all();
-					world.EnableTrigger("dg_map0", true);
-					world.EnableTrigger("dg_mape", true);
-					open_timer1(1, "busy0", "fmap;set no_teach xuemo");
-				}
-			}
-			else if (rn == "秦陵地宫") {
-				if (dg_maze.trace()) {
-					set("digong/npc", "");
-					send(do_digong());
-				} else {
-					stop_all();
-					world.EnableTrigger("dg_map0", true);
-					world.EnableTrigger("dg_mape", true);
-					open_timer1(1, "busy0", "fmap;set no_teach digong");
-				}
-			}
 			else
 				world.EnableTriggerGroup("gsm", 0);
 			break;
@@ -2195,7 +2182,7 @@ function on_maze(name, output, wildcards)
 			var ct = query("maze/count") - 0;
 			var dir = query("maze/dir");
 			if (rn == "大沙漠") {
-				if (query("hp/neili") < (get_var("min_neili") -0 + 1000)) send("mtc");
+				if (query("hp/neili") < (get_var("min_neili") - 0 + 1000)) send("mtc");
 				if (query("hp/neili") < get_var("min_neili")) send("dazuo " + get_var("num_dazuo"));
 				if (dir == "w") {
 					if (Math.floor(Math.random() * 5) == 1) dir = "s";
@@ -2203,8 +2190,7 @@ function on_maze(name, output, wildcards)
 
 				send(dir);
 				if (query("walk") == "auto") auto_search.dir = dir;
-			} else 
-			if (rn == "南疆沙漠") {
+			} else if (rn == "南疆沙漠") {
 				if (dir == "sw") {
 					if (ct < 9) dir = "sw";
 					else dir = "ne";
@@ -2214,13 +2200,12 @@ function on_maze(name, output, wildcards)
 
 				send(dir);
 				if (query("walk") == "auto") auto_search.dir = dir;
-			} else 
-			if (rn == "戈壁滩") {
+			} else if (rn == "戈壁滩") {
 				if (dir == "e") {
 					if (ct < 2) dir = "s";
 					else if ((ct % 2)) dir = "e";
 					else dir = "s";
-				} 
+				}
 				else if (dir == "w") {
 					if (ct < 2) dir = "w";
 					else if ((ct % 2)) dir = "n";
@@ -2230,64 +2215,50 @@ function on_maze(name, output, wildcards)
 				send(dir);
 				set("maze/count", (ct + 1));
 				if (query("walk") == "auto") auto_search.dir = dir;
+			} else if (rn == "桃花迷阵") {
+				if (query("hp/eff_qi") < 70) send("yun heal");
+				if (query("hp/neili") < get_var("min_neili")) send("dazuo " + get_var("num_dazuo"));
+				send(dir);
+				set("maze/count", (ct + 1));
+				if (query("walk") == "auto") auto_search.dir = dir;
 			}
 			break;
 		case "sm_out":	// ^(> )*(深山|昆仑山下|戈壁|丝绸之路|天山脚下|东门)$
-			world.EnableTriggerGroup("gsm", 0);		
-			world.EnableTriggerGroup("on_npc",false);
+			world.EnableTriggerGroup("gsm", 0);
+			world.EnableTriggerGroup("on_npc", false);
 			world.EnableTrigger("step", true);
 			break;
 	}
 }
 
-function on_walk(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_walk(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "wk_busy":	// ^(> )*你(的动作还没有完成，不能移动|逃跑失败)。$
 			world.DiscardQueue();
 			world.EnableTrigger("wk_busy", false);
 			if (output.indexOf("感觉相当飘忽") != -1)
-				if (query("miss/fail")&&!get_var("bool_missonly")){
+				if (query("miss/fail") && !get_var("bool_missonly")) {
 					stop_all()
 					var date = new Date();
 					var time = date.getTime();
-					set("miss/until",time+5*60*1000)
+					set("miss/until", time + 5 * 60 * 1000)
 					send("hp;i;set no_teach prepare")
 					return
-				}else{
-					set("miss/fail",true)
+				} else {
+					set("miss/fail", true)
 					send("mdan1")
 				}
 
-			if (output.indexOf("虾兵虾将") != -1) {
-				send("#t- step;#t+ bs_sea;look");
-				return;
-			}
 			var rn = query("room/name");
-			if (rn == "秦陵地宫") {
-				set("digong/npc","end");
-				 open_timer1(1, "busy0", do_digong() + ";#t+ wk_busy");	
-			} else 	if (rn == "诡异墓园") {
-				set("xuemo/npc","end");
-				 open_timer1(1, "busy0", do_xuemo() + ";#t+ wk_busy");	
-			} else
 			open_timer1(1, "busy0", get_step() + ";#t+ wk_busy");
 			break;
 		case "wk_noexit":	// ^(> )*这个方向没有出路。
-			var rd = query("room/id");
-			if (rd == 2820) {
-					stop_all();
-					world.EnableTrigger("dg_map0", true);
-					world.EnableTrigger("dg_mape", true);
-					open_timer1(1, "busy0", "fmap;set no_teach digong");
-			} else {
-					set("room/id", -1);
-					if (query("quest/flag") == "null") return;
-					stop_all();
-					open_timer1(1, "busy0", "set no_teach no exit");
-			}
-		//	if (rd != -1) add_log("没有出路：" + rd + " " + step_walk.dir);
+			set("room/id", -1);
+			if (query("quest/flag") == "null") return;
+			stop_all();
+			open_timer1(1, "busy0", "set no_teach no exit");
+			//	if (rd != -1) add_log("没有出路：" + rd + " " + step_walk.dir);
 			break;
 		case "wk_miss":	// ^(> )*你口中念念有词，转瞬天际一道长虹划过，你驾彩虹而走。
 			world.EnableTriggerGroup("gsm", 0);
@@ -2304,8 +2275,10 @@ function on_walk(name, output, wildcards)
 			send(get_step());
 			break;
 		case "wk_bar":		// ^(> )*(摘星子|虚通|虚明)(喝道：这位|伸手拦住你白眼一翻说道|拦住你说道|迈步挡在你身前)
-			var elt = {"亲兵" : 5, "衙役" : 5, "官兵" : 5, "宋兵" : 5, "虚通" : 5, "虚明" : 5, "道一" : 5,
-				"大汉" : 10, "拓跋" : 30, "摘星子" : 40, "劳德诺" : 70, "空见" : 500};
+			var elt = {
+				"亲兵": 5, "衙役": 5, "官兵": 5, "宋兵": 5, "虚通": 5, "虚明": 5, "道一": 5,
+				"大汉": 10, "拓跋": 30, "摘星子": 80, "劳德诺": 250, "空见": 500
+			};
 
 			var npc = wcs[1];
 			var num = elt[npc];
@@ -2315,18 +2288,22 @@ function on_walk(name, output, wildcards)
 				telldm("Help kill " + npc);
 				world.doafter(1, "look");
 				return;
-			} 
+			}
 
-			var list = {"安健刚" : "an jiangang", "孟健雄" : "meng jianxiong", "心砚" : "xin yan", "大汉" : "da han",
-				"周绮" : "zhou yi", "蒋四根" : "jiang sigen", "石双英" : "shi shuangying", "拓跋" : "tuoba", 
-				"卫春华" : "wei chunhua", "杨成协" : "yang chengxie", "徐天宏" : "xu tianhong", 
-				"常伯志" : "chang bozhi", "常赫志" : "chang hezhi", "赵半山" : "zhao banshan", 
-				"周仲英" : "zhou zhongying", "陆菲青" : "lu feiqing", "无尘" : "wuchen daozhang", 
-				"摘星子" : "zhaixing zi", "虚通" : "xu tong", "虚明" : "xu ming", "劳德诺" : "lao denuo",
-				"李力世" : "li lishi", "江百胜" : "jiang baisheng", "官兵" : "guan bing", "衙役" : "ya yi",
-				"宋兵" : "song bing", "侍女" : "shi nu", "亲兵" : "qin bing", "褚万里" : "chu wanli", "空见" : "kong jian", "道一" : "daoyi chanshi"};
+			var list = {
+				"安健刚": "an jiangang", "孟健雄": "meng jianxiong", "心砚": "xin yan", "大汉": "da han",
+				"周绮": "zhou yi", "蒋四根": "jiang sigen", "石双英": "shi shuangying", "拓跋": "tuoba",
+				"卫春华": "wei chunhua", "杨成协": "yang chengxie", "徐天宏": "xu tianhong",
+				"常伯志": "chang bozhi", "常赫志": "chang hezhi", "赵半山": "zhao banshan",
+				"周仲英": "zhou zhongying", "陆菲青": "lu feiqing", "无尘": "wuchen daozhang",
+				"摘星子": "zhaixing zi", "虚通": "xu tong", "虚明": "xu ming", "劳德诺": "lao denuo",
+				"李力世": "li lishi", "江百1胜": "jiang baisheng", "官兵": "guan bing", "衙役": "ya yi", "御前侍卫": "shi wei",
+				"宋兵": "song bing", "侍女": "shi nu", "巴依": "ba yi", "亲兵": "qin bing", "褚万里": "chu wanli", "空见": "kong jian", "道一": "daoyi chanshi"
+			};
 
 			var cmd = "kill " + list[npc];
+			if (npc == "御前侍卫") cmd += ";kill guan bing";
+			if ((npc == "摘星子") && (exp < 2500000)) cmd += ";" + perform();
 			if (get_var("cmd_pfm") == "shot") cmd += ";shot " + list[npc] + " with arrow";
 
 			send(cmd);
@@ -2338,12 +2315,13 @@ function on_walk(name, output, wildcards)
 			break;
 		case "wk_wd":	// ^请不要装备武器。
 			var wp = get_var("id_weapon");
+			send("unwield " + get_var("id_weapon2"));
 			send("unwield " + wp + ";" + get_step() + ";wield " + wp);
 			break;
 		case "wk_cross":	// ^(> )*(船厂里走出一个船夫，瞪着眼看着你|船夫在旁边拿眼瞪......
 			if (query("walk") == "multi") {
 				step_trace(step_walk.next());
-				step_walk.blockend ++;
+				step_walk.blockend++;
 				send("cross");
 			}
 			break;
@@ -2351,8 +2329,8 @@ function on_walk(name, output, wildcards)
 			open_timer1(2, "busy", "cross;piao");
 			break;
 		case "wk_xiwall":	// ^(> )*你太累了，还是休息一会儿吧。
-			open_timer1(2, "busy", "yun recover;"+ get_step());
-			break;			
+			open_timer1(2, "busy", "yun recover;" + get_step());
+			break;
 		case "wk_yell":	// ^(> )*你(.*)一声：“船家！”		
 			world.EnableTrigger("wk_dcbusy", true);
 			world.EnableTrigger("wk_dcready", true);
@@ -2369,17 +2347,17 @@ function on_walk(name, output, wildcards)
 			world.EnableTrigger("wk_dcbusy", false);
 			world.EnableTrigger("wk_dcready", false);
 			set("room/name", "渡船");
-			send("enter;" + get_var("cmd_mache"));
+			send("enter;" + get_var("cmd_wait"));
 			break;
 		case "wk_mache":		// ^(> )*马夫一声招呼，开过来一辆大车，你上了车就出发了。
 			set("room/name", "马车");
-			send("drop head 2;"+get_var("cmd_mache"));
+			send("drop head 2;" + get_var("cmd_wait"));
 			break;
 		case "wk_mcout":	// ^(> )*你到了(.*)，下了车。
 			world.SendImmediate("halt");
 			break;
 		case "wk_ride":		// ^(> )*这里没有这样东西可骑。
-			if(output.indexOf("可骑")) {
+			if (output.indexOf("可骑")) {
 				set("room/id", -1);
 				goto(query("nextstep/loc"));
 			} else
@@ -2393,12 +2371,25 @@ function on_walk(name, output, wildcards)
 			set("room/id", 2400);
 			goto(query("nextstep/loc"));
 			break;
+		case "wk_dzm"://^    前面就是明教的“地字门”了，这里是明教中女弟子修炼
+			if (query("walk") != "find")
+				return;
+
+			stop_all();
+			set("room/id", 1799);
+			goto(query("nextstep/loc"));
+			break;
+		case "wk_taishan":		// ^你一不小心脚下踏了个空，... 啊...！
+			if (query("walk") == "find")
+				return;
+			stop_all();
+			send("set no_teach go tl");
+			break;
 	}
 }
 
-function on_quest(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_quest(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "qt_sl":	// ^最近(.*)在(.*)作恶多端，你去把他除了，提头来见。”	
 			world.SetVariable("name_npc", wcs[0]);
@@ -2437,19 +2428,28 @@ function on_quest(name, output, wildcards)
 			set("npc/name", wcs[2]);
 			HelpFind(query("npc/name"))
 			world.SendImmediate("halt");
-			world.EnableTrigger("qt_letter1", true);
-			break;
-		case "qt_letter1":	// ^正是大好机会将他除去，你若愿意
-			var loc = query("other/loc") + wcs[0];
-			world.EnableTrigger("qt_letter1", false);
-			if (query("npc/status") == "head" && query("quest/master") 
-			&& (loc.indexOf("西域") != -1 || loc.indexOf("大理") != -1)) {
+			// world.EnableTrigger("qt_letter1", true);
+			var loc = query("other/loc");
+			if (query("npc/status") == "head" && query("quest/master")
+				&& (loc.indexOf("西域") != -1 || loc.indexOf("大理") != -1)) {
 				do_quest();
 			} else {
 				send("accept quest;quest");
 				world.EnableTrigger("qt_disp", true);
 				world.EnableTrigger("qt_start", true);
 			}
+			break;
+		case "qt_letter1":	// ^正是大好机会将他除去，你若愿意
+			// var loc = query("other/loc") + wcs[0];
+			world.EnableTrigger("qt_letter1", false);
+			// if (query("npc/status") == "head" && query("quest/master")
+			// 	&& (loc.indexOf("西域") != -1 || loc.indexOf("大理") != -1)) {
+			// 	do_quest();
+			// } else {
+			// 	send("accept quest;quest");
+			// 	world.EnableTrigger("qt_disp", true);
+			// 	world.EnableTrigger("qt_start", true);
+			// }
 			break;
 		case "qt_letter2":	// ^如果你愿意接受此任务，请在三十秒之内输入(accept quest)以确认，
 			break;
@@ -2460,7 +2460,7 @@ function on_quest(name, output, wildcards)
 			break;
 		case "qt_start":	// ^据说此人前不久曾经在(.*)出没。
 			world.EnableTrigger("qt_disp", false);
-			world.EnableTrigger("qt_nobody", false);	
+			world.EnableTrigger("qt_nobody", false);
 			world.EnableTrigger("qt_start", false);
 			set("quest/letter", false);
 			set("quest/master", true);
@@ -2468,7 +2468,7 @@ function on_quest(name, output, wildcards)
 			set("npc/wd", -1);
 			set("npc/id", "no body");
 			set("npc/loc", wcs[0].substr(0, 2));
-			add_room_cmd(get_var("cmd_bquest") + ";hp");
+			add_room_cmd(get_var("cmd_quest_go") + ";hp");
 			to_kill(true);
 			break;
 		case "qt_disp":	// (@npc_name)在(.*)失踪了！现在不知道去了哪里！”
@@ -2489,18 +2489,18 @@ function on_quest(name, output, wildcards)
 			break;
 		case "qt_busy1":	// ^(> )*(@master_name)正忙着呢，没功夫理你。
 		case "qt_busy":	// ^你还是有空了再和(@master_name)谈这些问题吧！
-				open_timer1(1, "busy0", "quest " + get_var("id_master"));
+			open_timer1(1, "busy0", "quest " + get_var("id_master"));
 			break;
 		case "qt_nomaster":	//这里没有这个人，你怎么领任务？
 			if (query("quest/flag") != "kill") return;
 
 			set("quest/master", false);
-			if (query("quest/letter")) {	
+			if (query("quest/letter")) {
 				send("l letter of me");
 				return;
 			}
 
- 			telldm("掌门被砍死啦！");
+			telldm("掌门被砍死啦！");
 			goto(query("room/chat"));
 			break;
 		case "qt_nobody":	// ^(这里没有这个人。|给你下任务的那个人现在不在这里吧？)
@@ -2516,9 +2516,8 @@ function on_quest(name, output, wildcards)
 	}
 }
 
-function on_kill(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_kill(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "kl_npc":		// ^  (@npc_name)\((.*)\)$
 			var rm = query("room/id");
@@ -2536,7 +2535,7 @@ function on_kill(name, output, wildcards)
 			if (name == "kl_npc1" || name == "kl_npc") {
 				world.EnableTriggerGroup("gkl", 1);
 			}
-			world.Note("发现 "+query("npc/name"))
+			world.Note("发现 " + query("npc/name"))
 			set("npc/find", -1);
 			var rn = query("room/name");
 			if (rn == "大沙漠" || rn == "南疆沙漠" || rn == "戈壁滩" || query("walk") == "auto") {
@@ -2549,8 +2548,8 @@ function on_kill(name, output, wildcards)
 			set("npc/id", id[0].toLowerCase());
 			break;
 		case "kl_fight1":	// ^(> )*你对著(@npc_name)喝道：(.*)
-			//var rm = query("room/id");
-			//if (rm != -1) mapper.exec("mush mark " + rm + " 0");
+		//var rm = query("room/id");
+		//if (rm != -1) mapper.exec("mush mark " + rm + " 0");
 		case "kl_fight2":	// ^(> )*你正在和人家生死相扑呢。
 			world.EnableTrigger("kl_nobody", false);
 			set("npc/find", 1);
@@ -2559,17 +2558,17 @@ function on_kill(name, output, wildcards)
 		case "kl_fight4":	// ^(> )*你现在没有力气战斗了。
 			world.EnableTrigger("kl_nobody", false);
 			set("npc/find", 0);
-			set("npc/coor",-1);
+			set("npc/coor", -1);
 			world.EnableTimer("t_pfm", false);
 			send("hp;set no_teach heal");
 			break;
 		case "kl_fight5":	// ^(> )*看起来(@name_npc)想杀死你！
-			set("npc/onkill",get_var("name_npc"))
+			set("npc/onkill", get_var("name_npc"))
 			var tmp = get_var("cmd_pfm");
 			if (tmp == "shot" || tmp.indexOf("mpf") != -1) return;
-			if (query("npc/wd") == 1){
-					send(CmdMpf())
-			}else{
+			if (query("npc/wd") == 1) {
+				send(CmdMpf())
+			} else {
 				set("npc/wd", 0);
 			}
 			send(get_var("cmd_pfm") + ";#q");
@@ -2584,17 +2583,17 @@ function on_kill(name, output, wildcards)
 			world.EnableTrigger("kl_help", false);
 			world.EnableTrigger("kl_help1", false);
 			set("npc/find", 0);
-			set("npc/coor",-1);
-			do_areasearch();	
+			set("npc/coor", -1);
+			do_areasearch();
 			break;
 		case "kl_fight3":	// ^(> )*(@npc_name)(一见到你|和你一碰面|对著你大喝|喝道：「你|一眼瞥见你|和你仇人相见分外眼红)
 			stop_all();
 			world.EnableTriggerGroup("gkl", 1);
-			set("npc/onkill",get_var("name_npc"))
+			set("npc/onkill", get_var("name_npc"))
 			send(kill_cmd());
 			break;
 		case "kl_flee":	// (@npc_name)(摇摇欲坠|身负重伤|狂叫一声|晃了两下|再退一步|已是避|深吸一口气|只有招架之功)(.*)
-			if (output.indexOf("兵法战策")>-0){
+			if (output.indexOf("兵法战策") > -0) {
 				return
 			}
 			world.EnableTimer("t_pfm", false);
@@ -2602,7 +2601,7 @@ function on_kill(name, output, wildcards)
 			world.EnableTriggerGroup("gkl1", 0);
 			set("quest/info", 0);
 			set("npc/find", 0);
-			set("npc/coor",-1);
+			set("npc/coor", -1);
 			set("npc/status", "flee");
 			if (query("hp/dispel") && !get_var("bool_drunk")) {
 				ydispel(true);
@@ -2618,35 +2617,34 @@ function on_kill(name, output, wildcards)
 			break;
 		case "kl_help1":	// ^(> )*说时迟，那时快！突然转出(.*)个人，一起冲上前来，看来是早有防备！$
 			//if (wcs[1] == query("npc/name") || wcs[1].indexOf("蛇") != -1 || wcs[1] || wcs[1].indexOf("蝎") != -1 || wcs[1].indexOf("虎") != -1 || wcs[1].indexOf("狼狗") != -1) return;
-			var cmd = get_var("id") + ";" + get_var("passw") 
+			var cmd = get_var("id") + ";" + get_var("passw")
 				+ ";y;cut head from corpse;get head;" + kill_cmd();
 			reconnect(cmd);
 			break;
 		case "kl_faint":	// ^(> )*(@npc_name)脚下一个不稳，跌在地上一动也不动了。
 			world.EnableTimer("t_pfm", false);
 			set("npc/status", "faint");
-			//var cmd = "gzhen " + query("npc/id") + ";" + get_var("cmd_npcfaint") + ";hp;i";
 			var cmd = "";
-			if (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao")){
-				if (query("item/zhen") < 699) cmd = "gzhen " + query("npc/id") + ";" 
+			if (get_var("cmd_pfm").indexOf("yuce") != -1 || get_var("bool_gangbiao")) {
+				if (query("item/zhen") < 499) cmd = "get yufeng zhen from " + query("npc/id") + ";"
 			}
-			set("npc/busystart",(new Date()).getTime())
-			cmd +=get_var("cmd_npcfaint") + ";i;hp";
-			var weapons=(get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon")+";"+get_var("id_weapon2")+";"+get_var("id_weapon3")).split(";")
-			var list=[]
-			weapons.forEach(function(data){
-				if (data){
+			set("npc/busystart", (new Date()).getTime())
+			cmd += get_var("cmd_npcfaint") + ";i;hp";
+			var weapons = (get_var("id_weapon") + ";" + get_var("id_weapon") + ";" + get_var("id_weapon") + ";" + get_var("id_weapon2") + ";" + get_var("id_weapon3")).split(";")
+			var list = []
+			weapons.forEach(function (data) {
+				if (data) {
 					list.push(data)
 				}
 			})
-			if (list.length){
+			if (list.length) {
 				var num = Math.floor(Math.random() * list.length);
-				var wp=list[num]
-				set("weapon/id",wp)
+				var wp = list[num]
+				set("weapon/id", wp)
 				cmd += ";l " + wp + " of me";
 			}
 			send(cmd);
-			tongji(1);
+
 			break;
 		case "kl_die":	// ^(> )*(@npc_name)扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！$
 			if (wcs[0] != query("npc/name")) {
@@ -2660,24 +2658,24 @@ function on_kill(name, output, wildcards)
 			world.EnableTrigger("kl_help1", false);
 			world.EnableTimer("t_pfm", false);
 			set("npc/find", 0);
-			set("npc/coor",-1);
+			set("npc/coor", -1);
 			set("npc/head", 0);
 			set("npc/corpse", 1);
 			set("npc/wd", 0);
 			set("npc/status", "dead");
-			set("npc/onkill","")
-			add_room_cmd(get_var("cmd_aquest"));
-			var busystart=query("npc/busystart")
-			if (busystart){
-				var busy=((new Date()).getTime()-busystart)/1000
-				var allbusy=query("stat/busy")-0+busy
-				var busycount=query("stat/busycount")-0+1
-				set("stat/busy",allbusy)
-				set("stat/busycount",busycount)
-				set("stat/busyeff", allbusy/busycount);
+			set("npc/onkill", "")
+			add_room_cmd(get_var("cmd_quest_back"));
+			var busystart = query("npc/busystart")
+			if (busystart) {
+				var busy = ((new Date()).getTime() - busystart) / 1000
+				var allbusy = query("stat/busy") - 0 + busy
+				var busycount = query("stat/busycount") - 0 + 1
+				set("stat/busy", allbusy)
+				set("stat/busycount", busycount)
+				set("stat/busyeff", allbusy / busycount);
 			}
 			var cmd = "cut head from corpse;get head";
-				
+
 			var tmp = get_var("cmd_npcdie");
 			if (tmp != null && tmp != "") {
 				tmp = tmp.split("|");
@@ -2701,16 +2699,15 @@ function on_kill(name, output, wildcards)
 			world.EnableTriggerGroup("gkl1", 0);
 			if (npc == wcs[1]) set("npc/status", "head");
 
-			if (query("hp/dispel")&& !get_var("bool_drunk")) {
+			if (query("hp/dispel") && !get_var("bool_drunk")) {
 				ydispel(true);
 				return;
 			}
 
-			if (npc == wcs[1] && (!can_accept() || ((get_var("bool_accept") == "both") && (query("hp/pot") < get_var("min_pot"))) ||!get_var("bool_accept"))) {
+			if (npc == wcs[1] && (!can_accept() || ((get_var("bool_accept") == "both") && (query("hp/th") < 2000)) || !get_var("bool_accept"))) {
 				do_quest();
 				return;
-			} else
-			if (npc != wcs[1] && !can_accept()) {
+			} else if (npc != wcs[1] && !can_accept()) {
 				send("drop head;hp;i;set no_teach prepare");
 				return;
 			}
@@ -2732,7 +2729,7 @@ function on_kill(name, output, wildcards)
 
 			world.EnableTriggerGroup("gkl", 0);
 			world.EnableTriggerGroup("gkl1", 0);
-			if (query("hp/dispel")&&!get_var("bool_drunk")) {
+			if (query("hp/dispel") && !get_var("bool_drunk")) {
 				ydispel(true);
 				return;
 			}
@@ -2752,9 +2749,8 @@ function on_kill(name, output, wildcards)
 	}
 }
 
-function on_info(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_info(name, output, wildcards) {
+	var wcs = wildcards;
 	world.EnableTriggerGroup("gio", 0);
 	switch (name) {
 		case "io_nobody":	// ^这里没有这个人。
@@ -2785,18 +2781,18 @@ function on_info(name, output, wildcards)
 				set("askyou/none", true);
 				set("npc/loc", "很远");
 				to_kill(false);
-				return;			
+				return;
 			}
 
 			if (loc.length > 1) {
 				var tmp = new Array();
-				for (var i=0; i<loc.length; i++) {
+				for (var i = 0; i < loc.length; i++) {
 					if (incity(loc[i], query("npc/loc"))) tmp[tmp.length] = loc[i];
 				}
 
 				if (tmp.length < 1) {
 					add_log("io_you:" + query("npc/loc") + "." + query("other/loc1") + "无法确定");
-					for (var i=0; i<loc.length; i++) {
+					for (var i = 0; i < loc.length; i++) {
 						if (incity(loc[i], "很远")) tmp[tmp.length] = loc[i];
 					}
 				}
@@ -2821,8 +2817,8 @@ function on_info(name, output, wildcards)
 			send("give 5 cash to you xun");
 			break;
 		case "io_you2":	// ^(> )*你(没有那么多的黄金|身上没有这样东西)。
-			world.EnableTrigger("io_you2", false); 
-			world.EnableTrigger("io_you3", false); 
+			world.EnableTrigger("io_you2", false);
+			world.EnableTrigger("io_you3", false);
 			send("give 5 cash to you xun");
 			break;
 		case "io_you3":	// 游讯(摇摇头，说道：没听说过。|疑惑地看着你，摇了摇头。|睁大眼睛望
@@ -2831,7 +2827,7 @@ function on_info(name, output, wildcards)
 			var ix = query("askyou/idpt") + 1;
 			if (ix >= npc_id.length) {
 				set("npc/status", "end");
-				set("npc/onkill","")
+				set("npc/onkill", "")
 				send("hp;i;set no_teach prepare");
 				add_log("io_you3:找不到" + query("npc/name") + "。");
 				return;
@@ -2844,9 +2840,8 @@ function on_info(name, output, wildcards)
 	}
 }
 
-function on_prepare(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_prepare(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "pe_stab":	// ^(> )*你随手将*往地上一插，发出“嚓愣”一声响。
 			world.EnableTrigger("pe_stab", false);
@@ -2860,24 +2855,21 @@ function on_prepare(name, output, wildcards)
 			break;
 		case "pe_repair": // ^(> )*铁匠道：“好了！”随手把(.*)还给了你，你看了看，满意的掏出了一些钱付了帐。$
 			world.EnableTrigger("pe_repair", false);
-				set("weapon/dur", 100);
-				set("weapons/"+query("weapon/id"), 100);
-				send(get_var("cmd_pre"));
-			break;	
+			set("weapon/dur", 100);
+			set("weapons/" + query("weapon/id"), 100);
+			send(get_var("cmd_pre"));
+			break;
 		case "pe_buy":		// ^(> )*你从店小二那里买下了
 			world.EnableTrigger("pe_buy", false);
 			world.EnableTrigger("pe_nobuy", false);
 			if (query("item/buy") == "yao from yaopu huoji") {
 				send("dazuo");
 				return;
-			} else
-			if (query("item/buy") == "long bow from tie jiang") {
+			} else if (query("item/buy") == "long bow from tie jiang") {
 				send("hand gong");
-			} else 
-			if (query("item/buy") == "long sword from tie jiang") {
+			} else if (query("item/buy") == "long sword from tie jiang") {
 				send("wield long sword");
-			} else 
-			if (query("item/buy") == "100 gangbiao from tie jiang") {
+			} else if (query("item/buy") == "100 gangbiao from tie jiang") {
 				send("hand gangbiao");
 			}
 
@@ -2909,7 +2901,7 @@ function on_prepare(name, output, wildcards)
 			world.EnableTrigger("pe_silver", false);
 			world.EnableTrigger("pe_cunb", false);
 			world.EnableTrigger("pe_qub", false);
-			send("i;set no_teach prepare");
+			send("i;score;set no_teach prepare");
 			break;
 		case "pe_qub":	// ^(> )*你还是等有空了再说吧！
 			world.EnableTrigger("pe_silver", false);
@@ -3010,21 +3002,20 @@ function on_prepare(name, output, wildcards)
 			break;
 		case "pe_tunab":	// 你现在正忙着呢！
 			send("yun recover;")
-			open_timer1(1, "busy", "tuna "+get_var("num_tuna"));
+			open_timer1(1, "busy", "tuna " + get_var("num_tuna"));
 			break;
 	}
 }
-function on_drunk(){
-	set("lastdrunk",(new Date()).getTime())
+function on_drunk() {
+	set("lastdrunk", (new Date()).getTime())
 }
-function CmdDrink(){
-	let drunked=(new Date()).getTime()-query("lastdrunk")
-	return (get_var("bool_drunk") && drunked>60000)?"drink zui xunfeng;drink zui xunfeng":"drink shui dai"
+function CmdDrink() {
+	let drunked = (new Date()).getTime() - query("lastdrunk")
+	return (get_var("bool_drunk") && drunked > 60000) ? "drink zui xunfeng;drink zui xunfeng" : "drink shui dai"
 }
 
-function on_hp(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_hp(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "hp_1":	// ^【 精 气 】(.*)/(.*)\((.*)%\)(.*)【 精 力 】(.*)/(.*)$
 			set("hp/jing", (wcs[0] - 0));
@@ -3039,15 +3030,15 @@ function on_hp(name, output, wildcards)
 			set("hp/eff_qi", (wcs[2] - 0));
 			set("hp/neili", (wcs[4] - 0));
 			set("hp/max_neili", (wcs[5] - 0));
-			if (query("other/touch") && (query("hp/jingli")>get_var("min_jingli"))&&(query("hp/neili") < get_var("min_neili"))) send("mtc;#q");
+			if (query("other/touch") && (query("hp/jingli") > get_var("min_jingli")) && (query("hp/neili") < get_var("min_neili"))) send("mtc;#q");
 			break;
 		case "hp_3":	// ^【 食 物 】(.*)/(.*)【 潜 能 】(.*)$
 			set("hp/food", (wcs[0] - 0));
 			set("hp/pot", (wcs[2] - 0));
 
-			var le = world.GetLinesInBufferCount ();
+			var le = world.GetLinesInBufferCount();
 			var st = world.GetLineInfo(le, 11);
-			if (world.GetStyleInfo (le, st, 14) == world.boldcolour(6)) 
+			if (world.GetStyleInfo(le, st, 14) == world.boldcolour(6))
 				set("hp/pot_full", true);
 			else
 				set("hp/pot_full", false);
@@ -3060,7 +3051,7 @@ function on_hp(name, output, wildcards)
 			set("hp/th", (wcs[2] - 0));
 
 			if (query("hp/food") < 150 || query("hp/water") < 150) {
-				send("halt;eat gan liang;"+CmdDrink()+";#q");
+				send("halt;eat gan liang;" + CmdDrink() + ";#q");
 			} else {
 				if (query("hp/food") < 210)
 					add_room_cmd("eat gan liang");
@@ -3076,19 +3067,34 @@ function on_hp(name, output, wildcards)
 				add_room_cmd("yun regenerate");
 
 			if (query("hp/eff_jing") < 70)
-				send("eat jiuhua wan;#q");
+				send("mdan0;#q");
+			break;
+		case "hpm_1":	// ^【精力上限】(.*)【内力上限】(.*)
+			set("hp/limit_jingli", (wcs[0] - 0));
+			set("hp/limit_neilili", (wcs[1] - 0));
+			var nn = query("hp/limit_neilili") - query("hp/max_neili")
+			world.note("内力差上限:" + nn + "；需要吃露" + nn / 180);
+			break;
+		case "hpm_2":	// ^【潜能上限】(.*)【体会上限】(.*)
+			set("hp/limit_pot", (wcs[0] - 0));
+			set("hp/limit_th", (wcs[1] - 0));
 			break;
 	}
 }
-function on_allitem(name, output, wildcards){
-	var wcs = VBArray(wildcards).toArray();
+function on_allitem(name, output, wildcards) {
+	var wcs = wildcards;
 	var num = number(wcs[2]);
 	if (num == 0) num = 1;
-	set("allitem/"+wcs[4].toLowerCase(),num)
+	if (wcs[4].toLowerCase() == "xun zhang")
+		add_room_cmd("use xun zhang");
+	else if ((wcs[4].toLowerCase() == "jiuyin zhenjing3") && num > 1)
+		add_room_cmd("drop jiuyin zhenjing3");
+	else
+		set("allitem/" + wcs[4].toLowerCase(), num)
+
 }
-function on_item(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_item(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "im_start":	// ^(> )*你身上带著下列这些东西
 			set("item/gold", 0);
@@ -3109,7 +3115,7 @@ function on_item(name, output, wildcards)
 			set("item/gangbiao", 0);
 			set("item/sell", "null");
 			set("item/qlkey", 0);
-			set("allitem",{})
+			set("allitem", {})
 			if ((wcs[0] - 0) > 75) set("item/load", true);
 			if (output.indexOf("带著") != -1) {
 				set("item/flag", true);
@@ -3125,40 +3131,38 @@ function on_item(name, output, wildcards)
 				my += num;
 				set("item/money", my);
 				set("item/silver", num);
-			} else 
-			if (output.indexOf("黄金") != -1) {
+			} else if (output.indexOf("黄金") != -1) {
 				var my = query("item/money") - 0;
 				my += num * 100;
 				set("item/money", my);
 				set("item/gold", num);
-			} else
-			if (output.indexOf("一千两银票") != -1)
+			} else if (output.indexOf("一千两银票") != -1)
 				set("item/cash", num);
 			else if (output.indexOf("牛皮水袋") != -1)
 				set("item/shuidai", num);
 			else if (output.indexOf("醉熏风") != -1)
-				set("item/jiuping", num);				
+				set("item/jiuping", num);
 			else if (output.indexOf("干粮") != -1)
 				set("item/food", num);
 			else if (output.indexOf("长剑") != -1)
 				set("item/lsword", num);
 			else if (output.indexOf("钢刀") != -1)
-				set("item/iblade", num);				
+				set("item/iblade", num);
 			else if (output.indexOf("长弓") != -1)
 				set("item/gong", num);
 			else if (output.indexOf("狼牙箭") != -1)
 				set("item/arrow", num);
 			else if (output.indexOf("九花玉露丸") != -1)
-				set("item/9hua", num);				
+				set("item/9hua", num);
 			else if (output.indexOf("点金盘龙弓") != -1)
 				set("item/gong", num);
 			else if (output.indexOf("钢镖") != -1)
 				set("item/gangbiao", num);
 			else if (output.indexOf("青龙臂铠") != -1)
-				set("item/qlkey", num);			
+				set("item/qlkey", num);
 			else if (output.indexOf("玉蜂针") != -1) {
 				set("item/zhen", num);
-				if (num > 1199) send("keep 100 yufeng zhen;hand yufeng zhen");
+				if (num > 999) send("drop 100 yufeng zhen;hand yufeng zhen");
 			}
 
 			break;
@@ -3179,9 +3183,9 @@ function on_item(name, output, wildcards)
 			}
 			break;
 		case "im_gift":	// (仙丹|洗髓丹|火红仙丹|神力丸|菩提子|九转金丹|天香玉露|金块|玄冰寒铁|乌金丝|补天石|冰蚕丝)
-		if (output.indexOf("记忆水晶") != -1){
-			return 
-		} 				
+			if (output.indexOf("记忆水晶") != -1) {
+				return
+			}
 			var gt = wcs[1].toLowerCase();
 			set("item/gift", gt);
 			break;
@@ -3192,9 +3196,8 @@ function on_item(name, output, wildcards)
 	}
 }
 
-function on_global(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_global(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "dead":		// ^[> ]*你请先用 enable 指令选择你要使用的内功。
 			stop_all(true);
@@ -3213,6 +3216,18 @@ function on_global(name, output, wildcards)
 			}
 			else if (wcs[0] == "no exit") {
 				do_autosearch(5, "find");
+			}
+			else if (wcs[0] == "doctor") {
+				send(get_var("cmd_wait"));
+				open_timer1(10, "busy", "halt;hp;i;score;set no_teach prepare");
+			}
+			else if (wcs[0] == "lianxi") {
+				send(get_var("cmd_wait"));
+				open_timer1(1, "busy", "halt;hp;i;score;set no_teach prepare");
+			}
+			else if (wcs[0] == "go tl") {
+				set("room/id", -1);
+				goto(query("nextstep/loc"));
 			}
 			else if (wcs[0] == "wait letter") {
 				do_wait();
@@ -3243,11 +3258,18 @@ function on_global(name, output, wildcards)
 					return;
 				}
 				//if (get_var("cmd_study") != "jingxiu")
-				if (get_var("cmd_study") == "yanjiu" || get_var("cmd_study").indexOf("xue") != -1)				
+				if (get_var("cmd_study") == "yanjiu" || get_var("cmd_study").indexOf("xue") != -1)
 					send("halt;" + get_study() + ";yun regenerate;" + get_var("cmd_studying"));
-				else 
+				else
 					send(get_study());
-				open_timer1(2, "busy", "hp;set no_teach study");
+
+				if (query("hp/th") < 100 && pot < get_var("max_pot") && Math.floor(Math.random() * 10) == 0) {
+					world.EnableTrigger("pe_study", false);
+					world.EnableTrigger("skfull", false);
+					send("halt;yun regenerate;hp;set no_teach prepare");
+					return;
+				} else
+					open_timer1(2, "busy", "hp;set no_teach study");
 			}
 			else if (wcs[0] == "cun money") {
 				world.EnableTrigger("pe_silver", true);
@@ -3255,6 +3277,7 @@ function on_global(name, output, wildcards)
 				if (query("item/silver") > 300) {
 					var num = query("item/silver") - 50;
 					send("cun " + num + " silver;score");
+
 				}
 				else if (query("item/gold") - get_var("min_gold") > 200) {
 					var num = query("item/gold") - get_var("min_gold") - 15;
@@ -3262,9 +3285,13 @@ function on_global(name, output, wildcards)
 				} else if (query("item/cash") > 2000) {
 					send("bond 2000 cash;i;score;set no_teach prepare");
 				}
-				 else if (query("item/cash") > 300) {
-					var num =  query("item/cash") - 50;
-					send("cun " + num +" cash;score");
+				else if (query("item/cash") > 300) {
+					var num = query("item/cash") - 50;
+					send("cun " + num + " cash;score");
+				}
+				else if (query("item/cash") > 1 && get_var("list_qask") == "") {
+					var num = query("item/cash");
+					send("cun " + num + " cash;i;score");
 				}
 				else {
 					world.EnableTrigger("pe_silver", false);
@@ -3275,48 +3302,48 @@ function on_global(name, output, wildcards)
 			else if (wcs[0] == "auto connect") {
 				world.EnableTrigger("qt_none", false);
 				var ns = query("npc/status");
-				if (query("item/shuidai") < 1 || query("item/food") < 5 || ns == "end" || ns == "dead") {
+				if (query("item/shuidai") < 1 || query("item/food") < 10 || ns == "end" || ns == "dead") {
 					set("npc/status", "end");
 					do_prepare();
-				} 
+				}
 				else if (ns == "head") {
 					do_quest();
-				} 
+				}
 				else {
 					set("room/id", -1);
 					goto(query("nextstep/loc"));
+				}
 			}
-			}
-						
+
 			else if (wcs[0] == "fill neili") {
 				if (query("hp/neili") < get_var("min_neili")) {
-					send("hp;dazuo "+get_var("num_dazuo"));
+					send("hp;dazuo " + get_var("num_dazuo"));
 					world.doafter(1, "set no_teach fill neili");
-					
+
 				} else {
 					send("halt");
 					to_kill();
-				}			
+				}
 			}
-			else if(wcs[0]=="eatlu.check"){
+			else if (wcs[0] == "eatlu.check") {
 				send("i;set no_teach eatlu.checked")
-			}else if(wcs[0]=="eatlu.checked"){
-				if (query("allitem/magic water",true)){
-					world.EnableTrigger("on_trc_eatlu",true)
+			} else if (wcs[0] == "eatlu.checked") {
+				if (query("allitem/magic water", true)) {
+					world.EnableTrigger("on_trc_eatlu", true)
 					send("join;hp;set no_teach eatlu.eat")
-				}else{
-					world.EnableTrigger("on_trc_eatlu",false)
-					set("trceatlu",false)
+				} else {
+					world.EnableTrigger("on_trc_eatlu", false)
+					set("trceatlu", false)
 					do_prepare()
 				}
-			}else if(wcs[0]=="eatlu.eat"){
-				BusyTest(306,"set no_teach eatlu.check")
-			}else if (wcs[0] == "heal") {
+			} else if (wcs[0] == "eatlu.eat") {
+				BusyTest(306, "set no_teach eatlu.check")
+			} else if (wcs[0] == "heal") {
 				stop_all();
 				var eq = query("hp/eff_qi");
-				if (eq < 21) send("eat jiuhua wan;hp");
+				if (eq < 21) send("mdan2;hp");
 
-				if (query("hp/dispel")&&!get_var("bool_drunk")) {
+				if (query("hp/dispel") && !get_var("bool_drunk")) {
 					ydispel(true);
 					return;
 				}
@@ -3324,7 +3351,7 @@ function on_global(name, output, wildcards)
 				var rn = query("room/name");
 				if (rn == "大沙漠" || rn == "南疆沙漠") {
 					set("other/heal", "heal2");
-				} 
+				}
 				else if (get_var("id_pass") == "xy" && eq < 70) {
 					set("nextstep/flag", "COMMANDS");
 					cmd = "#t+ pe_cures;#t+ pe_nobody;ask xue muhua about 疗伤";
@@ -3332,18 +3359,19 @@ function on_global(name, output, wildcards)
 					world.SetVariable("name_npc", "aa");
 					goto(1722);
 					return;
-				} 
+				}
 				else if (eq < 21) {
 					if (query("room/id") != 65) {
 						world.SetVariable("name_npc", "aa");
 						set("nextstep/flag", "COMMANDS");
 						set("nextstep/cmds", "hp;set no_teach heal");
+						if (query("hp/qi") < 1) add_room_cmd("mdan2");
 						goto(65);
 						return;
 					}
 
 					set("other/heal", "heal1");
-				} 
+				}
 				else if (eq < 90)
 					set("other/heal", "heal1");
 				else
@@ -3368,15 +3396,24 @@ function on_global(name, output, wildcards)
 			if (num > query("hp/level")) set("hp/level", num);
 			break;
 		case "skfull":		// ^[> ]*也许是缺乏实战经验，你对(.*)的回答总是无法领会。
-			if ((get_var("cmd_study").indexOf("xue ") != -1)&&(Math.floor(Math.random() * 5) == 0)) set("other/study", (new Date()).getTime());
+			if ((get_var("cmd_study").indexOf("xue ") != -1) && (Math.floor(Math.random() * 5) == 0)) set("other/study", (new Date()).getTime());
 			break;
 		case "weapon":		// ^耐久度：(.*)%
-			set("weapon/dur",wcs[0] - 0)
-			set("weapons/"+query("weapon/id"), wcs[0] - 0);
+			//if (query("weapon/id") == null) set("weapon/id",get_var("id_weapon"));
+			set("weapon/dur", wcs[0] - 0)
+			set("weapons/" + query("weapon/id"), wcs[0] - 0);
+			break;
+		case "reward":		// ^通过这次锻炼，你获得了(.*)点经验、(.*)点潜能、
+			var exp = number(wcs[0]);
+			exp += query("quest/exp");
+			set("quest/exp", exp);
+			var pot = number(wcs[1]);
+			pot += query("quest/pot");
+			set("quest/pot", pot);
+			tongji(1);
 			break;
 		case "touch":		// ^(> )*你觉得一股热气从丹田冉冉升起。
-			set("other/mtc",true)
-			set("hp/neili", query("hp/max_neili") * 0.66);
+			set("hp/neili", query("hp/max_neili") * 1);
 			set("other/touch", true);
 			break;
 		case "nlempty":		// ^(> )*你觉得一股热气从丹田冉冉升起。
@@ -3386,26 +3423,26 @@ function on_global(name, output, wildcards)
 		case "yjlxn":		// ^(> )*(研究|学习|练习)次数.*一次，.*不能超过
 			if (query("other/touch")) {
 				if (wcs[1] == "练习") {
-					if (query("other/n_lx") -1 > 0)
-						set("other/n_lx",query("other/n_lx") -1);
+					if (query("other/n_lx") - 1 > 0)
+						set("other/n_lx", query("other/n_lx") - 1);
 					else
-						set("other/n_lx",0);
+						set("other/n_lx", 0);
 				} else {
-					if ( query("other/n_yj") -1 > 0)
-						set("other/n_yj",query("other/n_yj") -1);
+					if (query("other/n_yj") - 1 > 0)
+						set("other/n_yj", query("other/n_yj") - 1);
 					else
-						set("other/n_yj",0);				
+						set("other/n_yj", 0);
 				}
 				set("other/touch", false);
 				send("mtc");
 			}
 			break;
 		case "yjlxs":		// ^^(> )*(当前|本日)活动：多倍(LIANXI|YANJIU)上限
-			if (wcs[2] == "LIANXI") 
-					set("other/n_lx",2);
-			else 
-					set("other/n_yj",3);				
-			break;			
+			if (wcs[2] == "LIANXI")
+				set("other/n_lx", 3);
+			else
+				set("other/n_yj", 4);
+			break;
 		case "askf":		// 你现在的精神不太好，没法和别人套瓷。
 			open_timer1(15, "ask_f", null);
 			break;
@@ -3416,6 +3453,7 @@ function on_global(name, output, wildcards)
 			set("quest/letter", false);
 			break;
 		case "hurt":		// ^(> )*\( 你(动作似乎开始有点不太灵光
+			if (check_in_fb()) return;
 			open_pfm();
 			set("other/getw", 1);
 			if (query("timer/pfm") == 0) {
@@ -3427,15 +3465,15 @@ function on_global(name, output, wildcards)
 			set("timer/pfm", 0);
 			break;
 		case "pfmf1":		// ^(> )*对方都已经这样了，用不着这么费力吧？
-			if (!query("boss/start")) world.EnableTimer("t_pfm", false);
+			world.EnableTimer("t_pfm", false);
 			break;
-		case "flee":		// 看来该找机会逃跑了...
-			if (query("boss/start")) return;
+		case "flee":		// 看来该找机会逃跑了...			
 			set("room/id", -1);
 			send("yun recover;yun regenerate;hp;set no_teach heal");
 			break;
 		case "faint1":		// ^(> )*你的眼前一黑，接著什么也不知道了....
 			stop_all(true);
+			world.note("晕倒地点:" + query("room/id"));
 			world.EnableTrigger("hurt", false);
 			world.EnableTrigger("faint", false);
 			world.EnableTrigger("kl_help", false);
@@ -3454,17 +3492,18 @@ function on_global(name, output, wildcards)
 			world.EnableTimer("t_kmg", true);
 			set("quest/letter", false);
 			set("connect/cmds", "");
+			set("connect/time", (new Date()).getTime());
 			set("hp/faint", "null");
-			
-			if (output.indexOf("连线进入") != -1 && !check_in_3boss()) {
-				set("boss/start",false);
+
+			if (output.indexOf("连线进入") != -1 && !check_in_fb()) {
+				send(get_var("cmd_login"));
+				//				world.note("连线进入。看看发生什么");
 				send(get_var("cmd_pre"));
-				close_fb();
 			}
 			if (query("connect/auto"))
 				add_log("autoconnect to world!");
 			else
-				set("connect/auto", true);				
+				set("connect/auto", true);
 			break;
 		case "connected1":	// 请输入密码：
 			world.EnableTrigger("connected1", false);
@@ -3477,14 +3516,21 @@ function on_global(name, output, wildcards)
 			if (output.indexOf("别处") != -1) add_log(output);
 			break;
 		case "condelay":	// 你不能在 30 秒钟......
-			open_timer1(32, "con_delay", null);
+
+			var ttimer1 = (new Date()).getTime();
+			ttimer1 = (ttimer1 - query("connect/time")) / 1000;
+			ttimer1 = 31 - ttimer1;
+			if (ttimer1 < 2)
+				ttimer1 = 2;
+			world.note("等待" + ttimer1 + "秒后重连");
+			open_timer1(ttimer1, "con_delay", null);
 			set("connect/auto", false);
 			world.Disconnect();
 			break;
 		case "tell":		// ^(> )*(.*)\((.*)\)告诉你：exe:(.*)
 			var pne = wcs[1];
 			if (pne.length > 6 || pne.length < 1) return;
-			
+
 			var re = new RegExp("[a-zA-Z0-9、 ()【】.。,，:：;；?？!！]", "g");
 			if (pne.search(re) != -1) return;
 
@@ -3505,7 +3551,7 @@ function on_global(name, output, wildcards)
 					set("room/id", -1);
 					set("hp/faint", "null");
 					set("quest/flag", "kill");
-					send("#t+ level;skills1;hp;i;unset keep_idle;unset map_prompt");
+					send("#t+ level;skills1;hp;hp -m;i;unset map_prompt");
 					close_fb();
 					world.doafter(1, "set no_teach prepare");
 					break;
@@ -3516,9 +3562,8 @@ function on_global(name, output, wildcards)
 					stop_all();
 					set("nextstep/flag", "");
 					set("quest/flag", "null");
-					set("boss/start", false);
 					set("npc/status", "end");
-					set("npc/onkill","")
+					set("npc/onkill", "")
 					break;
 				case "#to":
 					goto(cot[1]);
@@ -3542,16 +3587,14 @@ function on_global(name, output, wildcards)
 
 					if (cot[1] == "?") {
 						var nl = "worldlist: ";
-						var wl = new VBArray(world.GetworldList()).toArray();
+						var wl = world.GetworldList();
 						for (i = 0; i < wl.length; i++)
 							nl += wl[i] + ", ";
-						
+
 						send(nl);
-					} else 
-					if (cot[2] == null || cot[2] == "") {
+					} else if (cot[2] == null || cot[2] == "") {
 						send("命令格式无效！");
-					} else
-					if (cot[2] == "#con") {
+					} else if (cot[2] == "#con") {
 						var wd = world.getworld(cot[1]);
 						wd.connect();
 					} else {
@@ -3559,7 +3602,7 @@ function on_global(name, output, wildcards)
 						wd.send(cot[2]);
 					}
 					break;
-				default :
+				default:
 					send(wcs[3]);
 					break;
 			}
@@ -3578,37 +3621,40 @@ function on_global(name, output, wildcards)
 				world.Disconnect();
 				return;
 			}
-			
+
 			if (get_room_id(rne) != m_FAIL) {
 				set("room/name", rne);
-			} 
+			}
 			else if (query("walk") == "find") {
-				set("room/name", rne); 
+				set("room/name", rne);
 				//add_log("room name:[" + rne + "]无效！");	
 			}
 			break;
-		case "ttg":		// ^(> )*听涛阁 
-			send(get_var("cmd_ttg"));
-			break;
 		case "deposit":
-			var deposit=wcs[0]-0
-			set("deposit",deposit)
+			var deposit = wcs[0] - 0
+			set("deposit", deposit)
 			break
 	}
 }
-function CmdDispel(){
-	return get_var("bool_drunk")?"":"yun dispel"
+function CmdDispel() {
+	if (get_var("bool_drunk"))
+		return "";
+	var tt = "yun dispel";
+	if (query("allitem/jiedu wan", true) && (query("hp/neili") > query("hp/max_neili") * 0.8))
+		tt = "eat jiedu wan;" + tt;
+	if (query("allitem/tianxin dan", true) && (query("hp/neili") > query("hp/max_neili") * 0.8))
+		tt = "eat tianxin dan;" + tt;
+	return tt;
 }
-function on_dispel(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_dispel(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "yd_dispel":	// ^(> )*(忽然浑身一阵剧痛，你中的化骨绵掌毒发了！|忽然你觉得四肢百赅是似乎有无......
 			if (query("hp/exp") < 101000 || get_var("bool_drunk"))
 				return;
 
 			set("hp/dispel", true);
-			break;	
+			break;
 		case "yd_ok":		// ^结果你没发现自己有任何异常。$
 			ydispel(false);
 			send("yun recover;yun regenerate;hp");
@@ -3621,20 +3667,31 @@ function on_dispel(name, output, wildcards)
 			send("dazuo");
 			break;
 		case "yd_fail":	// ^(> )*你的内力不足，无法运满一个周天...
+			var room = get_var("loc_dispel")
+			if (!room) {
+				room = query("room/chat")
+			}
 			var fg = query("dispel/flag");
 			if (fg == "end" || fg == "") {
-				set("nextstep/cmds", "#tg+ gyd;#set dispel/flag dan;dazuo");
-				set("nextstep/flag", "COMMANDS");	
-				goto(query("room/chat"));
-			} else
-			if (fg == "yd") {
+				if (query("room/id") == room) {
+					send("#tg+ gyd;#set dispel/flag dan;dazuo")
+				} else {
+					set("nextstep/cmds", "#tg+ gyd;#set dispel/flag dan;dazuo");
+					set("nextstep/flag", "COMMANDS");
+					goto(room);
+				}
+			} else if (fg == "yd") {
 				set("dispel/flag", "dan");
 			}
 			break;
 		case "yd_ok1":	// ^结果你没发现自己有任何异常。$
+			//保护人质
+			//open_timer1(2, "busy", "hp;i;set no_teach prepare");
+
+
 			if (query("dispel/next") == "flee")
 				do_askinfo();
-			else 
+			else
 				do_quest();
 			break;
 		case "yd_busy":	// 你现在正忙着呢。
@@ -3643,22 +3700,35 @@ function on_dispel(name, output, wildcards)
 			break;
 		case "yd_nobusy":	// 你要花多少气练功？
 			switch (query("dispel/flag")) {
+				case "":
+				case "end":
+					var room = get_var("loc_dispel")
+					if (room) {
+						if (query("room/id") == room) {
+							send("#tg+ gyd;#set dispel/flag dan;dazuo")
+						} else {
+							set("nextstep/cmds", "#tg+ gyd;#set dispel/flag dan;dazuo");
+							set("nextstep/flag", "COMMANDS");
+							goto(room);
+						}
+					}
+					break
 				case "yd":
 					set("dispel/flag", "yd");
-					send(CmdDispel()+";dazuo");
+					send(CmdDispel() + ";dazuo");
 					break;
 				case "dan":
 					set("dispel/flag", "ydr");
-					send("eat jiuhua wan;dazuo");
+					send("mdan3;dazuo");
 					break;
 				case "ydr":
 					set("dispel/flag", "dazuo1");
-					send("yun recover;yun regenerate;hp;"+CmdDispel()+";dazuo");
+					send("yun recover;yun regenerate;hp;" + CmdDispel() + ";dazuo");
 					break;
 				case "dazuo1":
 					if (query("room/id") == query("room/chat")) {
 						set("dispel/flag", "inchat");
-						send("special yuan;yun recover;yun regenerate;hp;"+CmdDispel()+";dazuo");
+						send("special yuan;yun recover;yun regenerate;hp;" + CmdDispel() + ";dazuo");
 						return;
 					}
 
@@ -3666,7 +3736,7 @@ function on_dispel(name, output, wildcards)
 					send("yun recover;yun regenerate;hp;dazuo " + get_var("num_dazuo") + ";dazuo");
 					break;
 				case "dazuo2":
-					var ct = query("dispel/count") - 0 + 1;					
+					var ct = query("dispel/count") - 0 + 1;
 					if (ct < 7)
 						set("dispel/flag", "dazuo1");
 					else
@@ -3679,14 +3749,13 @@ function on_dispel(name, output, wildcards)
 						var ct1 = query("dispel/count1") - 0;
 						if (ct1 < 3) {
 							if (eq < 20)
-								send("yun recover;yun regenerate;eat jiuhua wan;dazuo");
+								send("yun recover;yun regenerate;mdan2;dazuo");
 							else
-								send("yun recover;yun regenerate;yun inspire;eat jiuhua wan;dazuo");
+								send("yun recover;yun regenerate;yun inspire;mdan0;dazuo");
 
 							set("dispel/count1", ct1 + 1);
-						} else
-						if (eq > 30 && ej > 30) {
-							send("yun recover;yun regenerate;eat jiuhua wan;dazuo");
+						} else if (eq > 30 && ej > 30) {
+							send("yun recover;yun regenerate;mdan2;mdan4;dazuo");
 						} else {
 							set("connect/auto", false);
 							ydispel(false);
@@ -3694,12 +3763,11 @@ function on_dispel(name, output, wildcards)
 							NotifyDM("dispel fail")
 							world.Disconnect();
 							return;
-						}							
-					} else 
-					if (eq < 65)
+						}
+					} else if (eq < 65)
 						send("yun recover;yun regenerate;yun heal;dazuo");
 					else
-						send("yun recover;yun regenerate;"+CmdDispel()+";dazuo");
+						send("yun recover;yun regenerate;" + CmdDispel() + ";dazuo");
 					break;
 				case "inchat":
 					ydispel(false);
@@ -3709,9 +3777,8 @@ function on_dispel(name, output, wildcards)
 	}
 }
 
-function on_heal(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_heal(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "yh_busy":	// 你现在正忙着呢。
 			world.EnableTrigger("yh_busy", false);
@@ -3772,9 +3839,8 @@ function on_heal(name, output, wildcards)
 	}
 }
 
-function on_timer(name)
-{
-	switch(name) {
+function on_timer(name) {
+	switch (name) {
 		case "timer1":
 			var num = query("timer/count") - 0 + 1;
 			if (num >= query("timer/time")) {
@@ -3789,7 +3855,7 @@ function on_timer(name)
 					case "con_delay":
 						world.DiscardQueue();
 						world.Disconnect();
-						world.Connect();		
+						world.Connect();
 						open_timer1(3, "con_delay", null);
 						break;
 					case "quest_end":
@@ -3817,7 +3883,7 @@ function on_timer(name)
 						auto_search.back();
 						send("l")
 						break;
-				}				
+				}
 			} else
 				set("timer/count", num);
 			if ((num % 2) && (query("timer/flag") == "quest_end") && (get_var("cmd_wait").indexOf("halt;") != -1) && (query("hp/eff_qi") > 89) && (query("hp/pot") > 300))
@@ -3826,9 +3892,10 @@ function on_timer(name)
 		case "t_pfm":
 			send(perform());
 			break;
-	
+
 		case "t_kmg":
 			set("other/touch", true);
+			updateHUD();
 			if (query("quest/flag") == "null") return;
 
 			if (query("timer/idle")) {
@@ -3838,29 +3905,14 @@ function on_timer(name)
 				}
 
 				telldm("idle");
-				if (query("boss/start")) {
-					if (query("boss/kill") == "digong") {
-						stop_all();
-						world.EnableTrigger("dg_map0", true);
-						world.EnableTrigger("dg_mape", true);
-						open_timer1(1, "busy0", "fmap;set no_teach digong");
-					} else if (query("boss/kill") == "xuemo") {
-						stop_all();
-						world.EnableTrigger("dg_map0", true);
-						world.EnableTrigger("dg_mape", true);
-						open_timer1(1, "busy0", "fmap;set no_teach xuemo");
-					} else if (query("boss/kill") == "juxianzhuang")
-						goto(2752);
-				} 
-				
-				else {
+
 				set("room/id", -1);
 				set("npc/find", 0);
-				set("npc/coor",-1);
+				set("npc/coor", -1);
 				set("quest/letter", false);
 				world.SetVariable("name_npc", "aa");
 				send("hp;i;set no_teach prepare");
-				}
+
 				return;
 			}
 
@@ -3868,14 +3920,18 @@ function on_timer(name)
 			break;
 		case "t_con":
 			autoconnect();
+		case "t_heartbeat":
+			if (get_var("cmd_heartbeat") != null && get_var("cmd_heartbeat") != "")
+				add_room_cmd(get_var("cmd_heartbeat"));
 			break;
 	}
 }
 
-function on_alias(name, line, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_alias(name, line, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
+		case "start0":
+			tongji(0);
 		case "start":
 			world.setalphaoption("name", get_var("id"));
 			if (world.Version() > 4.9) world.SetTitle(get_var("id"));
@@ -3888,19 +3944,19 @@ function on_alias(name, line, wildcards)
 			}
 			var cmd = get_var("id") + ";" + get_var("passw") + ";y";
 			send(cmd);
-			tongji(0);
+
 			StopMods();
 			set("room/id", -1);
 			set("stab/flag", true);
 			set("stab/miss", true);
 			set("hp/faint", "null");
 			set("quest/flag", "kill");
-			set("other/n_yj",3);
-			set("other/study",1);
-			set("other/n_lx",2);
+			set("other/n_yj", 4);
+			set("other/study", 1);
+			set("other/n_lx", 3);
 			world.EnableTrigger("ga", true);
 			send(get_var("cmd_pre"))
-			send("#t+ level;skills1;hp;i;unset keep_idle");
+			send("#t+ level;skills1;hp;hp -m;i;set wimpy 0;unset keep_idle");
 			open_timer1(1, "busy", "set no_teach prepare");
 			world.EnableTrigger("setting", true);
 			break;
@@ -3916,9 +3972,8 @@ function on_alias(name, line, wildcards)
 			set("nextstep/flag", "");
 			set("quest/flag", "null");
 			set("npc/status", "end");
-			set("boss/start",false);
-			world.EnableTimer("t_kmg", false); 
-			world.EnableTriggerGroup("on_npc",false);
+			world.EnableTimer("t_kmg", false);
+			world.EnableTriggerGroup("on_npc", false);
 			world.EnableTrigger("step", false);
 			world.EnableTrigger("ga", false);
 			//world.EnableTrigger("setting", false);
@@ -3928,16 +3983,16 @@ function on_alias(name, line, wildcards)
 			break;
 		case "radar":
 			PrintRadar();
-			break;			
+			break;
 		case "kill":
 			var npc = wcs[0];
 			var loc = wcs[1];
 			set("askyou/count", 0);
 			set("npc/wd", -1);
 			set("npc/find", 0);
-			set("npc/coor",-1);
+			set("npc/coor", -1);
 			set("npc/status", "start");
-			set("npc/onkill","")
+			set("npc/onkill", "")
 			set("quest/accept", "false");
 			set("quest/info", 0);
 			if (npc != "this") {
@@ -3950,82 +4005,92 @@ function on_alias(name, line, wildcards)
 			world.note("别名格式: #kl npc中文 loc中文");
 			to_kill(true);
 			break;
-			
+
 		case "todo":
-			var time = wcs[0]-0;
+			var time = wcs[0] - 0;
 			var todo_cmd = wcs[1];
-			if (time >0) {
+			if (time > 0) {
 				set("other/todo", time);
-				set("other/todo_cmd", todo_cmd);				
+				set("other/todo_cmd", todo_cmd);
 			} else {
 				set("other/todo", -1);
-				set("other/todo_cmd", "");					
+				set("other/todo_cmd", "");
 			}
 
-			break;			
+			break;
 		case "setvar":
-			var varname=wcs[0]
-			var varvalue=wcs[1]
-			if (varname){
-				world.SetVariable(varname, varvalue?varvalue:"");
+			var varname = wcs[0]
+			var varvalue = wcs[1]
+			if (varname) {
+				world.SetVariable(varname, varvalue ? varvalue : "");
+				world.note("设置游戏设置变量:" + varname + "为" + varvalue);
+			}
+			break
+		case "set":
+			var varname = wcs[0]
+			var varvalue = wcs[1]
+			if (varname) {
+				set(varname, varvalue ? varvalue : "");
+				world.note("设置游戏data变量:" + varname + "为" + varvalue);
 			}
 			break
 		case "unsetvar":
-			var varname=wcs[0]
-			if (varname){
+			var varname = wcs[0]
+			if (varname) {
 				world.SetVariable(varname, "");
 			}
 			break
 		case "cmd":
-			var cmdname=wcs[0]
-			if (cmdname){
+			var cmdname = wcs[0]
+			if (cmdname) {
 				send(GetCmd(cmdname))
 			}
 			break
 		case "rcmd":
-				var cmds=wcs[0]
-				if (cmds){
-					send(line)
-				}
-		break			
-		case "weapon":
+			var cmds = wcs[0]
+			if (cmds) {
 				send(line)
-		break			
+			}
+			break
+		case "weapon":
+			send(line)
+			break
 		case "login":
-			world.Connect();	
+			world.Connect();
 			world.send(get_var("id"))
 			world.send(get_var("passw"))
 			world.send("y")
 			break;
 		case "exstudycmd":
-			var lsc=get_var("cmd_study"); 
-			world.SetVariable("cmd_study",get_var("cmd_study2"));
-			world.SetVariable("cmd_study2",lsc);
-			
-			lsc=get_var("loc_study");
-			world.SetVariable("loc_study",get_var("loc_study2"));
-			world.SetVariable("loc_study2",lsc);
-			
-			lsc=get_var("list_skill");
-			world.SetVariable("list_skill",get_var("list_skill2"));
-			world.SetVariable("list_skill2",lsc);
+			var lsc = get_var("cmd_study");
+			set("other/study", 1);
+			world.SetVariable("cmd_study", get_var("cmd_study2"));
+			world.SetVariable("cmd_study2", lsc);
+
+			lsc = get_var("loc_study");
+			world.SetVariable("loc_study", get_var("loc_study2"));
+			world.SetVariable("loc_study2", lsc);
+
+			lsc = get_var("list_skill");
+			world.SetVariable("list_skill", get_var("list_skill2"));
+			world.SetVariable("list_skill2", lsc);
 			world.Note("学习指令交换完毕！")
-			world.Note("学习指令1:【"+get_var("cmd_study")+"】【"+get_var("loc_study")+"】【"+get_var("list_skill")+"】")
-			world.Note("学习指令2:【"+get_var("cmd_study2")+"】【"+get_var("loc_study2")+"】【"+get_var("list_skill2")+"】")
-			break;			
+			world.Note("学习指令1:【" + get_var("cmd_study") + "】【" + get_var("loc_study") + "】【" + get_var("list_skill") + "】")
+			world.Note("学习指令2:【" + get_var("cmd_study2") + "】【" + get_var("loc_study2") + "】【" + get_var("list_skill2") + "】")
+			break;
 		case "repeat":
-			var times=wcs[0]
-			var cmds=wcs[1]
-			if (isNaN(times)){
-				world.Note("次数"+times+"无效")
+			var times = wcs[0]
+			var cmds = wcs[1]
+			if (isNaN(times)) {
+				world.Note("次数" + times + "无效")
 				return
 			}
-			var num=times-0
-			if (num<=0 || num>99){
+			var num = times - 0
+			if (num <= 0 || num > 99) {
 				world.Note("次数应该在0-99之间")
 				return
 			}
-			for(var i=0;i<num;i++){
+			for (var i = 0; i < num; i++) {
 				send(cmds)
 			}
 			break
@@ -4035,247 +4100,52 @@ function on_alias(name, line, wildcards)
 			set("stab/miss", false);
 			send("hp;i;set no_teach prepare");
 			break
+		case "dis":
+			set("connect/auto", false);
+			set("connect/cmds", "");
+			world.Disconnect();
+			break
+		case "protect":
+		case "protect1":
+			var npc = wcs[0];
+			closed_protect();
+			set("protect/step", 1);
+			var loc, npcid;
+			if (npc != "this")
+				set("protect/name", npc);
+			jishi("接受任务保护" + query("protect/name"));
+			//set("protect/atime",(new Date()).getTime());		
+			go_protect();
+			break;
+		case "con":
+			set("connect/auto", true);
+			world.Disconnect();
+			autoconnect();
+			break;
 	}
 }
 
-
-function on_boss(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
-	switch (name) {
-		case "bs_door":	// ^  副本传送门\(fuben door\)
-			set("room/id", 2765);
-			break;
-		case "bs_start":	// ^[> ]*副本执行时间为(.*)，副本将在(.*)后可重新进入。
-			world.EnableTriggerGroup("gbs", 1);
-			//set("other/study", (new Date()).getTime());
-			var time1 = (new Date()).getTime();
-			set("boss/start", true);
-			set("boss/name","")
-			if (query("boss/kill") == "seadragon") {
-				set("boss/seadragon", time1);
-			} else 
-			if (query("boss/kill") == "dongfang") {
-				set("boss/dongfang", time1);
-			} else 
-			if (query("boss/kill") == "jiangshi") {
-				set("boss/jiangshi", time1);
-			} else
-			if (query("boss/kill") == "juxianzhuang") {
-				set("boss/juxianzhuang", time1);
-			} else
-			if (query("boss/kill") == "digong") {
-				world.EnableTriggerGroup("dg", 1);
-				world.EnableTrigger("bs_end0", true);	
-				world.EnableTrigger("bs_kill", true);
-				set("digong/step", 1);				
-				set("boss/digong", time1);
-			}	else		
-			if (query("boss/kill") == "xuemo") {
-				world.EnableTriggerGroup("xm", 1);
-				world.EnableTrigger("bs_end0", true);	
-				world.EnableTrigger("bs_kill", true);
-				set("xuemo/step", 1);				
-				set("boss/xuemo", time1);
-			}			
-
-			break;
-		case "bs_false":	// ^[> ]*你离上次进入副本时间太短，请休息会再来。
-			var time1 = (new Date()).getTime();
-			time1 = time1 + 0 - 45*60*1000;
-			if ((query("boss/kill") == "seadragon") && can_fuben("seadragon")) set("boss/seadragon", time1);
-			else if ((query("boss/kill") == "dongfang") && can_fuben("dongfang") ) set("boss/dongfang", time1);
-			else if ((query("boss/kill") == "jiangshi") && can_fuben("jiangshi")) set("boss/jiangshi", time1);
-			else if ((query("boss/kill") == "juxianzhuang") && can_fuben("juxianzhuang")) set("boss/juxianzhuang", time1);
-			else if ((query("boss/kill") == "digong") && can_fuben("digong")) set("boss/digong", time1 - 20*60*1000);
-			else if ((query("boss/kill") == "xuemo") && can_fuben("xuemo")) set("boss/xuemo", time1 - 60*60*1000);
-			do_prepare();
-			break;
-		case "bs_kill":	// ^[> ]*看起来(镇海神龙|东方不败|僵尸道长)想杀死你！
-			var list = {"少林僧人" : "shaolin sengren", "丐帮弟子" : "gaibang dizi", "江湖豪杰" : "jianghu haojie", "镇海神龙" : "sea dragon king",
-					"东方不败" : "dongfang bubai", "僵尸道长" : "jiangshi daozhang", "西域刀客" : "xiyu daoke", "逍遥护法" : "xiaoyao hufa",
-					"市井帮众" : "shijing bangzhong", "武当剑客" : "wudang jianke", "单正" : "shan zheng", 
-					"游骥" : "you ji", "游驹" : "you ju", "玄难大师" : "xuannan dashi", "玄寂大师" : "xuanji dashi", "徐长老" : "xu zhanglao", "秦始皇僵尸" : "qin shihuang", "丁一" : "ding yi"};
-			var npcname = wcs[0];
-			var id = list[npcname];
-			send("kill " + id);
-			set("boss/name",npcname)
-			if (query("boss/start")) world.EnableTrigger("bs_nobusy", true);
-			world.EnableTrigger("bs_sea1", true);
-			open_pfm();
-			break;
-			
-		case "bs_end0":	// ^[> ]*一阵时空的扭曲将你传送到另一个地方
-			if (output.indexOf("虚空") != -1) 				
-				telldm("副本失败"+ query("boss/kill"));
-			close_fb();
-			set("room/id",-1);
-			set("weapon/id",get_var("id_weapon"))
-			set("weapon/dur", 0);
-			send("halt;"+get_var("cmd_pre")+";l " + get_var("id_weapon") + " of me;mtc;i;hp;set no_teach prepare");
-			break;
-		case "bs_end":	// ^[> ]*(镇海神龙|僵尸道长|东方不败)(.*)副本将在30秒后消失。
-			world.EnableTimer("t_pfm", false); 
-			send("fleave");
-			if (query("boss/kill") == "digong" || query("boss/kill") == "xuemo") {
-				send(get_var("cmd_wait"));
-				dg_maze.init(1);
-			}
-			break;
-		case "bs_drop":	// ^[> ]*当(.*)一声，一(只|个|块|粒|根|颗|枚)(.*)从天而降，掉落在你面前。
-			var list = {"「金刚不坏体」残本" : "jingang book","「七杀心经」残本" : "qisha book","冰蚕丝碎片" : "chipped white silk","补天石碎片" : "chipped magic stone",
-			"水晶残片" : "chipped crystal","翡翠残片" : "chipped jade","钻石碎粒" : "chipped diamond","玛瑙残片" : "chipped agate","玉髓碎片" : "chipped chalcedony",
-			"骷髅头碎片" : "chipped skull", "精金残片" : "chipped metal", "木灵残片" : "chipped wood", "炎晶碎粒" : "chipped fire", "玄冰碎块" : "chipped ice", 
-			"水晶" : "crystal","翡翠" : "jade","钻石" : "diamond","玛瑙" : "agate","玉髓" : "chalcedony",
-			"骷髅头" : "skull", "精金" : "perfect metal", "木灵" : "perfect wood", "炎晶" : "earth fire", "玄冰" : "cold ice", 
-			"金块" : "jin kuai", "金锭" : "jin ding", "金条" : "jin tiao", "小金元宝" : "xiao yuanbao","大金元宝" : "da yuanbao", 
-			"乾坤塔符石" : "rune03", "混元道果符石" : "rune04", "傲世诀符石" : "rune02","灵通术符石" : "rune01","灵性符石" : "rune05","九龙诀符石" : "rune08","金刚伏魔符石" : "rune09",
-			"密宝奇珍" : "mibao qizhen","青龙臂铠" : "qinglong key","「守城录」":"strategy book","守城录":"strategy book"};
-					
-			var item = wcs[2];
-			var id = list[item];
-			if (id == null) {
-				telldm(item+"未定义");
-				send("id here");
-				}
-//			else if ((id != "qinglong key") ||(query("item/qlkey") < 16))
-			else if (id != "qinglong key")
-				send("get " + id);
-			else 
-				set("digong/g_getk",true);
-			break;
-		case "bs_sea":	// ^  (.*)(海怪|水怪|水灵怪|海灵怪)\((.*)\)
-			world.DiscardQueue();
-			world.EnableTrigger("wk_busy", false);
-			world.EnableTrigger("bs_sea", false);
-			world.EnableTrigger("bs_sea1", true);
-			send(get_var("cmd_3boss"))
-			send("kill " + wcs[2].toLowerCase() + ";" + get_var("cmd_kill")+";"+get_var("cmd_pfm"));
-			open_pfm();
-			break;
-
-		case "bs_nobusy":	//^(> )*你要往这上面镶嵌什么物品？
-			world.EnableTrigger("bs_nobusy", false);
-			if (query("boss/step") != 9) return;
-		case "bs_sea1":	// ^[> ]*(水怪|海怪|水灵怪|海灵怪)扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！
-			world.EnableTrigger("wk_busy", true);
-			world.EnableTimer("t_pfm", false);
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", true);
-			world.EnableTrigger("bs_sea1", false);
-			send(get_step());
-			break;
-		case "bs_ju1":	// ^[> ]*^[> ]*(你现在去聚贤庄门前找丐帮的徐长老|我知道你和他很是熟悉|段正淳说道：第二件事|我知道，玄慈方丈心里有一些难解的结|你详细地向徐长老汇报)
-			//set("boss/step", query("boss/step")+1);
-			var i = query("boss/step")+1;
-			set("boss/step", i);
-
-//			if (output.indexOf("感觉相当飘忽") != -1)
-//				set("boss/step", i);
-			var tl = 0;
-			var cmd = "";
-							
-			if (i == 2) {
-				cmd = "ask xu zhanglao about 武林大会";	
-				tl = 2750;
-			} else
-			if (i == 3) {
-				cmd = "ask duan zhengchun about 武林大会";	
-				tl = 2384;
-			} else	
-			if (i == 4) {
-				cmd = "give letter to xu zhanglao";	
-				tl = 2750;
-			} else
-			if (i == 5) {
-				world.note("----------------记得alias takeling 取英雄令------------");
-				add_room_cmd("takeling");
-				cmd = "ask xuanci dashi about 聚贤庄";	
-				tl = 1887;
-			} else
-			if (i == 6) {
-				add_room_cmd("keep yingxiong ling");
-				cmd = "w;report;e";
-				tl = 2749;
-			} else
-			if (i == 7) {
-				set("boss/target1",5);
-				set("boss/target2",5);
-				set("boss/target3",5);
-				//world.EnableTrigger("step", false);	
-				//send("e;w");
-				cmd = get_var("cmd_jxz")+";#t+ bs_target;hp;18mo a zhu";	
-				tl = 2752;
-			} else	
-			if (i == 8) {
-				set("boss/target1",5);
-				set("boss/target2",5);
-				set("boss/target3",5);
-				set("boss/target4",5);
-				cmd = "#t+ bs_target;18mo xiyu daoke";	
-				tl = 2754;
-			} 					
-			set("nextstep/cmds", cmd);	
-			set("nextstep/flag", "COMMANDS");
-			goto(tl);	
-			break;
-		case "bs_target":	// ^杀死\s+(.*):\s+(\d+)\/(\d+)。
-			
-			if (wcs[0] == "少林僧人" || wcs[0] == "西域刀客")
-				set("boss/target1",wcs[2]-wcs[1]);
-			if (wcs[0] == "丐帮弟子" || wcs[0] == "逍遥护法")
-				set("boss/target2",wcs[2]-wcs[1]);
-			if (wcs[0] == "江湖豪杰" || wcs[0] == "市井帮众")
-				set("boss/target3",wcs[2]-wcs[1]);
-			if (wcs[0] == "武当剑客")
-				set("boss/target4",wcs[2]-wcs[1]);			
-			if (query("boss/step") == 7 && query("boss/target1") == 0 && query("boss/target2") == 0 && query("boss/target3") == 0 && query("boss/target4") == 0)
-			{
-					set("nextstep/cmds", get_var("cmd_bquest")+";yun recover;yun regenerate;ask xue muhua about 疗伤");
-					set("nextstep/flag", "COMMANDS");	
-					set("room/id", 2752);
-					goto(2753);
-			}
-			if (query("boss/step") == 8 && query("boss/target1") == 0 && query("boss/target2") == 0 && query("boss/target3") == 0 && query("boss/target4") == 0)
-			{
-					
-					set("boss/step", 9);
-					set("nextstep/cmds", get_var("cmd_bquest")+";yun recover;yun regenerate;ask xue muhua about 疗伤");
-					set("nextstep/flag", "COMMANDS");	
-					goto(2753);
-			}			
-			break;
-		case "bs_weigong":	// ^你被群雄围攻，尚未完成任务，无法离开！
-			if (query("boss/step") < 9) 
-				return;
-			world.DiscardQueue();
-			world.EnableTrigger("wk_busy", false);
-			world.EnableTrigger("bs_sea", false);
-			break;				
-	}
-}
-
-function on_pk(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
+function on_pk(name, output, wildcards) {
+	var wcs = wildcards;
 	switch (name) {
 		case "pk_xkd":		// ^(> )*(看起来张三想杀死你！|张三轻吐一口气，掌力袭来，震得你|李四轻吐一口气，掌力袭来，震得你|看起来李四想杀死你！)
-			var cmd = get_var("id") + ";" + get_var("passw") 
+			var cmd = get_var("id") + ";" + get_var("passw")
 				+ ";y;quit";
 			reconnect(cmd);
 			break;
 		case "pk_hit":		// ^(> )*(.*)对著你大喝一声：看招！
 		case "pk_guard":		// ^(> )*(.*)(一声怒吼，冲上前去，看来是要和你拼命。|一言不发，对你发动了攻击
 		case "pk_kill":		// ^(> )*如果你要和(.*)性命相搏，请你也对这个人\((.*)\)下一次 kill 指令。
-			var cmd = get_var("id") + ";" + get_var("passw") 
-				+ ";y;id here;quit";
+			//var cmd = get_var("id") + ";" + get_var("passw") 
+			//	+ ";y;id here;quit";
+			send(perform());
+			send("chat* sl");
 			add_log(output);
-			reconnect(cmd);
+			//reconnect(cmd);
 			break;
 	}
 }
-function do_continue()
-{
+function do_continue() {
 	var nt = query("npc/status");
 	var qf = query("quest/flag");
 	if (nt == "head")
@@ -4287,874 +4157,70 @@ function do_continue()
 	else if (qf != "null")
 		send("hp;i;set no_teach prepare");
 }
-// 用于根据正方形迷宫地图获取路径。
-function MyMaze(dp)  
-{
-	this.data = new Array(dp*dp);
-	this.flag = new Array(dp*dp);
-	this.enter = -1;  //入口
-	this.lockrm1 = -1;  //特殊位置
-	this.lockrm2 = -1;  //特殊位置
-	this.lockrm3 = -1;  //特殊位置
-	this.lockrm4 = -1;  //特殊位置
-	this.leave = -1;   //出口
-	this.cloc = -1;  //当前位置
-	this.tloc = -1;  //要去的位置
-	this.path = "";  //迷宫路径
-	this.pnum = 0; //路径序号
-	this.clock = 0;  //不明
-	this.size = dp;  
-	this.length = dp*dp;
-	this.line = dp-1;
-	this.init = function(fg) {
-		this.clock = -1;
-		this.line = dp -1;
-		this.lockrm1 = -1;
-		this.lockrm2 = -1;
-		this.lockrm3 = -1;
-		this.lockrm4 = -1;
-		this.enter = -1;
-		this.leave = -1;
-		this.cloc = -1;
-		this.path = "";
-		this.pnum = 0;
-		this.tloc = -1;
-		if (fg == 1) {
-			this.data = null;
-			this.flag = null;			
-		} else  {			
-			if (this.data == null)
-				this.data = new Array(dp*dp);
-			if (this.flag == null)
-				this.flag = new Array(dp*dp);
-			for (var i=0; i<this.length; i++) {
-				this.data[i] = "";
-				this.flag[i] = -1;
-			}
-		}
-		return;
-	};
-	this.block = function(ns) {
-		var bk;
-		var st = this.pnum;
-		var ed = ns - 0 + st;
-		if (ed >= this.path.length)
-			ed = this.path.length;
-		if (st >= ed) 
-			return m_FAIL;
-		bk = this.path.slice(st, ed);
-		return (bk);
-	};
-	
-	this.exitid = function(dex, dir) {
-		var nex = -1;
-		if (dir == "e") nex = dex + this.size;
-		else if (dir == "s") nex = dex - 1;
-		else if (dir == "w") nex = dex - this.size;
-		else if (dir == "n") nex = dex + 1;
-		if (nex >= this.length) nex = -1;
-		return nex;
-	};
-	this.trace = function() {
-		var block=this.block(1);
-		var l = this.exitid(this.cloc,block);
-		if   (l >= 0 && l < dp*dp) {
-			this.cloc = l;
-			this.pnum++;
-			return true;
-		}
-		else 
-			this.cloc = -1;
-		return false;
-	};
-	this.goto = function(loc) {
-		var pot, dex, nex, dir, open, path, pat;
-		this.path = "";
-		this.pnum = 0;
-		if (this.cloc == loc) return "";
-		this.tloc = loc;
-		pot = 0;
-		this.clock ++;
-		open = new Array;
-		path = new Array;
-		this.flag[this.cloc] = this.clock;
-		open[open.length] = this.cloc;
-		path[path.length] = "";
-		world.note(this.cloc+"当前坐标要去坐标"+this.tloc);
-		while (1) {
-			if (pot >= open.length) return m_FAIL;
-			
-			dex = open[pot];
-			for (var i=0; i<this.data[dex].length; i++) {
-				dir = this.data[dex].charAt(i);
-				nex = this.exitid(dex, dir);
-				if (nex == -1) continue;
-				if (this.flag[nex] == this.clock) continue;
 
-				if (path[pot] == "") pat = dir;
-				//else pat = path[pot] + ";" + dir;
-				else pat = path[pot] + dir;
-				if (nex == loc) return pat;
-				this.flag[nex] = this.clock;
-				open[open.length] = nex;
-				path[path.length] = pat;
-			}
-			pot ++;	
-		}
-	};
+function CmdMpf() {
+	var str = get_var("cmd_backstab")
+	return str ? str : "mpf"
 }
-function on_digong(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
-	switch (name) {
-		case "dg_map0":	// ^  ^┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐ 迷宫地图开始
-			dg_maze.init(0);
-			world.EnableTrigger("dg_map1", true);
-			break;
-		case "dg_map1":	// ^  ^│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│
-			var le = world.GetLinesInBufferCount ();
-			var st = world.GetLineInfo(le, 11);
-			// i横向++ j纵向--
-			for (var i=1; i <= st; i++) {
-					var js = world.GetStyleInfo (le, i, 3);
-					var line=world.GetLineInfo(le, 1)
-					var j=line.substr(0,js).split("│").length-1
-					j = (dg_maze.line+j*10)-10;
-					if (world.GetStyleInfo (le, i, 1) =="★") //当前位置
-					{
-						dg_maze.cloc = j;
-					}
-					if (world.GetStyleInfo (le, i, 15) == world.NormalColour(2)) //str = str + "红色出口第" + i +"项;"+(world.GetStyleInfo (le, 2*i, 3)+1)/4;	
-					{
-						dg_maze.leave = j;					
-					}
-					if (world.GetStyleInfo (le, i, 15) == world.NormalColour(8)) //str = str + "白色入口第" + i +"项;"+(world.GetStyleInfo (le, 2*i, 3)+1)/4;	
-					{
-						dg_maze.enter =  j;	
-					}
-					if (world.GetStyleInfo (le, i, 15) == world.NormalColour(6)) //str = str + "紫色特殊房间第" + i +"项;"+(world.GetStyleInfo (le, 2*i, 3)+1)/4;	
-					{
-						if (dg_maze.leave == -1){
-							dg_maze.leave = j;
-						}
-						if (dg_maze.lockrm1 == -1) dg_maze.lockrm1 = j;
-						dg_maze.lockrm2 = j;
-					}
-				}
-			dg_maze.line --;	
-			break;
-		case "dg_mape":	//^└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
-			world.EnableTrigger("dg_map0", false);
-			world.EnableTrigger("dg_map1", false);	
-			world.EnableTrigger("dg_mape", false);				
-			var mid = "p"+ dg_maze.enter+dg_maze.leave+dg_maze.lockrm1;
-				
-			if (mid == "p909978")  mid += dg_maze.lockrm2; 
-			dg_maze.lockrm1 = -1;
-			dg_maze.lockrm2 = -1;
-			world.note(mid + "是迷宫地图标记！");
-			
-			var path = "";
-			if (query("boss/kill") == "digong") {
-				eval( Include( "map_digong.h" ) );	
-				if (dgmap_path[mid] == null) {
-					world.note(mid + "是无效地宫地图标记！");
-					return ;
-				}
-
-				dg_maze.lockrm1 = dgmap_path[mid]["lockroom1"];
-				dg_maze.lockrm2 = dgmap_path[mid]["lockroom2"];
-				dg_maze.lockrm3 = dgmap_path[mid]["lockroom3"];
-				dg_maze.lockrm4 = dgmap_path[mid]["lockroom4"];
-				var path = dgmap_path[mid]["path"];
-	//			world.note(path);
-				dgmap_path == null;
-			} else	{
-				eval( Include( "map_xuemo.h" ) );	
-				if (xmmap_path[mid] == null) {
-					world.note(mid + "是无效地宫地图标记！");
-					return ;
-				}
-
-				dg_maze.lockrm1 = xmmap_path[mid]["rest_room"];
-			//	dg_maze.lockrm2 = xmmap_path[mid]["lockroom2"];
-				//dg_maze.lockrm3 = xmmap_path[mid]["lockroom3"];
-			//	dg_maze.lockrm4 = xmmap_path[mid]["lockroom4"];
-				var path = xmmap_path[mid]["path"];
-				world.note(path);
-				xmmap_path == null;
-			}
-			path =  path.split("|");
-			if (path.length != dg_maze.length) 
-				world.note("地图文件长度格式不正确！!"+mid);		
-			 
-			for (var i=0; i<path.length; i++) {
-				dg_maze.data[i] = path[i];
-				dg_maze.flag[i] = -1;
-			}
-			
-			break;
-		case "dg_start":	//^石壁上面布满了蜘蛛网，显然很久没有人来过这里。
-			if (query("boss/kill") != "digong") return;
-			//地宫副本开始标记
-			set("boss/kill","digong");
-			set("boss/start",true);
-			//入口标记
-			set("room/id",2819);
-			dg_maze.cloc = dg_maze.enter;	
-			dg_maze.tloc = get_lockroom();
-			//开始运行
-			set("nextstep/cmds", "set no_teach move desk");
-			set("nextstep/flag", "COMMANDS");
-			goto(2821);			
-			break;
-		case "dg_step":	// ^(> )*设定环境变数：no_teach = "digong"
-			world.EnableTimer("timer1", false);
-			world.EnableTimer("t_pfm", false);
-			var nn = query("digong/npc");
-			set("digong/npc","end");
-			set("digong/g_getk",false);
-			if (( nn!= "") && (nn != "end") && ((query("item/qlkey") < 16))) {
-				world.EnableTrigger("dg_npc", false);
-				world.EnableTrigger("dg_nobody", true);	
-				world.EnableTrigger("dg_kill", true);	
-				send("kill "+ nn.toLowerCase() +";#ts+ t_pfm;"+get_var("cmd_pfm"));	
-			} else
-				send(do_digong());		
-			break;
-		case "dg_npc":	//^[> ]*  [机关兽|皇陵][.*]/((.*)/)
-			set("digong/npc", wcs[1]);
-			if (query("digong/npc") == "jiang ling")
-				world.EnableTrigger("dg_npc", false);	
-			break;
-		case "dg_kill":	// ^(> )*你对著(.*)喝道：(.*)
-			world.SetVariable("fb_npc", wcs[1]);
-		//	world.EnableTrigger("dg_kill", false);
-			world.EnableTrigger("dg_npcdie", true);			
-			break;
-		case "dg_npcdie":	// ^[> ]*(@fb_npc)扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！
-			world.EnableTrigger("dg_npcdie", false);
-			world.EnableTimer("t_pfm", false);
-			
-			//看一下
-			world.EnableTrigger("sm_exit", false);
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", false);
-			world.EnableTrigger("dg_npc", true);
-			if ((query("item/qlkey") < 16) && query("digong/g_getk"))
-				send("get qinglong key;i");
-			send("hp;look;set no_teach digong");
-			break;
-		case "dg_desk":	// ^(> )*当前房间分配的机关序号：(.*)
-			var n = query("digong/step");
-			var n_m = {1: "A",2: "B",3: "C",4: "D",5: "E"};
-			send(get_var("cmd_digong")+";#q")			
-			if (n_m[n] == wcs[1])
-				send("move desk");
-			else 
-				send("set no_teach no move");
-			break;
-		case "dg_goldman":	// ^(> )*杀死 金人: (/d){1}/9。
-				world.EnableTrigger("dg_npcdie", false);			
-				if (wcs[1] == 1)
-					set("digong/passwd", "a");
-				set("digong/n_gman", wcs[1]);
-			break;	
-		case "dg_pwd":	// ^(> )*密码 (/d){1}
-				set("digong/passwd", wcs[1]+query("digong/passwd"));
-				var n = query("digong/n_gman");
-				var str1 = query("digong/passwd");
-				send("alias dgpswd "+str1);
-				if (n == 3 || n == 5 || n == 7 || n == 8)
-				//world.doafter(1, "kill gold man;#ts+ t_pfm;"+get_var("cmd_pfm"));	
-					send("kill gold man;#ts+ t_pfm;"+get_var("cmd_pfm"));	
-				else if (n == 9)
-					send("#t- dg_kill;turn "+str1.slice(0,9));
-				else {
-					set("nextstep/flag", "COMMANDS");	
-					set("nextstep/cmds", "kill gold man" + ";#tg+ dg2;#ts+ t_pfm;"+get_var("cmd_pfm"));
-					var loc = 2828;
-					if (n == 1) {
-						loc = 2825;
-						set("room/id",2824);
-					}
-					if (n == 2)  {
-						loc = 2826;
-						set("room/id",2825);
-					}
-					if (n == 4)  {
-						loc = 2827;
-						set("room/id",2826);
-					}
-					if (n == 6)  {
-						loc = 2828;
-						set("room/id",2827);
-					}
-					goto(loc);
-				}	
-			break;			
-		case "dg_mdesk":	// ^(> )*你将石桌用力的旋转，只听得不远处传来
-			var n = query("digong/step");
-			if (output.indexOf("用力的旋转") != -1) {				
-				set ("digong/step",n+1);
-			}
-			dg_maze.tloc = get_lockroom();
-			set("nextstep/flag", "COMMANDS");
-			set("room/id",2830);
-			//if (n < 5) {
-			if (dg_maze.tloc == dg_maze.leave && query("digong/step") > 4) {
-				set("nextstep/cmds", "kill gold man" + ";#tg+ dg2;#ts+ t_pfm;"+get_var("cmd_pfm"));
-				goto(2824);					
-			} else {
-				set("nextstep/cmds", "set no_teach move desk");
-				goto(2821);	
-			}
-			break;
-	}
+function CmdMjq() {
+	var str = get_var("cmd_jiqu")
+	return str ? str : "mjq"
 }
 
-function do_digong()
-{
-//		world.note(dg_maze.pnum+"ee" + dg_maze.cloc+ "ff"+ dg_maze.tloc+"dg_path"+dg_maze.path);
-		var nn = "";
-		if ((query("digong/npc") == "") && (query("item/qlkey") < 16)) {
-			world.EnableTrigger("dg_npc", true);
-			world.EnableTrigger("dg_step", true);
-			set("digong/npc","end");
-			nn = "hp;set no_teach digong";
-		} else 
-		if (dg_maze.cloc == dg_maze.tloc) {
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", false);
-			world.EnableTriggerGroup("gsm", 1);
-			world.EnableTriggerGroup("gwk", 1);
-			dg_maze.path = "";
-			nn = get_step();
-			world.note("迷宫路径结束到达指定地点"+nn);
-			if (nn == m_FAIL)
-				world.note("aaaaa");			
-		} else { 
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", false);
-			world.EnableTriggerGroup("gsm", 1);
-			world.EnableTriggerGroup("gwk", 1);
-			if (dg_maze.path == null || dg_maze.path == "" || dg_maze.path == m_FAIL) {
-				var tt = dg_maze.goto(get_lockroom());
-				dg_maze.path = tt;
-			}
-			//set("digong/npc","");	
-			world.EnableTrigger("dg_npc", true);			
-			//send(dg_maze.block(1));
-			nn = dg_maze.block(1);
-		}
-		return nn;
-}
-function get_lockroom()
-{
-	var stp = query("digong/step");
-	var tt = -1;
-	if (stp > 4 && (query("item/qlkey") >= 16))
-		tt = dg_maze.leave;
-	else if (dg_maze.cloc == dg_maze.lockrm3)
-		tt = dg_maze.lockrm4;
-	else if (dg_maze.cloc == dg_maze.lockrm2)
-		tt = dg_maze.lockrm3;
-	else if (dg_maze.cloc == dg_maze.lockrm1)
-		tt = dg_maze.lockrm2;
-	else
-		tt = dg_maze.lockrm1;
-	
-	return tt;
-}
-function close_fb()
-{
-	world.EnableTriggerGroup("gbs", 0);
-	//地宫
-	world.EnableTriggerGroup("dg", 0);
-	world.EnableTriggerGroup("dg1", 0);
-	world.EnableTriggerGroup("dg2", 0);	
-	world.EnableTimer("t_pfm", false);
-	world.EnableTriggerGroup("gxm", 0);	
-	world.EnableTriggerGroup("xm1", 0);	
-	set("digong/step", 1);
-	set("npc/wd", 0);
-	
-	set("boss/start", false);
-	set("boss/kill", "");
-	set("boss/step", 0);
-	
-}
-function CmdMpf(){
-	var str=get_var("cmd_backstab")
-	return str?str:"mpf"
-}
-function CmdMjq(){
-	var str=get_var("cmd_jiqu")
-	return str?str:"mjq"
-}
-var holderre=/\$\*/g
-function CmdPfmlich(name){
-	var str=get_var("cmd_cheapshot")
-
-	if (!str){
-		str=""
-	}
-	if (str==""){
-		return "pfm_lich "+name
-	}
-	if (!name){
-		name=""
-	}
-	return str.replace(holderre,name)
-}
 //--------------------------------------------------------------------------------
-function on_xuemo(name, output, wildcards)
-{
-	var wcs = VBArray(wildcards).toArray();
-	switch (name) {
-		case "xm_start1":	// ^丁一说道：
-			world.doafter(1, "accept yes");
-			break;
-		case "xm_juling":	// ^聚灵法阵
-			//set("room/id", 2834);
-			dg_maze.cloc = dg_maze.leave;
-			world.EnableTrigger("xm_npc", true);
-			set("xuemo/npc","");
-			//world.EnableTrigger("step", false);
-			//world.EnableTrigger("wk_noexit", false);
-			//world.EnableTrigger("xm_npc", true);
-			//world.EnableTrigger("xm_nobusy", true);
-			//if (query("xuemo/step") == 5) set("xuemo/step", 6);
-			break;	
-		case "xm_nobusy":	// ^[> ]*你要往这上面镶嵌什么物品？
-		/*	world.EnableTimer("t_pfm", false);
-			world.EnableTrigger("sm_exit", false);
-			world.EnableTrigger("step", false);
-			world.EnableTrigger("wk_noexit", false);
-			world.EnableTrigger("xm_npc", true);
-			send("hp;look;set no_teach xuemo");			
-			break;
-*/
-			world.EnableTimer("timer1", false);
-			world.EnableTimer("t_pfm", false);
-			var nn = query("xuemo/npc").toLowerCase();
-			//set("xuemo/npc","end");
-			world.note("npc:"+nn);
-			world.EnableTrigger("xm_nobusy", false);
-			if ((( nn!= "") && (nn != "end")) || (query("xuemo/step") >= 8)) {
-			//if (nn != "end") {
-				world.EnableTriggerGroup("on_npc",false);			
-				world.EnableTrigger("step", false);
-				world.EnableTrigger("wk_noexit", false);
-				world.EnableTrigger("wk_nobusy", false);	
-				
-				world.EnableTrigger("xm_npc", false);
-				world.EnableTrigger("xm_nobody", true);	
-				world.EnableTrigger("xm_target", true);	
-				var pp = get_var("cmd_pfm");
-				if (nn == "skeleton lich"){
-					pp = CmdPfmlich("skeleton lich");
-					send("hp;n;#t- kl_nobody;look;kill "+ nn +";kill lord zombie;kill ghost devil;#ts+ t_pfm;"+pp+";#t+ xm_nobusy;jiqu 300");	
-				}else{
-					send("hp;n;#t- kl_nobody;look;kill "+ nn +";#ts+ t_pfm;"+pp+";#t+ xm_nobusy;jiqu 300");	
-				}
-				if (query("xuemo/step") == 8) send("freport");
-			} else {
-				world.EnableTimer("t_pfm", false);
-				send("get bone staff;get zombie blood;get ghost fire;#q");										
-				set("room/id",2834);
-				set("xuemo/step",7);
-				set("xuemo/target",true);
-				set("nextstep/cmds", "give all to ding yi;freport;"+get_var("cmd_wait"));
-				set("nextstep/flag", "COMMANDS");
-				dg_maze.cloc = dg_maze.leave;
-				dg_maze.tloc = -1;
-				goto(2835);	
-				return;				
-			}
-
-			break;
-			
-		case "xm_lich":	// ^看起来巫妖想杀死你！
-			if (query("xuemo/step") == 5)  {
-				set("xuemo/target",false);
-				set("xuemo/step", 6);
-			}
-			
-			var stp = query("xuemo/step");
-			if (stp == 6)	{set("xuemo/npc", "skeleton lich");			
-			}
-			world.DoAfterSpecial(0.1, 'reconnect(get_var("id") + ";" + get_var("passw") + ";y;halt;hp;i;fquest;set no_teach xuemo connect;l skeleton lich;'+CmdMpf()+';#t+ xm_nobody;#t+ xm_juling;l;#ts+ t_pfm")', 12);
-			break;	
-		case "xm_npc":	//^[> ]*(.{0,4})\(鬼气\) (.*)\((.*)\)
-			if (query("xuemo/target")) return;
-			var stp = query("xuemo/step");
-			var npcname = wcs[1];
-			var npcid = wcs[2];
-			var b_k = false;
-			switch (wcs[1]) { 
-				case "骷髅":
-					if (stp == 1 && !query("xuemo/target1")) b_k = true;
-					break;
-				case "僵尸":
-					if (stp == 1 && !query("xuemo/target2")) b_k = true;
-					break;
-				case "幽灵":
-					if (stp == 1 && !query("xuemo/target3")) b_k = true;
-					break;
-				case "骷髅武士":
-					if (stp == 2 && !query("xuemo/target1")) b_k = true;
-					break;	
-				case "尸煞":
-					if (stp == 2 && !query("xuemo/target2")) b_k = true;
-					break;	
-				case "幽冥之眼":
-					if (stp == 2 && !query("xuemo/target3")) b_k = true;
-					break;	
-				case "骷髅法师":
-					if (stp == 2 && !query("xuemo/target4")) b_k = true;
-					break;
-				case "血僵尸":
-					if (stp == 2 && !query("xuemo/target5")) b_k = true;
-					break;	
-				case "幽冥之火":
-					if (stp == 2 && !query("xuemo/target6")) b_k = true;
-					break;	
-				case "巫妖":
-					if (stp == 6) b_k = true;
-					break;	
-				case "僵尸王":
-					if (stp == 6) b_k = true;
-					break;	
-				case "幽冥魔":
-					if (stp == 6) b_k = true;
-					break;
-			}
-			if (stp >= 6 && wcs[1] != "巫妖") b_k = true;
-			if (b_k) 
-			 {
-				set("xuemo/npc", wcs[2].toLowerCase());
-				//world.note("新npc:"+wcs[2]);
-				if (wcs[1] == "巫妖") {
-					world.EnableTrigger("xm_npc", false);
-					world.EnableTrigger("xm_nobusy", true);
-					//send("kill skeleton lich;pfm_lich;" + get_var("cmd_pfm"));
-					open_pfm();
-				}
-			
-			 }
-			break;
-		case "xm_start":	// (你可愿意帮我们对付血魔|就请你证明尚未被血魔诱惑|去尝试着杀掉三个骷髅武士|去找到那些堕落的少林和尚|巫妖的骨杖|法阵那里可能还有些血魔的手下|在我施法期间)
-			//血魔副本开始标记
-			//1、2 杀怪，3去杀心武，4、杀心武回，5、去杀三小boss，6清光聚灵法阵。7杀三小boss回。8带路。9，清光聚灵法阵。 10，杀丁一
-			set("boss/kill","xuemo");
-			set("boss/start",true);
-			world.EnableTrigger("xm_nobusy", false);
-			set("room/id",2831);
-			//入口标记			
-			var stp = 0;
-			if (output.indexOf("你可愿意帮我们对付血魔") != -1) {
-				world.doafter(1, "accept yes");
-				return;
-				}				
-			else if (output.indexOf("就请你证明尚未被血魔诱惑") != -1)
-				stp = 1;
-			else if (output.indexOf("去尝试着杀掉三个骷髅武士") != -1)
-				stp = 2;
-			else if (output.indexOf("去找到那些堕落的少林和尚") != -1)
-				stp = 3;	
-			else if (output.indexOf("巫妖的骨杖") != -1)
-				stp = 5;	
-			else if (output.indexOf("法阵那里可能还有些血魔的手下") != -1)
-				stp = 8;	
-			else if (output.indexOf("在我施法期间") != -1)
-				stp = 9;
-			set("xuemo/step",stp);
-			
-			set("xuemo/target",false);
-			set("xuemo/target1",true);
-			set("xuemo/target2",true);
-			set("xuemo/target3",true);
-			set("xuemo/target4",true);
-			set("xuemo/target5",true);
-			set("xuemo/target6",true);
-			//world.note("dg_maze.cloc = dg_maze.enter"+dg_maze.cloc+"dd"+dg_maze.enter);
-			send("halt;"+get_var("cmd_xm")+";#q");
-			
-			var tl = 2834;
-			switch (stp) {
-				case 2: 
-					set("xuemo/target4",false);
-					set("xuemo/target5",false);
-					set("xuemo/target6",false);
-				case 1:
-					set("xuemo/target1",false);
-					set("xuemo/target2",false);
-					set("xuemo/target3",false);
-					set("nextstep/cmds", "freport;"+get_var("cmd_wait"));
-					set("nextstep/flag", "COMMANDS");
-					tl = 2835;
-					break;
-				case 3:
-					set("xuemo/target",true);
-					set("nextstep/cmds", "push coffin;kill xin wu;#t+ xm_target;#ts+ t_pfm;"+get_var("cmd_pfm"));
-					set("nextstep/flag", "COMMANDS");
-					tl = 2833;					
-					break;
-				case 5:
-					set("xuemo/target",true);
-					set("nextstep/cmds", "kill skeleton lich;"+CmdPfmlich("skeleton lich")+";#q;#t+ xm_nobusy;#ts+ t_pfm;"+get_var("cmd_pfm"));
-					set("nextstep/flag", "COMMANDS");
-					tl = 2834;	
-					break;
-				case 8:
-					send("tuna 200;dazuo 200;"+CmdMpf()+";#q");
-					set("xuemo/target",true);
-					set("nextstep/cmds", "do 3 freport;#t+ xm_nobusy;#ts+ t_pfm");
-					set("nextstep/flag", "COMMANDS");									
-					break;					
-				default:
-					world.EnableTrigger("xm_start", false);
-					world.EnableTrigger("xm_target", true);
-					world.EnableTrigger("xm_nobusy", true);
-					world.EnableTimer("t_pfm", true);
-					//send(get_var("cmd_bquest"));
-					
-					world.note("跑路结束，准备杀怪！");
-					return;
-				}
-				dg_maze.cloc = dg_maze.enter;
-				dg_maze.tloc = get_xmroom();
-				goto(tl);
-			break;
-			
-		case "xm_step":	// ^(> )*设定环境变数：no_teach = "xuemo"
-			world.EnableTimer("timer1", false);
-			world.EnableTimer("t_pfm", false);
-			var nn = query("xuemo/npc");
-			set("xuemo/npc","end");
-			//world.note("npc:"+nn);
-			if (( nn!= "") && (nn != "end")) {
-				world.EnableTrigger("xm_npc", false);
-				world.EnableTrigger("xm_nobody", true);	
-				world.EnableTrigger("xm_target", true);	
-				send("kill "+ nn.toLowerCase() +";#ts+ t_pfm;"+get_var("cmd_pfm"));	
-			} else
-				send(do_xuemo());		
-			break;
-		case "xm_target":	// ^(> )*杀死 骷髅: 2/8   ^[杀死|超度]\s+(.*) :\s+(\d+)\/(\d+)。   
-			//if (query("xuemo/target") == true) return;
-			if (wcs[1] == "亡灵") {
-				if (wcs[2] == wcs[3]) {
-					send("freport");
-					world.EnableTrigger("bs_kill", true);
-				}
-				return;
-			}
-			var stp = query("xuemo/step");
-			if (stp > 2 && wcs[1] != "心武") return; 
-			
-			set("xuemo/npc","");
-			if (wcs[2] == wcs[3]) {
-				switch (wcs[1]) { 
-					case "骷髅":
-						if (stp == 2) return;
-					case "骷髅武士":
-				//	case "巫妖":
-						set("xuemo/target1",true);
-						break;	
-					case "僵尸":
-						if (stp == 2) return;
-					case "尸煞":
-				//	case "僵尸王":
-						set("xuemo/target2",true);
-						break;
-					case "幽灵":
-						if (stp == 2) return;
-					case "幽冥之眼":
-				//	case "幽冥魔":
-						set("xuemo/target3",true);
-						break;
-					case "骷髅法师":
-						set("xuemo/target4",true);
-						break;	
-					case "血僵尸":
-						set("xuemo/target5",true);
-						break;	
-					case "幽冥之火":
-						set("xuemo/target6",true);
-						break;
-					case "心武": 
-						world.Note("spirit tower")
-						send("get spirit tower;#q");
-						set("room/id",2833);
-						set("xuemo/step",4);
-						set("nextstep/cmds", "give spirit tower to ding yi;freport;"+get_var("cmd_wait"));
-						set("nextstep/flag", "COMMANDS");
-						dg_maze.cloc = dg_maze.lockrm1;
-						dg_maze.tloc = -1;
-						goto(2835);	
-						return;						
-			}
-				if (query("xuemo/target1") && query("xuemo/target2") && query("xuemo/target3") && query("xuemo/target4") && query("xuemo/target5") && query("xuemo/target6"))
-					set("xuemo/target",true);
-			}
-			world.EnableTrigger("xm_target", false);
-			world.EnableTimer("t_pfm", false);
-			
-			//看一下
-			world.EnableTrigger("sm_exit", false);
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", false);
-			world.EnableTrigger("xm_npc", true);
-			send("hp;look;set no_teach xuemo");
-			
-			//send(do_xuemo());
-			break;
-}
-}
-//--------------------------------------------------------------------------------
-function do_xuemo()
-{
-		//world.note("坐标" + dg_maze.cloc);
-		//world.note(dg_maze.pnum+"索引号" + dg_maze.cloc+ "是当前坐标，要去"+ dg_maze.tloc+"，路径"+dg_maze.path);
-		var nn = "";
-		//任务目标完成，回去交任务
-		if (query("xuemo/target") && (query("xuemo/step")<3) && dg_maze.tloc != dg_maze.enter) {
-			dg_maze.tloc = dg_maze.enter;
-			dg_maze.path = "";			
-		}
-		
-		if ((query("xuemo/npc") == "") && (query("xuemo/step")<3) && !(query("xuemo/target")) )  
-		{
-			world.EnableTrigger("xm_npc", true);
-			world.EnableTrigger("xm_step", true);
-			set("xuemo/npc","end");
-			nn = "hp;set no_teach xuemo";
-		} else 
-		if (dg_maze.cloc == dg_maze.tloc && (query("xuemo/target"))) {
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", false);
-			world.EnableTriggerGroup("gsm", 1);
-			world.EnableTriggerGroup("gwk", 1);
-			dg_maze.path = "";
-			nn = get_step();
-			world.note("迷宫路径结束到达指定地点"+nn);
-			if (nn == m_FAIL)
-				world.note("迷宫路径结束到达指定地点发生错误");			
-		} else { 
-			world.EnableTriggerGroup("on_npc",false);
-			world.EnableTrigger("step", false);
-			world.EnableTriggerGroup("gsm", 1);
-			world.EnableTriggerGroup("gwk", 1);
-			if (dg_maze.tloc == -1 || dg_maze.cloc == dg_maze.tloc) {
-				dg_maze.tloc = get_xmroom();
-				dg_maze.path = ""; 
-			}
-			if (dg_maze.path == null || dg_maze.path == "" || dg_maze.path == m_FAIL) {
-				dg_maze.path = dg_maze.goto(dg_maze.tloc);			
-			}
-			//set("digong/npc","");	
-			world.EnableTrigger("xm_npc", true);			
-			//send(dg_maze.block(1));
-			nn = dg_maze.block(1);
-		}
-		return nn;
-}
-function get_xmroom()
-{
-	//world.note(dg_maze.cloc+"是当前坐标get_xmroom要去坐标"+dg_maze.tloc);
-	var stp = query("xuemo/step");
-	var tt = -1;
-		switch (stp) { 
-			case 1:
-			case 2:
-				if (query("xuemo/target")) 
-					tt = dg_maze.enter;	
-				else if (dg_maze.cloc == dg_maze.enter) 
-					tt = dg_maze.lockrm1;
-				else if  (dg_maze.cloc == dg_maze.lockrm1) 
-					tt = dg_maze.leave;
-				else {
-					tt = dg_maze.leave;
-					while (tt == dg_maze.leave) {				
-						i = Math.floor(Math.random() * 99);
-						if (dg_maze.data[i] != "" && dg_maze.cloc != i)
-							tt = i;	
-					}	
-				}
-				break;
-			case 3:
-					tt = dg_maze.lockrm1;
-				break;			
-			case 4:
-			case 7:
-					tt = dg_maze.enter;	
-				break;
-			case 5:
-			case 8:
-					tt = dg_maze.leave;
-				break;			
-		}
-	world.note("当前坐标get_xmroom坐标结束，要去"+tt);
-	return tt;
-}	
-//--------------------------------------------------------------------------------
-function on_trc_eatlu(name, output, wildcards){
-	send("eat magic water;i")
-	world.EnableTrigger("on_trc_eatlu",false)
+function on_trc_eatlu(name, output, wildcards) {
+	send("eat magic water;hp;hp -m;i")
+	world.EnableTrigger("on_trc_eatlu", false)
 }
 
-function BusyTest(loc,cmds){
-	world.EnableTriggerGroup("busytest",true)
-	set("nextstep/loc",loc)
+function BusyTest(loc, cmds) {
+	world.EnableTriggerGroup("busytest", true)
+	set("nextstep/loc", loc)
 	set("nextstep/flag", "COMMANDS");
 	set("nextstep/cmds", cmds);
 	send("enchase bao")
 }
-function on_busy_test_busy(name, output, wildcards){
+function on_busy_test_busy(name, output, wildcards) {
 	world.Note("busy")
-	world.DoAfterSpecial(0.5, 'send("enchase bao")', 12);	
+	world.DoAfterSpecial(0.5, 'send("enchase bao")', 12);
 }
-function on_busy_test_nobusy(name, output, wildcards){
-	world.EnableTriggerGroup("busytest",false)
-	goto(query("nextstep/loc"))	
+function on_busy_test_nobusy(name, output, wildcards) {
+	world.EnableTriggerGroup("busytest", false)
+	goto(query("nextstep/loc"))
 }
-world.EnableTriggerGroup("busytest",false)
+world.EnableTriggerGroup("busytest", false)
 
-function EatLu(){
-	set("trceatlu",true)
+function EatLu() {
+	set("trceatlu", true)
 	do_prepare()
 }
 
 //-------------------------
 
-function on_jubaoxiang(name, output, wildcards){
-	var wcs = VBArray(wildcards).toArray();
-	set("xiang",{
-		"_used":wcs[0]-0,
-		"_max":wcs[1]-0,
+function on_jubaoxiang(name, output, wildcards) {
+	var wcs = wildcards;
+	set("xiang", {
+		"_used": wcs[0] - 0,
+		"_max": wcs[1] - 0,
 	})
-	if (wcs[0]>0){
+	if (wcs[0] > 0) {
 		world.EnableTrigger("jubaoxiang_start", true);
 	}
 }
 
 
-function on_jubaoxiang_item(name, output, wildcards){
-	var wcs = VBArray(wildcards).toArray();
-	set("xiang/"+wcs[1],wcs[2]-0)
+function on_jubaoxiang_item(name, output, wildcards) {
+	var wcs = wildcards;
+	set("xiang/" + wcs[1], wcs[2] - 0)
 }
 
-function on_jubaoxiang_start(name, output, wildcards){
+function on_jubaoxiang_start(name, output, wildcards) {
 	world.EnableTrigger("jubaoxiang_start", false);
 	world.EnableTrigger("jubaoxiang_end", true);
 	world.EnableTrigger("jubaoxiang_item", true);
 
 }
-function on_jubaoxiang_end(name, output, wildcards){
+function on_jubaoxiang_end(name, output, wildcards) {
 	world.EnableTrigger("jubaoxiang_end", false);
 	world.EnableTrigger("jubaoxiang_item", false);
-
-
 }

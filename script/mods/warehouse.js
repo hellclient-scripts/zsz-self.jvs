@@ -8,6 +8,15 @@
             cmd:"buy 100 "+id +" from ping yizhi",
         }
     }
+    function newshengshengitem(id){
+        warehouse.Items[id]={
+            check:100,
+            store:"cun 100 "+id,
+            type:"buy",
+            loc:65,
+            cmd:"buy 100 "+id +" from ping yizhi",
+        }
+    }
     var warehouse={}
     mods.Modules.warehouse=warehouse
     warehouse.Items={}
@@ -29,6 +38,14 @@
     for(var i in jiuhualist){
         newjiuhuaitem(jiuhualist[i])
     }
+    var shengshenglist=["honghua","chenpi","danggui","renshen","shouwu","xiongdan","juhua","ha fen","du huo","tianqi","lurong","gan shiliu"]
+    for(var i in shengshenglist){
+        newshengshengitem(shengshenglist[i])
+    }	
+    var tianxinlist=["yang jinhua","du huo","chuanwu","chenpi","fu zi","shengdi","moyao","gan shiliu"]
+    for(var i in tianxinlist){
+        newjiuhuaitem(tianxinlist[i])
+    }		
     warehouse.Preparing=""
     warehouse.Target=[]
     warehouse.Task=""
@@ -55,6 +72,8 @@
         var list=Userinput.newlist("物资管理","请选择你要管理的物资",true)
         list.append("饮食","[饮食]为计划的ID准备水袋和干粮 shuidai ganliang")
         list.append("九花","[九花]制作九花玉露丸的材料 jiuhua wan")
+        list.append("生生","[生生]制作生生造化丹的材料 shengsheng dan")		
+		list.append("天心","[天心解毒丹]制作天心解毒丹的材料 tianxin dan")	
         list.publish("Mods.Modules.warehouse.Prompt")    
     }
     warehouse.ModuleCheck=function(){
@@ -119,6 +138,20 @@
                 }
                 warehouse.Target=t
                 break
+            case "生生":
+                var t=[]
+                for(var i in shengshenglist){
+                    t.push({ID:shengshenglist[i],Need:need})
+                }
+                warehouse.Target=t
+                break	
+            case "天心":
+                var t=[]
+                for(var i in tianxinlist){
+                    t.push({ID:tianxinlist[i],Need:need})
+                }
+                warehouse.Target=t
+                break					
             default:
                 Userinput.alert("","不支持的任务",warehouse.Task+"是不支持的任务")
                 return

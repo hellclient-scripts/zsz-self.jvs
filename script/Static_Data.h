@@ -72,8 +72,8 @@ var loc_list = {
 	"大理" : {"id" :  443, "sh" : "dl", "map" : "map_dl", "info" : "32;21;33;34;35"},
 	"西域" : {"id" : 1150, "sh" : "xy", "map" : "map_xy", "info" : "16;17;48;49;44;39;50"}
 	};
-
-var far_list = new Array("佛山","南海","泉州","福州","汝州","嵩山","星宿","天山","武功","灵州","长安","华山","襄阳","扬州","苏州","杭州","成都","终南","关外","大理","西域");
+var raw_far_list=["佛山","南海","泉州","福州","汝州","嵩山","星宿","天山","武功","灵州","长安","华山","襄阳","扬州","苏州","杭州","成都","终南","关外","大理","西域"];
+var far_list = [...raw_far_list]
 
 //--------------------------------------------------------------------------------
 var info_list = {
@@ -94,7 +94,7 @@ var info_list = {
 	"17" : {"name" : "波斯商人", "id" : "bosi shangren",    "area" : "xy", "loc" : 1150},
 	"18" : {"name" : "小贩",     "id" : "seller",           "area" : "hs", "loc" : 1053},    
 	"19" : {"name" : "小贩",     "id" : "seller",           "area" : "hs", "loc" : 1002},
-	"20" : {"name" : "李铁嘴",   "id" : "teller",           "area" : "hs", "loc" : 1056},
+	"20" : {"name" : "李铁嘴",   "id" : "fortune teller",   "area" : "hs", "loc" : 1056},
 	"21" : {"name" : "凤七",     "id" : "feng qi",          "area" : "fs", "loc" : 403},
 	"22" : {"name" : "凤一鸣",   "id" : "feng yiming",      "area" : "fs", "loc" : 400},
 	"23" : {"name" : "渔夫",     "id" : "yu fu",            "area" : "fs", "loc" : 420},
@@ -118,9 +118,9 @@ var info_list = {
 	"41" : {"name" : "店小二",   "id" : "xiao er",          "area" : "yz", "loc" : 1684},
 	"42" : {"name" : "小贩",     "id" : "seller",           "area" : "cd", "loc" : 671},
 	"43" : {"name" : "方人智",   "id" : "fang renzhi",      "area" : "cd", "loc" : 688},
-	"44" : {"name" : "卓玛",     "id" : "zhuoma",           "area" : "cd", "loc" : 1638},
+	"44" : {"name" : "卓玛",     "id" : "zhuo ma",           "area" : "cd", "loc" : 1638},
 	"45" : {"name" : "店小二",   "id" : "xiao er",          "area" : "wd", "loc" : 1489},
-	"46" : {"name" : "船夫",     "id" : "chuanfu",          "area" : "sz", "loc" : 1748},
+	"46" : {"name" : "船夫",     "id" : "chuan fu",          "area" : "sz", "loc" : 1748},
 	"47" : {"name" : "店小二",   "id" : "xiao er",          "area" : "yd", "loc" : 1011},
 	"48" : {"name" : "店小二",   "id" : "xiao er",          "area" : "xy", "loc" : 1149},
 	"49" : {"name" : "小贩",     "id" : "seller",           "area" : "xy", "loc" : 1784},

@@ -1,12 +1,13 @@
-Type = "jscript"
-Intro = "由zsz开发，self接手的终极地狱高效率quest+副本 mushclient jvs机器人，由bao迁移。\n变量和别名设置说明和建议由老牛提供\n感谢老牛提供测试ID\n\nalias设置:\n\nalias menter0 enter dong      enter聊天室设置，这个应该可以在地图里面设置自己的聊天室\t\nalias mdz0 dazuo 100          打坐设置\t\nalias mdan1 eat jiuhua wan    ①精力小于500；②精力小于设置的最小精力值min_jingli；③miss的时候精力不够；④散兵器的时候\t\nalias mdan2 eat jiuhua wan    ①气血受伤小于20%（吃丹顺序mdan4;mdan2）；精气受伤小于70%（吃丹顺序yun inspire;mdan2;mdan3;mdan4）\t\nalias mdan3 touch xxx         加内力的药（没有10级兵器就设置alias mdan3 eat xxx，有10级兵器就alias mdan3 touch xxx，如果不设置吃药，就打坐alias mdan3 dazuo xxx）\t\nalias mdan4 eat jiuhua wan    精气受伤，治疗精气的药。（没有通二脉的情况下使用）\t\nalias mdan5 dazuo 500         过沙漠内里不够\t\nalias gdan0 qu xxx jiuhua wan 取多少九花丸\t\nalias mtc0 touch xxx          touch武器\t\nalias mtc touch xxx          touch武器\t\n\n基本set:\n\nset auto_regenerate yes;\nset auto_drinkout yes;\nset brief yes;\nset combatd brief;\nset no_more yes;\nunset prompt;\nset wimpy 0\n\n*******身上物品，数量大于一定时，自动存到房子里\t\t\t\n\t\t\t\n****血魔必须设置，副本通过率极高(新手不用设置600+再设置这个)：\t\t\t（以狂风剑+不败神功为例，攻击性连招+busy）\nalias pfm_lich yong sword.kuang skeleton lich and throwing.tianhua skeleton lich\t\t\t\n\t\t\t\n**聚贤庄副本取少林令设置：\t\t\t\nalias takeling fetch xx xx\t\t\t\n\t\t\t\n****副本结束后，有时候PFM会变更不过来，这是自动PFM设置：\t\t（以狂风剑+不败神功为例）\t\nalias mpf yong sword.kuang and throwing.yuce\t\t\t\n\t\t\t\n***QM时候如果yuce,需要这个设置，自动捡取NPC身上玉峰针，自动控制数量\t\t\t\nalias gzhen get yufeng zhen from $*\t\t\t\n\nbao添加:\n\n快速初始化命令，仅在第一次设置id时使用，然后自行进行精细化调整\n\nalias menter0 enter bao;alias mdz0 dazuo 100;alias mdan1 eat jiuhua wan;alias mdan2 eat jiuhua wan;alias mdan3 touch xxx;alias mdan4 eat jiuhua wan;alias mdan5 dazuo 500;alias gdan0 qu xxx jiuhua wan;alias mtc0 touch xxx;alias mtc touch xxx;alias mjq jiqu\n\n"
+Type = "v8"
+Intro = "此机器人主要是hell游戏的mater quest机器人，集成了三小副本、地宫副本、聚贤庄副本、血魔副本以及新出的保护任务。主打一个高效稳定。\n使用此机器人前\n1、感谢zsz大神\n\t此机器人最早zsz大神在mushclient上开发的master quest 机器人，后由于大神人间消失。只能尝试自己慢慢维护。增加新功能，新副本。\n2、感谢bao大神\n\t制作提供了这么强大的hellclient、线报功能等大量优化。\n3、感谢所有一切风风雨雨走过来的人，ri all。\n\t\t\t\t\t\t\t\t\t\t\t\t\tself 2023-12-09\n\n下面是本人常用的set 和alias。根据个人情况按需设置。\nset auto_regenerate yes;\nset brief yes;\nset careful BRIEF;\nset combatd brief;\nunset map_prompt;\nset no_more yes;\nunset prompt;\nset wimpy 0;\nalias j wield sword;\nalias uj unwield sword;\nalias mtc touch sword;\nalias er yun recover;\nalias mjq jiqu;\nalias re yun regenerate;\nalias dan0 0精气1精力2气血3内力其他full;\nalias mdan0 eat jiuhua wan;\nalias mdan1 eat jiuhua wan;\nalias mdan2 do eat jiuhua wan,eat shengsheng dan;\nalias mdan3 eat heishi dan;\nalias mdan4 eat jiuhua wan;\nalias mdan5 eat shengsheng dan;\nalias gdan0 take 20 jiuhua wan;\nalias mjq jiqu;\nalias mjq1 jiqu;\nalias gzhen get yufeng zhen from $*;\nalias tl take 1 yingxiong ling;\nalias ll lian dodge 50;\nalias yp yun powerup;\nalias ys yun shield;\nalias xx xue zuo force 20;\nalias xxx xue zuo jiaohua-neigong 20;\nalias menter0 enter guanjia;\nalias dh fmstore exchange $1 $2;\nalias zz donate transfer 1 to guanjia;"
 Desc = "zsz/self 的终极地狱 QM+副本机器人"
 OnOpen = ""
 OnClose = ""
 OnConnect = "at_connect"
 OnDisconnect = "at_disconnect"
 OnBroadcast = "onBroadcast"
-OnFocus = ""
+OnFocus = "get_focus"
+OnLoseFocus = ""
 OnKeyUp = ""
 OnHUDClick = ""
 OnResponse = ""
@@ -16,471 +17,6 @@ OnSubneg = ""
 OnBufferMin = 0
 OnBufferMax = 0
 Channel = "zsz-self.jvs"
-
-[[Triggers]]
-  ID = "d1d5cnq4t2kjb373fgcs2k"
-  Name = "bs_sea"
-  Enabled = false
-  Match = "^    (.*)(海怪|水怪|水巨灵|海巨灵)\\((.*)\\)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2kkje73fgcs2l"
-  Name = "bs_door"
-  Enabled = true
-  Match = "^  副本传送门\\(fuben door\\)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2kl0373fgcs2m"
-  Name = "dg_npc"
-  Enabled = false
-  Match = "^[> ]*    (机关|皇陵).*\\((.*)\\)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l2fc73fgcs2n"
-  Name = "xm_npc"
-  Enabled = false
-  Match = "^[> ]*(.{0,4})\\(鬼气\\) (.*)\\((.*)\\)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "xm1"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l2o573fgcs2o"
-  Name = "dg_npcdie"
-  Enabled = false
-  Match = "^[> ]*(@fb_npc)(扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！|散落成一堆青铜。|化成了一堆黄土。)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = true
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg1"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l31273fgcs2p"
-  Name = "bs_sea1"
-  Enabled = false
-  Match = "^[> ]*(水怪|海怪|水巨灵|海巨灵)扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l3aa73fgcs2q"
-  Name = "bs_end0"
-  Enabled = false
-  Match = "^[> ]*(一阵时空的扭曲将你传送到另一个地方|虚空$)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l3iq73fgcs2r"
-  Name = "bs_end"
-  Enabled = false
-  Match = "^[> ]*(镇海神龙|僵尸道长|东方不败|血战聚贤庄|秦陵地宫|诡异墓园)(.*)副本将在30秒后消失。"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l3qv73fgcs2s"
-  Name = "bs_drop"
-  Enabled = false
-  Match = "^[> ]*当(.*)一声，一(只|个|块|粒|根|颗|枚|锭|片|束|些|份|本)(.*)从天而降，掉落在你面前。"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l43n73fgcs2t"
-  Name = "bs_ju2"
-  Enabled = true
-  Match = "^[> ]*段正淳说道：呵呵，这位.*，好久不见了啊，近来可好？来我大理有事吗？"
-  Send = "ask duan zhengchun about 武林大会"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = ""
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l4ck73fgcs2u"
-  Name = "bs_start"
-  Enabled = true
-  Match = "^[> ]*副本执行时间为(.*)，副本将在(.*)后可重新进入。"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l4l673fgcs2v"
-  Name = "bs_kill"
-  Enabled = false
-  Match = "^[> ]*看起来(镇海神龙|东方不败|僵尸道长|少林僧人|江湖豪杰|丐帮弟子|西域刀客|逍遥护法|市井帮众|武当剑客|单正|游骥|游驹|玄难大师|玄寂大师|徐长老|丁一|秦始皇僵尸)想杀死你！"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l4tj73fgcs30"
-  Name = "bs_false"
-  Enabled = true
-  Match = "^[> ]*你离上次进入副本时间太短，请休息会再来。"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l58073fgcs31"
-  Name = "bs_nobusy"
-  Enabled = false
-  Match = "^[> ]*你要往这上面镶嵌什么物品？"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l5h373fgcs32"
-  Name = "xm_nobusy"
-  Enabled = false
-  Match = "^[> ]*你要往这上面镶嵌什么物品？"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "xm1"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
 
 [[Triggers]]
   ID = "d1d5cnq4t2l5h373fgcs32-a"
@@ -545,133 +81,9 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2l5pf73fgcs33"
-  Name = "dg_map1"
-  Enabled = false
-  Match = "^│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│(.*)│"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l62k73fgcs34"
-  Name = "dg_map0"
-  Enabled = false
-  Match = "^┌─┬─┬─┬─┬─┬─┬─┬─┬─┬─┐"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l6ap73fgcs35"
-  Name = "dg_mape"
-  Enabled = false
-  Match = "^└─┴─┴─┴─┴─┴─┴─┴─┴─┴─┘"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l6j173fgcs36"
-  Name = "dg_start"
-  Enabled = true
-  Match = "^石壁上面布满了蜘蛛网，显然很久没有人来过这里。"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 10
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "d1d5cnq4t2l6ro73fgcs37"
   Name = "step"
-  Enabled = false
+  Enabled = true
   Match = "^    这里(唯一的出口是|明显的出口是|没有任何明显的出路)(.*)"
   Send = ""
   ColourChangeType = 0
@@ -694,7 +106,7 @@ Channel = "zsz-self.jvs"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
-  OmitFromOutput = true
+  OmitFromOutput = false
   Inverse = false
   Italic = false
   Variable = ""
@@ -731,41 +143,10 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2l7d373fgcs39"
-  Name = "xm_step"
-  Enabled = false
-  Match = "^(> )*(.*> )*设定环境变数：no_teach = \"xuemo\""
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 65
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "xm1"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "d1d5cnq4t2l7lp73fgcs3a"
   Name = "sm_out"
   Enabled = false
-  Match = "^(> )*(深山|昆仑山下|戈壁|丝绸之路|天山脚下|青城|大门|石室|地宫入口|内宫通道|墓园入口|荒庙|聚灵法阵)$"
+  Match = "^(> )*(深山|昆仑山下|戈壁|丝绸之路|天山脚下|青城|大门|桃林边|迷阵入口)$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -784,37 +165,6 @@ Channel = "zsz-self.jvs"
   LinesToMatch = 0
   WildcardLowerCase = false
   Group = "gsm"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2l7ua73fgcs3b"
-  Name = "dg_step"
-  Enabled = false
-  Match = "^(> )*设定环境变数：no_teach = \"digong\""
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 65
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg1"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -920,7 +270,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2l90773fgcs3f"
   Name = "wk_bar"
   Enabled = true
-  Match = "^(> )*(褚万1里|亲兵|侍女|宋兵|衙役|官兵|江百胜|李力世|大汉|拓跋|劳德诺|摘星子|虚通|虚明|安健刚|孟健雄|心砚|周绮|蒋四根|石双英|卫春华|杨成协|徐天宏|常伯志|常赫志|赵半山|周仲英|陆菲青|无尘|空见|道一)(上前挡住你，朗声说道：|一把拦住你，喝道：|美目一挑，想走，没门！|喝道：“威……武……|向你喝道：什么人|拦住了你的去路|伸手拦住你说道|喝道：别乱逛|拦住你说：此处乃明教重地|对你道：对不起|喝道：这位|伸手拦住你白眼一翻说道|拦住你说道|迈步挡在你身前|一把拦住你|哈哈一笑|俏眼一瞪|大喝一声|冷哼一声|大吼一声|长刀一摆|飞身挡住你的去路|扭身挡住|笑嘻嘻地挡住你的去路|吹着白胡子|用冷森森的眼光扫了你一眼|长剑电闪|对你道：善哉，后殿|说道: 你未经许可)"
+  Match = "^(> )*(褚万1里|巴依|亲兵|侍女|御前侍卫|宋兵|衙役|官兵|江百1胜|李力世|大汉|拓跋|劳德诺|摘星子|虚通|虚明|安健刚|孟健雄|心砚|周绮|蒋四根|石双英|卫春华|杨成协|徐天宏|常伯志|常赫志|赵半山|周仲英|陆菲青|无尘|空见|道一)(上前挡住你，朗声说道：|一把拦住你，喝道：|美目一挑，想走，没门！|喝道：“威……武……|向你喝道：什么人|拦住了你的去路|伸手拦住你|喝道：别乱逛|拦住你说：此处乃明教重地|对你道：对不起|喝道：这位|伸手拦住你白眼一翻说道|拦住你说道|迈步挡在你身前|一把拦住你|哈哈一笑|俏眼一瞪|大喝一声|冷哼一声|大吼一声|长刀一摆|飞身挡住你的去路|扭身挡住|笑嘻嘻地挡住你的去路|吹着白胡子|用冷森森的眼光扫了你一眼|长剑电闪|对你道：善哉，后殿|说道: 你未经许可|说：我把阿凡提关)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -982,7 +332,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2l9ig73fgcs3h"
   Name = "wk_mache"
   Enabled = true
-  Match = "^(> )*马夫一声招呼，开过来一辆大车，你上了车就出发了。"
+  Match = "^(> )*(马夫一声招呼，开过来一辆大车，你上了车就出发了。|你在海上航行了很久很久)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -1044,7 +394,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2la4b73fgcs3j"
   Name = "wk_mcout"
   Enabled = true
-  Match = "^(> )*你到了(.*)，下了车。"
+  Match = "^(> )*(你到了.*，下了车。|.{0,4}终于.*你走下船来。)"
   Send = "hp"
   ColourChangeType = 0
   Colour = 0
@@ -1199,7 +549,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2ldf573fgcs3o"
   Name = "wk_busy"
   Enabled = false
-  Match = "^(> )*(.*> )*(你的动作还没有完成，不能移动|你逃跑失败|你被拦住了去路|什么都等你忙完了再说吧|等你忙完了再说吧|等你打完了架再说吧|你正忙，等有空了再说。|你觉得(.*)的感觉相当飘忽|你发现有洞穴内并不安全，还是还先清理掉虾兵虾将在走也不迟)"
+  Match = "^(> )*(.*> )*(你上一个动作还没有完成，先等等吧。|你的动作还没有完成，不能移动|你逃跑失败|你被拦住了去路|什么都等你忙完了再说吧|等你忙完了再说吧|等你打完了架再说吧|你正忙，等有空了再说。|你觉得(.*)的感觉相当飘忽|你发现有洞穴内并不安全，还是还先清理掉虾兵虾将在走也不迟)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -1261,7 +611,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2le6n73fgcs3q"
   Name = "wk_die"
   Enabled = false
-  Match = "^(> )*(褚万里|亲兵|侍女|宋兵|衙役|官兵|江百胜|李力世|大汉|拓跋|劳德诺|虚通|虚明|摘星子|安健刚|孟健雄|心砚|周绮|蒋四根|石双英|卫春华|杨成协|徐天宏|常伯志|常赫志|赵半山|周仲英|陆菲青|无尘道长|空见|道一禅师)(扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！|往上面落荒而逃了。|往下面落荒而逃了。|往外面落荒而逃了。)"
+  Match = "^(> )*(褚万里|巴依|亲兵|侍女|宋兵|衙役|御前侍卫|东厂官兵|官兵|江百胜|李力世|大汉|拓跋|劳德诺|虚通|虚明|摘星子|安健刚|孟健雄|心砚|周绮|蒋四根|石双英|卫春华|杨成协|徐天宏|常伯志|常赫志|赵半山|周仲英|陆菲青|无尘道长|空见|道一禅师)(扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！|往上面落荒而逃了。|往下面落荒而逃了。|往外面落荒而逃了。)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -1568,6 +918,37 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
+  ID = "d1fldbn9a0ovhs72cv1a05"
+  Name = "hpm_2"
+  Enabled = true
+  Match = "^【潜能上限】(.*)【体会上限】(.*)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_hp"
+  SendTo = 0
+  Sequence = 80
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ghpm"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
   ID = "d1d5cnq4t2lgr273fgcs44"
   Name = "im_start"
   Enabled = true
@@ -1602,7 +983,7 @@ Channel = "zsz-self.jvs"
   ID = "allitem"
   Name = "allitem"
   Enabled = false
-  Match = "^(  |□|○)((\\S*)[壶|支|顶|块|朵|面|匹|位|支|颗|个|把|只|粒|张|枚|件|柄|根|块|文|两|碗|滴]){0,1}(\\S+)\\((.*)\\)"
+  Match = "^(  |□|○)((\\S*)[本|幅|壶|支|顶|块|朵|面|匹|位|支|颗|个|把|只|粒|张|枚|件|柄|根|块|文|两|碗|滴]){0,1}(\\S+)\\((.*)\\)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -1664,7 +1045,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2lhbo73fgcs46"
   Name = "im_gift"
   Enabled = false
-  Match = "(赏善罚恶令|九转金丹|仙丹|洗髓丹|火红仙丹|神力丸|人参养荣丸|福寿膏|龟苓膏|百花腹蛇膏|玛瑙|翡翠|水晶|钻石|玄冰|精金|天香玉露|菩提子|木灵|炎晶|玉髓|骷髅头|残片|碎粒|残片|符石|碎块|补天石|冰蚕丝|碎片|残本)\\((.*)\\)"
+  Match = "(九转金丹|仙丹|洗髓丹|火红仙丹|神力丸|人参养荣丸|福寿膏|龟苓膏|百花腹蛇膏|玛瑙|翡翠|水晶|钻石|玄冰|精金|天香玉露|菩提子|木灵|炎晶|玉髓|骷髅头|残片|碎粒|残片|符石|碎块|补天石|冰蚕丝|碎片|残本|飞刀灵符|北」|南」|勋章|轩辕剑)\\((.*)\\)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -2591,68 +1972,6 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2lpj873fgcs53"
-  Name = "dg_desk"
-  Enabled = false
-  Match = "^(> )*当前房间分配的机关序号：(.*)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2lprm73fgcs54"
-  Name = "dg_kill"
-  Enabled = false
-  Match = "^(> )*看起来(.*)想杀死你！"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = true
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg1"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "d1d5cnq4t2lq4873fgcs55"
   Name = "kl_fight5"
   Enabled = false
@@ -2675,37 +1994,6 @@ Channel = "zsz-self.jvs"
   LinesToMatch = 0
   WildcardLowerCase = false
   Group = "gkl"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2lqcg73fgcs56"
-  Name = "dg_pwd"
-  Enabled = false
-  Match = "^(> )*密码 (\\d){1}"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = true
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg2"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -2839,37 +2127,6 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2lrn273fgcs5b"
-  Name = "dg_goldman"
-  Enabled = false
-  Match = "^(> )*杀死 金人: (\\d){1}\\/9。"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = true
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg2"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "d1d5cnq4t2lrvi73fgcs5c"
   Name = "kl_die"
   Enabled = false
@@ -2901,321 +2158,11 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2ls7p73fgcs5d"
-  Name = "dg_mdesk"
-  Enabled = false
-  Match = "^[> ]*(你将石桌用力的旋转，只听得不远处传来|设定环境变数：no_teach = \"no move\")"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_digong"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "dg"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2lsg473fgcs5e"
-  Name = "bs_ju1"
-  Enabled = true
-  Match = "^[> ]*(你现在去聚贤庄门前找丐帮的徐长老|我知道你和他很是熟悉|段正淳拿出一封信交给了你。|我知道，玄慈方丈心里有一些难解的结|<玄慈大师一脸拒人千里的模样，于是你开始发挥你舌粲莲花、才辩无双的本领。>|你详细地向徐长老汇报|薛慕华说道：如今乔峰深陷重围|薛慕华说道：我为何要为你们疗伤)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2lsou73fgcs5f"
-  Name = "xm_target"
-  Enabled = false
-  Match = "^[> ]*(杀死|超度) (.*): (\\d+)\\/(\\d+)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = true
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "xm1"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2lt1m73fgcs5g"
-  Name = "xm_start"
-  Enabled = false
-  Match = "^[> ]*丁一说道：(你可愿意帮我们对付血魔|就请你证明尚未被血魔诱惑|去尝试着杀掉三个骷髅武士|去找到那些堕落的少林和尚|巫妖的骨杖|法阵那里可能还有些血魔的手下|在我施法期间)"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gxm"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2ltao73fgcs5h"
-  Name = "xm_start2"
-  Enabled = false
-  Match = "^[> ]*丁一有气无力地说道：这位(.*)，能听我一言吗？"
-  Send = "answer yes"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gxm"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "d1d5cnq4t2ltjl73fgcs5i"
   Name = ""
   Enabled = true
   Match = "^你现在手中并没有拿着暗器，怎么施展御策诀？"
   Send = "hand gangbiao\nhand zhen"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = ""
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2ltsj73fgcs5j"
-  Name = "bs_target"
-  Enabled = false
-  Match = "^杀死\\s+(.*) :\\s+(\\d+)\\/(\\d+)。"
-  Send = "hp"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_boss"
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gbs"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2lu4s73fgcs5k"
-  Name = ""
-  Enabled = true
-  Match = "丁一慢慢变成了一滩污血"
-  Send = "mjq"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = ""
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2ludl73fgcs5l"
-  Name = ""
-  Enabled = true
-  Match = "你告诉老"
-  Send = "freport\nanswer yes"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = ""
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2luvv73fgcs5n"
-  Name = ""
-  Enabled = false
-  Match = "你望着光芒四射的圣光之子，觉得应该膜拜"
-  Send = "mobai emo"
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = ""
-  SendTo = 0
-  Sequence = 100
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = ""
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
-  ID = "d1d5cnq4t2lv8j73fgcs5o"
-  Name = ""
-  Enabled = true
-  Match = "秦始皇僵尸扑在地上挣扎了几下，腿一伸，口中喷出几口"
-  Send = "mjq"
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
@@ -3326,6 +2273,1711 @@ Channel = "zsz-self.jvs"
   LinesToMatch = 0
   WildcardLowerCase = false
   Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1f5fiksdue7c471hiqohj"
+  Name = "findnpc"
+  Enabled = true
+  Match = "4444444\\s(\\S{2,10})\\((.+ .+)\\)$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1f6ju2fcnk52072uilfsm"
+  Name = "reward"
+  Enabled = true
+  Match = "^通过这次锻炼，你获得了(.*)点经验、(.*)点潜能、"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_global"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ggl"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1f75ls0snf8jc73dtmt1h"
+  Name = "wk_taishan"
+  Enabled = true
+  Match = "^你一不小心脚下踏了个空"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_walk"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1f77dd249dlc86h3mafk"
+  Name = "ggl_makeweaponhelp"
+  Enabled = true
+  Match = "^干将对你说道：如果你想炼得更好，需要注入自己的精气血脉，如是你有此意，请助"
+  Send = "help"
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = ""
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ggl"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1f77de1vmjf106h3md6o"
+  Name = "ggl_makeweapongivecash"
+  Enabled = true
+  Match = "^莫邪对你说道：很好，用这块原料打造道具需要二百十两黄金，交钱吧。"
+  Send = "give 21 cash to mo ye"
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = ""
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ggl"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1f7pgse7529a471v9q188"
+  Name = "wk_lao"
+  Enabled = true
+  Match = "^劳德诺劝道：家师有交代，剑宗廿五年前就离开华山了，自认不是华山弟子了。"
+  Send = "beg lao"
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = ""
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325m"
+  Name = "pt_ask"
+  Enabled = false
+  Match = "^你向汪剑通打听有关『保护人质』的消息。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325n"
+  Name = "pt_ask1"
+  Enabled = false
+  Match = "^你向汪剑通打听有关『保护完成』的消息。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325o"
+  Name = "pt_start"
+  Enabled = false
+  Match = "^汪剑通点了点头，对你说道:蒙古人收买了一批武林败类,好象要暗杀(.*)，你去保护他一下。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj0"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325p"
+  Name = "pt_wait"
+  Enabled = false
+  Match = "^汪剑通说道：(“.*你先休息一会儿，.*后我再给你派任务。|多吸取点失败的教训，等会再来吧。)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj0"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325q"
+  Name = "pt_gold"
+  Enabled = false
+  Match = "^汪剑通说道：襄阳的百姓岌岌可危，现在你能帮我筹备十两黄金吗？"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj0"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325r"
+  Name = "pt_fail1"
+  Enabled = false
+  Match = "^汪剑通说道：@my_name，你上一次的任务还没完成!"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj0"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325s"
+  Name = "pt_shou"
+  Enabled = false
+  Match = "^你想要(.*)为弟子"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325t"
+  Name = "pt_none"
+  Enabled = false
+  Match = "^你想收谁作弟子？"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325u"
+  Name = "pt_kill"
+  Enabled = false
+  Match = "^你对@my_name的(黑衣人|邪派高手|绝世高手)喝道:大胆狂徒,竟敢在这撒野！！"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj2"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us325v"
+  Name = "pt_complete"
+  Enabled = false
+  Match = "^@my_name的(黑衣人|邪派高手|绝世高手).*人质安全了。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj2"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3260"
+  Name = "pt_jiqu"
+  Enabled = false
+  Match = "^你(感觉自己的实战经验还有欠缺，还无法领会更高境界的武学修养。|将实战中获得的体会心得充分的消化吸收了。|运功完毕，深深吸了口气，站了起来。|现在积累的实战体会还太少。)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj2"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3261"
+  Name = "pt_fail"
+  Enabled = false
+  Match = "^汪剑通说道：你任务还没完成,还不赶紧去做?"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj_c"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3262"
+  Name = "pt_noquest"
+  Enabled = false
+  Match = "^汪剑通说道：你没有领任务,跑这里瞎嚷嚷什麽?"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj_c"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3263"
+  Name = "pt_finish"
+  Enabled = false
+  Match = "^汪剑通说道：什么？这么快就完成任务了？"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj_c"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3264"
+  Name = "pt_reward"
+  Enabled = false
+  Match = "^你被奖励了："
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj_c1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3265"
+  Name = "pt_exp"
+  Enabled = false
+  Match = "^(.*)点实战经验"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj_c1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3266"
+  Name = "pt_pot"
+  Enabled = false
+  Match = "^(.*)点潜能"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj_c1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fae7ei39utlc73us3267"
+  Name = "pt_count"
+  Enabled = false
+  Match = "^汪剑通对你说道:你已经连续完成了(.*)次任务。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_protect"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ptj_c1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fagr451m2gog67sg046"
+  Name = "fb_goodluck"
+  Enabled = true
+  Match = "^[> ]*祝你好运"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_fuben"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gfb_enter"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fagr7cgslrg867sg7og"
+  Name = "fb_gift"
+  Enabled = false
+  Match = "^[> ]*当(.*)一声，一(只|个|块|粒|根|颗|枚|锭|片|束|些|份|本)(.*)从天而降，掉落在你面前。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_fuben"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gfb_gl"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fagr8bbfcan867sga3d"
+  Name = "fb_out"
+  Enabled = false
+  Match = "^[> ]*(一阵时空的扭曲将你传送到另一个地方|虚空$)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_fuben"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gfb_gl"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fah5b05grock67tu9sn"
+  Name = "fb_enterbusy"
+  Enabled = true
+  Match = "^[> ]*(你还需要等0才能进入.*副本。|为了降低游戏CPU负担，游戏副本的创建必须每隔2分钟一次。)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_fuben"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gfb_enter"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldc88i9nogo72cv1asd"
+  Name = "hpm_1"
+  Enabled = true
+  Match = "^【精力上限】(.*)【内力上限】(.*)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_hp"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "ghpm"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee4kn8472cv1bp9"
+  Name = "ql_enter"
+  Enabled = true
+  Match = "^[> ]*秦始皇陵墓入口$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gfb_enter"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee4kn8472cv1bpa"
+  Name = "ql_maze1"
+  Enabled = false
+  Match = "^(> )*地图说明：●表示入口和出口，◎表示迷宫的房间。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql_map"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee4kn8472cv1bpb"
+  Name = "ql_maze2"
+  Enabled = false
+  Match = "^([◎─|◎  |●─|●  ]+)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql_map"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee4kn8472cv1bpc"
+  Name = "ql_maze3"
+  Enabled = false
+  Match = "^([  |│]+)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql_map"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee4kn8472cv1bpd"
+  Name = "ql_dostep"
+  Enabled = false
+  Match = "^[> ]*设定环境变数：no_teach = \"qinling (start|kill)\""
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee542rc72cv1bpe"
+  Name = "ql_npc"
+  Enabled = false
+  Match = "^    皇帝 秦始皇僵尸\\(Qin shihuang\\)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee542rc72cv1bpf"
+  Name = "ql_kingdie0"
+  Enabled = false
+  Match = "^秦始皇僵尸扑在地上挣扎了几下，腿一伸，口中喷出几口鲜血，死了！"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee542rc72cv1bpg"
+  Name = "ql_kingdie"
+  Enabled = false
+  Match = "^    秦始皇僵尸的尸体\\(Corpse\\)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee542rc72cv1bph"
+  Name = "ql_nobusy"
+  Enabled = false
+  Match = "^[> ]*你要往这上面镶嵌什么物品？"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql222"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee542rc72cv1bpi"
+  Name = "ql_wkbusy"
+  Enabled = false
+  Match = "^[> ]*你的动作还没有完成，不能移动。"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql222"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fldd2ee542rc72cv1bpj"
+  Name = "ql_outdoor"
+  Enabled = false
+  Match = "^[> ]*秦始皇陵墓出口$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_qinling"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "gql"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8h"
+  Name = "lgt_start"
+  Enabled = true
+  Match = "^你想.*收杨小邪为弟子"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8i"
+  Name = "lgt_later"
+  Enabled = true
+  Match = "^(本日闯关你已经试过了，明天中午|你再等等吧，现在)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8j"
+  Name = "lgt_floor"
+  Enabled = true
+  Match = "^灵感.*塔\\.第(.*)层$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8k"
+  Name = "lgt_charm"
+  Enabled = true
+  Match = "^\\(你还有(.*)张灵符\\)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8l"
+  Name = "lgt_charm1"
+  Enabled = true
+  Match = "^你怔怔地望着剩余的(.*)张灵符，大口喘息着，不知道该不该继续"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8m"
+  Name = "lgt_heal1"
+  Enabled = true
+  Match = "^你(现在气血充盈，不需要疗伤。|运功完毕，吐出一口瘀血，脸色看起来好多了。)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8n"
+  Name = "lgt_up"
+  Enabled = false
+  Match = "^(你听到无数天魔在耳边吟唱嘶吼，莫大的压力使你开始神智迷糊了|你现在气血充盈，不需要疗伤|一个空洞的声音在你耳边响起：你在磨蹭什么)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8o"
+  Name = "lgt_end"
+  Enabled = true
+  Match = "^(你在灵感(.*)塔上成功敲钟之后，你获得了|然后“噗通”一声栽落在地上。原来是你)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8p"
+  Name = "lgt_wuchi"
+  Enabled = true
+  Match = "^(看起来武痴想杀死你！|武痴左手两指|武痴双手虚虚实实|武痴轻轻地往上方一飘|武痴凝神闭息|武痴扬手|武痴身形忽然变得诡秘异常|武痴身子忽进忽退|武痴深深吸进一口气|武痴随手抓出)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8q"
+  Name = "lgt_npc"
+  Enabled = true
+  Match = "^杨小邪\\(yang xiaoxie\\)偷偷告诉你：据说上面关押的是：(.*)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1fs7pu0poo9306qj3h8r"
+  Name = "lgt_onoff"
+  Enabled = true
+  Match = "^设定环境变数：no_teach = \"lgt (start|end)\""
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_lgt"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "glgt1"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1g3g2nav8khos733mbeqf"
+  Name = "wk_dzm"
+  Enabled = true
+  Match = "^    前面就是明教的“地字门”了，这里是明教中女弟子"
+  Send = ""
+  ColourChangeType = 0
+  Colour = 0
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_walk"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1g3g2oofe0kgl733mbft4"
+  Name = "wud_loc"
+  Enabled = false
+  Match = "^[百|千|万]毒窟$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_wud_suck"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "wusuck"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1g3g2oofe16ev733mbft5"
+  Name = "wud_bug"
+  Enabled = false
+  Match = "^    (食尸蝎|灰背蝎|长螯蝎|铁骨蝎|九尾蝎|黑寡妇|长腿蛛|人面蛛|吸血蛛|大头蜈蚣|金线蜈蚣|百足蜈蚣|阴山天蜈)\\((.+ .+)\\)$"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_wud_suck"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "wusuck"
+  IgnoreCase = false
+  KeepEvaluating = true
+  OmitFromLog = false
+  OmitFromOutput = false
+  Inverse = false
+  Italic = false
+  Variable = ""
+
+[[Triggers]]
+  ID = "d1g3g2oofe1en1733mbft6"
+  Name = "wud_sucked"
+  Enabled = true
+  Match = "^你(正在修炼中|小心翼翼的将手伸到)"
+  Send = ""
+  ColourChangeType = 0
+  Colour = -1
+  Wildcard = 0
+  SoundFileName = ""
+  SoundIfInactive = false
+  Script = "on_wud_suck"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = true
+  Temporary = false
+  OneShot = false
+  Regexp = true
+  Repeat = false
+  MultiLine = false
+  LinesToMatch = 0
+  WildcardLowerCase = false
+  Group = "wusuck"
   IgnoreCase = false
   KeepEvaluating = true
   OmitFromLog = false
@@ -5074,7 +5726,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2mi5073fgcs7b"
   Name = "pfmf1"
   Enabled = true
-  Match = "^(> )*对方都已经这样了，用不着这么费力吧？"
+  Match = "^(> )*(对方都已经这样了，用不着这么费力吧？|只有战斗中才能施展左右互搏。|你只能对战斗中的对手使用绝招。|「狂风剑」只能对战斗中的对手使用。)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -5198,7 +5850,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2mjsm73fgcs7f"
   Name = "touch"
   Enabled = true
-  Match = "^(> )*你觉得(浑身如同笼罩在阳光一般，暖洋洋的，说不出的舒服|一股热气从丹田冉冉升起)。"
+  Match = "^(> )*你觉得一股热气从丹田冉冉升起。"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -5414,7 +6066,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "d1d5cnq4t2mn0r73fgcs7m"
   Name = "skfull"
-  Enabled = false
+  Enabled = true
   Match = "^[> ]*(也许是缺乏实战经验，你对.*的回答总是无法领会|这项技能你的程度已经不输你师父了)。"
   Send = ""
   ColourChangeType = 0
@@ -5849,7 +6501,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2nduj73fgcs80"
   Name = "yd_dispel"
   Enabled = true
-  Match = "^(> )*(忽然浑身一阵剧痛，你中的|忽然一股寒流夹着一阵灼热涌上心来，你中的生死符发作了！|忽然你觉得四肢百赅是似乎有无数小虫在游走|结果你一个不慎，被火星溅到了衣衫，哪知碧焰|结果只听扑的一声，你被他一掌拍中！一时间|你惊慌失措，连忙后退，然而没能避开|你只觉得伤口一阵灼伤，随即便跟着麻木起来|你只觉全身灼热无比，全身的燃起的碧焰直焚心髓|“喀喇”一声响，你大声惨叫，连退数步|你见滔天热浪扑面涌来，只觉眼前一片通红|你中的剧毒发作了|你只感内息顿滞，真气不畅，一张脸涨得通红|你只感内息顿滞，全身血液竟渐渐的开始凝固起来|你觉得肢体末端一阵僵直|你的脸蛋烧得通红|你嘶哑着嗓子咳了两声|你打了个冷战，头昏沉沉的|你觉得胸臆之间一阵翻腾|你感到胸口处传来阵阵刺痛，全身血液竟似要凝结住一般。|你只觉丹田处有如火焚，便似有千万钢针一齐扎入体内。|你只觉得一股寒意袭上心头，浑身说不出得难受。)"
+  Match = "^(> )*(忽然浑身一阵剧痛，你中的|忽然一股寒流夹着一阵灼热涌上心来，你中的生死符发作了！|忽然你觉得四肢百赅是似乎有无数小虫在游走|结果你一个不慎，被火星溅到了衣衫，哪知碧焰|结果只听扑的一声，你被他一掌拍中！一时间|你惊慌失措，连忙后退，然而没能避开|你只觉得伤口一阵灼伤，随即便跟着麻木起来|你只觉全身灼热无比，全身的燃起的碧焰直焚心髓|“喀喇”一声响，你大声惨叫，连退数步|你见滔天热浪扑面涌来，只觉眼前一片通红|你中的剧毒发作了|你只感内息顿滞，真气不畅，一张脸涨得通红|你只感内息顿滞，全身血液竟渐渐的开始凝固起来|你觉得肢体末端一阵僵直|你的脸蛋烧得通红|你嘶哑着嗓子咳了两声|你打了个冷战，头昏沉沉的|你觉得胸臆之间一阵翻腾|你感到胸口处传来阵阵刺痛，全身血液竟似要凝结住一般。|你只觉丹田处有如火焚，便似有千万钢针一齐扎入体内。|你只觉得一股寒意袭上心头，浑身说不出得难受。|你中的玄冥神掌之毒发作了|你只见眼前紫影晃动，突然间胸口一震，)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6128,7 +6780,7 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2ni0873fgcs89"
   Name = "pk_xkd"
   Enabled = true
-  Match = "^(> )*(看起来张三想杀死你！|张三轻吐一口气，掌力袭来，震得你|李四轻吐一口气，掌力袭来，震得你|看起来李四想杀死你！)"
+  Match = "^(> )*(看起来张1三想杀死你！|张三轻吐一口气，掌力袭来，震得你|李四轻吐一口气，掌力袭来，震得你|看起来李四想杀死你！)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6187,41 +6839,10 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2nihp73fgcs8b"
-  Name = "xm_juling"
-  Enabled = false
-  Match = "^[> ]*聚灵法阵"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 150
-  ExpandVariables = false
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gxm"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "d1d5cnq4t2nir473fgcs8c"
   Name = "ga"
   Enabled = false
-  Match = "(游客|古定剑|紫骝马|黄骠马|枣红马|武将|官兵|趟子手|流氓|男孩|女孩|看起来好多|装备效果|装备类型|装备品级|炼制而成|上面镶嵌着|⊙|一道道|一道光圈|一道火光|一面|一串|成了蜂窝|一圈|无法自拔|摇晃不定|兹兹作响|托付些重任|飞沙走石|四下飞舞|神情恍惚|难以醒目|不住的点头|金钱撒地|凶险的紧|枯木回春|山石之雨|赞许|山摇地动|一阵强风|强风破|金黄耀目|翡翠梦境|无数枝干|刮出一阵|跳了下来|─────≡)"
+  Match = "(出口|游客|古定剑|紫骝马|黄骠马|枣红马|武将|趟子手|流氓|男孩|女孩|看起来好多|装备效果|装备类型|装备品级|炼制而成|上面镶嵌着|⊙|一道道|一道光圈|一道火光|一面|一串|成了蜂窝|一圈|无法自拔|摇晃不定|兹兹作响|托付些重任|飞沙走石|四下飞舞|神情恍惚|难以醒目|不住的点头|金钱撒地|凶险的紧|枯木回春|山石之雨|赞许|山摇地动|一阵强风|强风破|金黄耀目|翡翠梦境|无数枝干|刮出一阵|跳了下来|─────≡)"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6283,8 +6904,8 @@ Channel = "zsz-self.jvs"
   ID = "d1d5cnq4t2njcm73fgcs8e"
   Name = ""
   Enabled = true
-  Match = "^(> )*(戚长发|朱熹|厨娘)(笑着说道：您见笑了|说道：您太客气了|像是受宠若惊一样)"
-  Send = "give 1 gold to qi\ngive 1 gold to zhu xi\ngive 1 gold to chu niang"
+  Match = "^(> )*(戚长发|朱熹|厨娘|李博渊)(笑着说道：您见笑了|说道：您太客气了|像是受宠若惊一样)"
+  Send = "give 1 gold to qi\ngive 1 gold to zhu xi\ngive 1 gold to chu niang\ngive 1 gold to li boyuan"
   ColourChangeType = 0
   Colour = 0
   Wildcard = 0
@@ -6621,40 +7242,9 @@ Channel = "zsz-self.jvs"
   Variable = ""
 
 [[Triggers]]
-  ID = "d1d5cnq4t2nmc573fgcs8p"
-  Name = "xm_lich"
-  Enabled = false
-  Match = "^[> ]*看起来(巫妖|丫鬟)想杀死你！"
-  Send = ""
-  ColourChangeType = 0
-  Colour = 0
-  Wildcard = 0
-  SoundFileName = ""
-  SoundIfInactive = false
-  Script = "on_xuemo"
-  SendTo = 0
-  Sequence = 700
-  ExpandVariables = true
-  Temporary = false
-  OneShot = false
-  Regexp = true
-  Repeat = false
-  MultiLine = false
-  LinesToMatch = 0
-  WildcardLowerCase = false
-  Group = "gxm"
-  IgnoreCase = false
-  KeepEvaluating = true
-  OmitFromLog = false
-  OmitFromOutput = false
-  Inverse = false
-  Italic = false
-  Variable = ""
-
-[[Triggers]]
   ID = "on_npc"
   Name = "on_npc"
-  Enabled = false
+  Enabled = true
   Match = "^    (.{2,8})\\((.+ .+)\\)$"
   Send = ""
   ColourChangeType = 0
@@ -6685,7 +7275,7 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "on_npcheal"
   Name = "on_npcheal"
-  Enabled = false
+  Enabled = true
   Match = "^    (.{2,8})正坐在地下运功疗伤。$"
   Send = ""
   ColourChangeType = 0
@@ -6716,8 +7306,8 @@ Channel = "zsz-self.jvs"
 [[Triggers]]
   ID = "on_radar"
   Name = "on_radar"
-  Enabled = false
-  Match = "^    (.+)\\((tuobo seng|illidan stormrage)\\)$"
+  Enabled = true
+  Match = "^    (.+)\\((tuobo seng|illidan stormrage|prince of dragon|niutou guai|king of dragon|monster dragon|sun wukong|yan zei)\\)$"
   Send = ""
   ColourChangeType = 0
   Colour = 0
@@ -6788,7 +7378,7 @@ Channel = "zsz-self.jvs"
   Enabled = false
   Hour = 0
   Minute = 0
-  Second = 1.0
+  Second = 0.1
   Send = ""
   Script = "on_timer"
   AtTime = false
@@ -6821,17 +7411,74 @@ Channel = "zsz-self.jvs"
   OmitFromOutput = false
 
 [[Timers]]
-  ID = "d1f7oin24vkv6973pc4jfl"
-  Name = "updatehud"
+  ID = "d1fae7ei39utlc73us3268"
+  Name = "timer_nokiller"
   Enabled = false
   Hour = 0
   Minute = 0
-  Second = 60.0
+  Second = 550.0
   Send = ""
-  Script = "updateHUD()"
+  Script = "on_pttime"
   AtTime = false
   SendTo = 0
-  ActionWhenDisconnectd = true
+  ActionWhenDisconnectd = false
+  Temporary = false
+  OneShot = false
+  Group = ""
+  Variable = ""
+  OmitFromLog = false
+  OmitFromOutput = false
+
+[[Timers]]
+  ID = "d1farc109dcpgg73s898v6"
+  Name = "t_heartbeat"
+  Enabled = true
+  Hour = 0
+  Minute = 0
+  Second = 1.0
+  Send = ""
+  Script = "on_timer"
+  AtTime = false
+  SendTo = 0
+  ActionWhenDisconnectd = false
+  Temporary = false
+  OneShot = false
+  Group = ""
+  Variable = ""
+  OmitFromLog = false
+  OmitFromOutput = false
+
+[[Timers]]
+  ID = "d1fldd2ee554no72cv1bpk"
+  Name = "t_qinling"
+  Enabled = false
+  Hour = 0
+  Minute = 0
+  Second = 0.5
+  Send = ""
+  Script = "on_qinlingtime"
+  AtTime = false
+  SendTo = 0
+  ActionWhenDisconnectd = false
+  Temporary = false
+  OneShot = false
+  Group = ""
+  Variable = ""
+  OmitFromLog = false
+  OmitFromOutput = false
+
+[[Timers]]
+  ID = "d1fs7pu0poo9306qj3h8s"
+  Name = "t_lgt"
+  Enabled = false
+  Hour = 0
+  Minute = 0
+  Second = 1.0
+  Send = ""
+  Script = "on_lgttime"
+  AtTime = false
+  SendTo = 0
+  ActionWhenDisconnectd = false
   Temporary = false
   OneShot = false
   Group = ""
@@ -7249,130 +7896,148 @@ Channel = "zsz-self.jvs"
   OmitFromOutput = false
   OmitFromCommandHistory = false
 
-[[RequiredParams]]
-  Name = "bool_accept"
-  Desc = "接信开关"
-  Intro = "是否接信（F否T是）"
+[[Aliases]]
+  ID = "d1f47v9g4hjqfg716mmt9r"
+  Name = "dis"
+  Enabled = true
+  Match = "#dis"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "d1f47v9sc532ps716mn1oe"
+  Name = "con"
+  Enabled = true
+  Match = "#con"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "d1f6jeocq2eqsc72uffc54"
+  Name = "protect"
+  Enabled = true
+  Match = "#protect *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "d1f6ji7h1ois7o72ug4tb8"
+  Name = "protect1"
+  Enabled = true
+  Match = "#bh *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "d1f6k01nb6lva072ujchep"
+  Name = "start0"
+  Enabled = true
+  Match = "start0"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
+
+[[Aliases]]
+  ID = "d1f79mcmaur5ug6tgmbbn"
+  Name = "set"
+  Enabled = true
+  Match = "#set * *"
+  Send = ""
+  Script = "on_alias"
+  SendTo = 0
+  Sequence = 100
+  ExpandVariables = false
+  Temporary = false
+  OneShot = false
+  Regexp = false
+  Group = ""
+  IgnoreCase = false
+  KeepEvaluating = false
+  Menu = false
+  OmitFromLog = false
+  Variable = ""
+  ReverseSpeedwalk = false
+  OmitFromOutput = false
+  OmitFromCommandHistory = false
 
 [[RequiredParams]]
-  Name = "bool_echo"
-  Desc = "回显开关"
-  Intro = "是否显示执行命令（F否T是）"
-
-[[RequiredParams]]
-  Name = "bool_miss"
-  Desc = "miss武器开关"
-  Intro = "是非使用MISS 武器（F否T是）"
-
-[[RequiredParams]]
-  Name = "house"
-  Desc = "房屋信息"
-  Intro = "设置后会将1933-1949设置为对应的房屋信息\n格式为'包子铺 bzp 1558'"
-
-[[RequiredParams]]
-  Name = "cmd_aquest"
-  Desc = "接Quest前命令"
-  Intro = "接QM任务前的命令（研究+练习，新手期这里请慎重，内力不够，频繁研究练习会导致效率降低，建议：吸气吸精就可以）"
-
-[[RequiredParams]]
-  Name = "cmd_bquest"
-  Desc = "接Quest后命令"
-  Intro = "接QM任务后的命令研究+练习，新手期这里请慎重，内力不够，频繁研究练习会导致效率降低，建议：吸气吸精就可以）"
-
-[[RequiredParams]]
-  Name = "cmd_pre"
-  Desc = "重连后命令"
-  Intro = "副本任务或重新连线后的设置"
-
-[[RequiredParams]]
-  Name = "cmd_3boss"
-  Desc = "3小副本准备命令"
-  Intro = "打3个小BOSS副本进入前的设置（例如切换pfm，yun powerup等）"
-
-[[RequiredParams]]
-  Name = "cmd_jxz"
-  Desc = "聚贤庄准备命令"
-  Intro = "聚贤庄副本进入前的设置（例如切换pfm，yun powerup等）"
-
-[[RequiredParams]]
-  Name = "cmd_digong"
-  Desc = "地宫准备命令"
-  Intro = "地宫副本进入前的设置（例如切换pfm，yun powerup等）"
-
-[[RequiredParams]]
-  Name = "cmd_xm"
-  Desc = "血魔准备命令"
-  Intro = "血魔副本进入前的设置（例如切换pfm，yun powerup等）"
-
-[[RequiredParams]]
-  Name = "cmd_kill"
-  Desc = "Kill前命令"
-  Intro = "KILL之前的命令（自己酌情）"
-
-[[RequiredParams]]
-  Name = "cmd_mache"
-  Desc = "马车命令"
-  Intro = "做马车时候的命令（研究练习吸气吸精汲取吐纳都可以）"
-
-[[RequiredParams]]
-  Name = "cmd_npcdie"
-  Desc = "NPC死后命令"
-  Intro = "QM任务NPC死了之后的命令（这里和aquest的设置几乎是连贯的，即使增加命令也不要和aquest一样，一般加个吸气吸精）"
-
-[[RequiredParams]]
-  Name = "cmd_npcfaint"
-  Desc = "NPC晕后命令"
-  Intro = "QM任务NPC倒地之后的命令（一般用于磨武器，NPC倒地替换需要磨的武器，NPC死了再替换回来）"
-
-[[RequiredParams]]
-  Name = "cmd_pfm"
-  Desc = "QM任务绝招"
-  Intro = "QM任务PFM设置，（吸气+p）"
-
-[[RequiredParams]]
-  Name = "cmd_backstab"
-  Desc = "强力攻击"
-  Intro = "面对强大的敌人时的强力攻击，在打有特防的npc/巫妖/血魔时使用。留空会发送 pfm 到游戏"
-
-[[RequiredParams]]
-  Name = "cmd_cheapshot"
-  Desc = "偷袭"
-  Intro = "面对强大的敌人时的第一次攻击，在打有特防的npc/巫妖时使用，一般设置为 普通攻击+Busy技能，用于打破对手yun powerup的busy并busy对方。留空会发送 pfm_lich 到游戏"
-
-[[RequiredParams]]
-  Name = "cmd_jiqu"
-  Desc = "汲取指令"
-  Intro = "汲取的指令，留空发送mjq"
-
-[[RequiredParams]]
-  Name = "bool_smartmode"
-  Desc = "智能模式"
-  Intro = "是否使用智能模式（F否T是），功能开发中，请勿使用"
-
-[[RequiredParams]]
-  Name = "list_cmd"
-  Desc = "|分割的命令列表"
-  Intro = "由|分割的命令列表，格式为 yp:yun powerup|ys:yun shield|mpf:xxxx,可以在send时通过#cmd mpf 的形式发送"
-
-[[RequiredParams]]
-  Name = "cmd_studying"
-  Desc = "学习间隔指令"
-  Intro = "2次学习间隔的命令（#lian + 吸气+汲取或者吐纳）"
-
-[[RequiredParams]]
-  Name = "cmd_ttg"
-  Desc = "听涛阁指令"
-  Intro = "进入听涛阁后执行的的指令，没啥用（老牛觉得）"
-
-[[RequiredParams]]
-  Name = "cmd_master"
-  Desc = "给头后的指令"
-  Intro = "give head to master后的指令，留空发送dd"
-
-[[RequiredParams]]
-  Name = "cmd_wait"
-  Desc = "闲时命令"
-  Intro = "QM任务杀完NPC后，砍错头，需要等着接信时候的设置（吸气+吸精+汲取或吐纳）"
+  Name = "【常用设置】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
 
 [[RequiredParams]]
   Name = "id"
@@ -7380,14 +8045,19 @@ Channel = "zsz-self.jvs"
   Intro = "****很重要，自己ID的英文名字"
 
 [[RequiredParams]]
-  Name = "id_master"
-  Desc = "掌门ID"
-  Intro = "师傅的名字拼写"
+  Name = "passw"
+  Desc = "密码"
+  Intro = "游戏密码"
 
 [[RequiredParams]]
-  Name = "id_pass"
-  Desc = "门派缩写"
-  Intro = "门派缩写（有密道的门派要填）"
+  Name = "my_name"
+  Desc = "我的名字（考虑后续有机器人自动获取，但是现在还没实现）。做保护任务的时候需要填写，门派任务暂时用不到"
+  Intro = ""
+
+[[RequiredParams]]
+  Name = "bool_accept"
+  Desc = "接信开关"
+  Intro = "是否接信（F否T是）"
 
 [[RequiredParams]]
   Name = "id_weapon"
@@ -7405,19 +8075,9 @@ Channel = "zsz-self.jvs"
   Intro = "分号分割的额外维修装备列表，如 armor;staff"
 
 [[RequiredParams]]
-  Name = "list_boss"
-  Desc = "副本列表"
-  Intro = "需要打的副本名字\n  seadragon,dongfang,digong,jiangshi,juxianzhuang,xuemo\n  新手初期空着不要填写"
-
-[[RequiredParams]]
-  Name = "list_control"
-  Desc = "大米id"
-  Intro = "自己大米的ID"
-
-[[RequiredParams]]
-  Name = "list_lian"
-  Desc = "练习列表"
-  Intro = "#lian对应需要练习的武功名字（dodge|sword|parry,支持多种武功轮换练习，具体格式请到群里咨询）"
+  Name = "bool_miss"
+  Desc = "miss武器开关"
+  Intro = "是非使用MISS 武器（F否T是）"
 
 [[RequiredParams]]
   Name = "list_mloc"
@@ -7425,29 +8085,129 @@ Channel = "zsz-self.jvs"
   Intro = "  MISS武器的坐标（举例：yyyy:1150,oooo:1956,zwca:1202）\n  会自动添加到地图内，地图内不需要设置\n  "
 
 [[RequiredParams]]
-  Name = "list_qask"
-  Desc = "买线报城市"
-  Intro = "问游讯 NPC位置的命令（一般填 很远 ）"
+  Name = "bool_echo"
+  Desc = "回显开关"
+  Intro = "是否显示执行命令（F否T是）"
 
 [[RequiredParams]]
-  Name = "loc_dazuo"
-  Desc = "休整坐标"
-  Intro = "打坐吃药或者砍错头等信的坐标"
+  Name = "cmd_pre"
+  Desc = "准备命令"
+  Intro = "下完副本，或重新连线后，修完武器后等一些列情况后的准备命令"
 
 [[RequiredParams]]
-  Name = "loc_gift"
-  Desc = "物资坐标"
-  Intro = "有好东西，存放物资的坐标"
+  Name = "house"
+  Desc = "房屋信息"
+  Intro = "设置后会将1933-1949设置为对应的房屋信息\n格式为'包子铺 bzp 1558'"
 
 [[RequiredParams]]
-  Name = "loc_jiuhua"
-  Desc = "九花坐标"
-  Intro = "取九华玉露丸的坐标"
+  Name = "【HP状态设置设置】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
 
 [[RequiredParams]]
-  Name = "loc_master"
-  Desc = "掌门坐标"
-  Intro = "师门任务，师傅的坐标"
+  Name = "max_exp"
+  Desc = "经验值上限"
+  Intro = "最大经验值"
+
+[[RequiredParams]]
+  Name = "max_pot"
+  Desc = "潜能上限"
+  Intro = "最大潜能"
+
+[[RequiredParams]]
+  Name = "min_pot"
+  Desc = "潜能下限"
+  Intro = "保留多少潜能。"
+
+[[RequiredParams]]
+  Name = "max_th"
+  Desc = "体会上限"
+  Intro = "最大体会"
+
+[[RequiredParams]]
+  Name = "min_jingli"
+  Desc = "最小精力"
+  Intro = "最小精力"
+
+[[RequiredParams]]
+  Name = "num_dazuo"
+  Desc = "打坐数字"
+  Intro = "打坐多少"
+
+[[RequiredParams]]
+  Name = "min_gold"
+  Desc = "最少黄金"
+  Intro = "身上携带GOLD下限，建议32-33."
+
+[[RequiredParams]]
+  Name = "num_tuna"
+  Desc = "吐纳数字"
+  Intro = "每次吐纳多少"
+
+[[RequiredParams]]
+  Name = "num_fangqi"
+  Desc = "放弃经验"
+  Intro = "需要放弃多少经验"
+
+[[RequiredParams]]
+  Name = "【quest设置】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
+
+[[RequiredParams]]
+  Name = "min_neili"
+  Desc = "最小内力"
+  Intro = "最小内力"
+
+[[RequiredParams]]
+  Name = "cmd_pfm"
+  Desc = "QM任务绝招"
+  Intro = "QM任务PFM设置，（吸气+p）。检测到yuce的话，会自动get玉峰针gzhen。"
+
+[[RequiredParams]]
+  Name = "cmd_backstab"
+  Desc = "强力攻击"
+  Intro = "面对强大的敌人时的强力攻击，在打有特防的npc(武当，胡家等)/巫妖/血魔时使用。留空会发送 pfm 到游戏"
+
+[[RequiredParams]]
+  Name = "cmd_kill"
+  Desc = "Kill前命令"
+  Intro = "KILL之前的命令（自己酌情）"
+
+[[RequiredParams]]
+  Name = "cmd_npcfaint"
+  Desc = "NPC晕后命令"
+  Intro = "QM任务NPC倒地之后的命令（一般用于磨武器，NPC倒地替换需要磨的武器，NPC死了再替换回来）"
+
+[[RequiredParams]]
+  Name = "cmd_npcdie"
+  Desc = "NPC死后命令"
+  Intro = "QM任务NPC死了之后的命令。（和cmd_quest_back的区别是，这里可能有busy造成不了）。接信的话，建议此处练习+研究，后面跟hp更新状态。"
+
+[[RequiredParams]]
+  Name = "cmd_quest_back"
+  Desc = "任务npc死亡后执行的命令"
+  Intro = "任务npc死亡后，再到达下一个房间后，执行的命令。（和npcdie命令最大的区别是，此时没有busy），如果接信的话，命令会再接信后并出发后才执行。不接信的话，建议此处练习+研究，后面跟hp更新状态。"
+
+[[RequiredParams]]
+  Name = "cmd_quest_go"
+  Desc = "接Quest后命令"
+  Intro = "接QM任务后的命令，不建议在此处研究+练习，"
+
+[[RequiredParams]]
+  Name = "cmd_wait"
+  Desc = "闲时命令"
+  Intro = "QM任务杀完NPC后，砍错头，，等着接信时候，或者坐马车，坐船的设置（吸气+吸精+汲取或吐纳）"
+
+[[RequiredParams]]
+  Name = "cmd_jiqu"
+  Desc = "汲取指令"
+  Intro = "汲取的指令，留空发送mjq"
+
+[[RequiredParams]]
+  Name = "【学习设置】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
 
 [[RequiredParams]]
   Name = "cmd_study"
@@ -7472,7 +8232,7 @@ Channel = "zsz-self.jvs"
 [[RequiredParams]]
   Name = "loc_study2"
   Desc = "第二种学习的地点"
-  Intro = "第一种学习skfull的情况下，执行2。如果需要使用，请同时保证 loc_study2,study_cmd2,list_skill2 三个变量都不为空"
+  Intro = "请保证第二套学习方案的pot倾泻。如果允许的话，可以考虑cmd_studying里面加上#yj"
 
 [[RequiredParams]]
   Name = "list_skill2"
@@ -7480,79 +8240,114 @@ Channel = "zsz-self.jvs"
   Intro = "第一种学习skfull的情况下，执行2。如果需要使用，请同时保证 loc_study2,study_cmd2,list_skill2 三个变量都不为"
 
 [[RequiredParams]]
+  Name = "cmd_studying"
+  Desc = "学习间隔指令"
+  Intro = "2次学习间隔的命令（#lian + 吸气+汲取或者吐纳）"
+
+[[RequiredParams]]
+  Name = "list_lian"
+  Desc = "练习列表"
+  Intro = "#lian对应需要练习的武功名字（dodge|sword|parry,支持多种武功轮换练习，具体格式请到群里咨询。）例子：dodge:shenxing-baibian,huashan-shenfa,feiyan-huixiang|sword:kuangfeng-jian,huashan-sword,liuyue-jianwu::jifa sword kuangfeng-jian|cuff::uj:   "
+
+[[RequiredParams]]
+  Name = "【门派设置】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
+
+[[RequiredParams]]
+  Name = "id_pass"
+  Desc = "门派缩写"
+  Intro = "门派缩写（有密道的门派要填）"
+
+[[RequiredParams]]
+  Name = "id_master"
+  Desc = "掌门ID"
+  Intro = "师傅的名字拼写"
+
+[[RequiredParams]]
+  Name = "loc_master"
+  Desc = "掌门坐标"
+  Intro = "师门任务，师傅的坐标"
+
+[[RequiredParams]]
+  Name = "loc_dazuo"
+  Desc = "休整坐标"
+  Intro = "打坐吃药或者砍错头等信的坐标"
+
+[[RequiredParams]]
+  Name = "loc_dispel"
+  Desc = "解毒坐标"
+  Intro = "解毒的坐标，解毒失败后会去这个房间继续尝试。不填会去聊天室"
+
+[[RequiredParams]]
   Name = "loc_sleep"
   Desc = "睡觉坐标"
   Intro = "睡觉的坐标"
 
 [[RequiredParams]]
-  Name = "max_exp"
-  Desc = "经验值上限"
-  Intro = "最大经验值"
+  Name = "cmd_master"
+  Desc = "给头后的指令"
+  Intro = "give head to master后的指令，留空发送dd"
 
 [[RequiredParams]]
-  Name = "max_pot"
-  Desc = "潜能上限"
-  Intro = "最大潜能"
+  Name = "【副本设置】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
 
 [[RequiredParams]]
-  Name = "max_th"
-  Desc = "体会上限"
-  Intro = "最大体会"
+  Name = "list_boss"
+  Desc = "副本列表"
+  Intro = "需要打的副本名字\n  seadragon,dongfang,digong,jiangshi,juxianzhuang,xuemo--都被cut了。现在支持lgt,qinling,protect\n  新手初期空着不要填写"
 
 [[RequiredParams]]
-  Name = "min_jingli"
-  Desc = "最小精力"
-  Intro = "最小精力"
+  Name = "cmd_protect"
+  Desc = "保护npc时候提起执行的准备命令。"
+  Intro = ""
 
 [[RequiredParams]]
-  Name = "min_gold"
-  Desc = "最少黄金"
-  Intro = "身上携带GOLD下限"
+  Name = "lgt_cmd_pre"
+  Desc = "lgt_cmd_pre"
+  Intro = "lgt准备命令"
 
 [[RequiredParams]]
-  Name = "min_neili"
-  Desc = "最小内力"
-  Intro = "最小内力"
+  Name = "lgt_cmd_killing"
+  Desc = "lgt_cmd_killing"
+  Intro = "lgt_cmd_killing灵感塔爬塔时候的命令。"
 
 [[RequiredParams]]
-  Name = "min_pot"
-  Desc = "潜能下限"
-  Intro = "保留多少潜能（初期没啥用）"
+  Name = "lgt_time"
+  Desc = "lgt_time"
+  Intro = "记录灵感塔时间。自动修改。"
 
 [[RequiredParams]]
-  Name = "num_cmds"
-  Desc = "每心跳命令数"
-  Intro = "每心跳内输出最多几个命令（偶数，可以围绕46上下调整，数值越大，越容易被雷劈）"
+  Name = "lgt_cmd_pfm"
+  Desc = "灵感塔pfm"
+  Intro = "灵感塔里面使用的pfm"
 
 [[RequiredParams]]
-  Name = "num_dazuo"
-  Desc = "打坐数字"
-  Intro = "打坐多少"
+  Name = "ql_cmd_pre"
+  Desc = "秦陵-进入副本后执行的准备命令"
+  Intro = "秦陵-进入副本后执行的准备命令"
 
 [[RequiredParams]]
-  Name = "num_fangqi"
-  Desc = "放弃经验"
-  Intro = "需要放弃多少经验"
+  Name = "ql_cmd_killing"
+  Desc = "秦陵，杀boss前的命令"
+  Intro = "秦陵，杀boss前的命令"
 
 [[RequiredParams]]
-  Name = "num_step"
-  Desc = "走路步数"
-  Intro = "一次走多少步"
+  Name = "ql_cmd_pfm"
+  Desc = "秦陵副本杀怪使用的pfm。不填则默认使用mq pfm"
+  Intro = ""
 
 [[RequiredParams]]
-  Name = "num_tuna"
-  Desc = "吐纳数字"
-  Intro = "每次吐纳多少"
+  Name = "【不常修改设置】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
 
 [[RequiredParams]]
-  Name = "passw"
-  Desc = "密码"
-  Intro = "游戏密码"
-
-[[RequiredParams]]
-  Name = "bool_3boss_recon"
-  Desc = "三小boss重连"
-  Intro = "打3小boss时时候重连开关，适用于较弱的id。注意，不建议开seadragons,容易卡海怪"
+  Name = "list_cmd"
+  Desc = "|分割的命令列表"
+  Intro = "由|分割的命令列表，格式为 yp:yun powerup|ys:yun shield|mpf:xxxx,可以在send时通过#cmd mpf 的形式发送"
 
 [[RequiredParams]]
   Name = "bool_cungift"
@@ -7588,3 +8383,58 @@ Channel = "zsz-self.jvs"
   Name = "list_assist"
   Desc = "帮助命令列表"
   Intro = "帮助命令列表，以|分割，可以通过助理按钮调用，方便是操作"
+
+[[RequiredParams]]
+  Name = "【重要设置，但不常修改变量】分隔符"
+  Desc = "-------------------------------"
+  Intro = "-------------------------------"
+
+[[RequiredParams]]
+  Name = "loc_jiuhua"
+  Desc = "九花坐标"
+  Intro = "取九华玉露丸的坐标"
+
+[[RequiredParams]]
+  Name = "loc_gift"
+  Desc = "物资坐标"
+  Intro = "有好东西，存放物资的坐标"
+
+[[RequiredParams]]
+  Name = "list_control"
+  Desc = "大米id"
+  Intro = "自己大米的ID"
+
+[[RequiredParams]]
+  Name = "list_qask"
+  Desc = "买线报城市"
+  Intro = "问游讯 NPC位置的命令（一般填 很远 ）--现在机器人都有bao大人提供的线报功能，这个建议不填写。"
+
+[[RequiredParams]]
+  Name = "num_cmds"
+  Desc = "每心跳命令数"
+  Intro = "每心跳内输出最多几个命令（偶数，可以围绕46上下调整，数值越大，越容易被雷劈）。建议；46"
+
+[[RequiredParams]]
+  Name = "num_step"
+  Desc = "走路步数"
+  Intro = "一次走多少步。建议6"
+
+[[RequiredParams]]
+  Name = "cmd_login"
+  Desc = "连线进入游戏后执行的命令"
+  Intro = "“你连线进入”后。执行的命令"
+
+[[RequiredParams]]
+  Name = "bool_wudusuck"
+  Desc = "五毒教suck"
+  Intro = "五毒教suck"
+
+[[RequiredParams]]
+  Name = "cmd_heartbeat"
+  Desc = "cmd_heartbeat"
+  Intro = "cmd_heartbeat"
+
+[[RequiredParams]]
+  Name = "cmd_ride"
+  Desc = "骑坐骑的指令"
+  Intro = "比如ride bao-feiji。\n留空则不尝试rideto。\n如果不需要召唤坐骑，可以设为t"

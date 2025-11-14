@@ -62,7 +62,7 @@ var data_npcs = {
     "a zi"					: {"name" : "阿紫",			"loc" : 1160,	"id" : "a zi"},
     "chuchen zi"			: {"name" : "出尘子",		"loc" : 1162,	"id" : "chuchen zi"},
     "shihou zi"				: {"name" : "狮吼子",		"loc" : 1158,	"id" : "shihou zi"},
-    "duan zhengchun"		: {"name" : "段正淳",		"loc" : 2400,	"id" : "duan zhengchun"},
+    "duan zhengchun"		: {"name" : "段正淳",		"loc" : 2384,	"id" : "duan zhengchun"},
     "duan zhengming"		: {"name" : "段正明",		"loc" : 541,	"id" : "duan zhengming"},
     "dao baifeng"			: {"name" : "刀白凤",		"loc" : 504,	"id" : "dao baifeng"},
     "murong fu"				: {"name" : "慕容复",		"loc" : 2195,	"id" : "murong fu"},
@@ -185,16 +185,20 @@ var data_npcs = {
     "tie yan"				: {"name" : "铁燕",			"loc" : 2737,	"id" : "tie yan"},
     "liu ruosong"			: {"name" : "柳若松",		"loc" : 2725,	"id" : "liu ruosong"}, 
     "fu hongxue"			: {"name" : "傅红雪",		"loc" : 2734,	"id" : "fu hongxue"},
-    "guo jing"				: {"name" : "郭靖",		"loc" : 177,	"id" : "guo jing"},
-    "wu qian"				: {"name" : "吴潜",		"loc" : 2850,	"id" : "wu qian"},
-    "yu jie"				: {"name" : "余介",		"loc" : 2871,	"id" : "yu jie"},
+    "guo jing"				: {"name" : "郭靖",			"loc" : 177,	"id" : "guo jing"},
+    "wu qian"				: {"name" : "吴潜",			"loc" : 2850,	"id" : "wu qian"},
+    "yu jie"				: {"name" : "余介",			"loc" : 2871,	"id" : "yu jie"},
     "fan tingzhao"			: {"name" : "范廷召",		"loc" : 2845,	"id" : "fan tingzhao"},
-    "meng gong"				: {"name" : "孟珙",		"loc" : 2858,	"id" : "meng gong"},
+    "meng gong"				: {"name" : "孟珙",			"loc" : 2858,	"id" : "meng gong"},
     "ge huaimin"			: {"name" : "葛怀敏",		"loc" : 2861,	"id" : "ge huaimin"},
     "pan guangyu"			: {"name" : "潘光裕",		"loc" : 2862,	"id" : "pan guangyu"},
     "kong shouzheng"		: {"name" : "孔守正",		"loc" : 2875,	"id" : "kong shouzheng"},
-    "gao hua"				: {"name" : "高化",		"loc" : 2876,	"id" : "gao hua"},
-    "nan xian"				:{"name":"南贤","loc":1551,"id":"nan xian"}
+    "gao hua"				: {"name" : "高化",			"loc" : 2876,	"id" : "gao hua"},
+	"wen zhengming"			: {"name" : "文征明",		"loc" : 2799,	"id" : "wen zhengming"},
+    "wang xu"				: {"name" : "王诩",			"loc" : 2800,	"id" : "wang xu"},
+    "puzhi dashi"			: {"name" : "普智大师",		"loc" : 2801,	"id" : "puzhi dashi"},
+    "zhang junfang"			: {"name" : "张君房",		"loc" : 2802,	"id" : "zhang junfang"},	
+    "nan xian"				: {"name" : "南贤",			"loc":	1551,	"id" : "nan xian"}
    };
 
 var data_locations=[
@@ -205,7 +209,7 @@ var data_locations=[
 
 ]
    function alias_npc(name, line, wildcards){
-    var wcs = VBArray(wildcards).toArray();
+    var wcs = wildcards;
     var id=wcs[0]
     var npc=data_npcs[id]
     if (npc){

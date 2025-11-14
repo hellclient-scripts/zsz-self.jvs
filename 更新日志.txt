@@ -1,0 +1,268 @@
+20231001
+to_kill前回复内力
+20231010 
+修复襄阳城墙，新手爬墙爬不动情况 ^(> )*你太累了，还是休息一会儿吧。
+20231011
+增加变量loc_study2,study_cmd2,list_skill2 都不为空的情况下，others/study 不学习情况下去 学习第二种。
+20231016
+cha level获取不到level的问题，修复
+quest kill的时候。屏蔽 step 这里xx的出口 信息。 spwk后可以正常显示。
+增加#yj  指令。略同于#yj2，2个变量，第一个变量可以 list_skill或者 list_skill2或者同格式的技能列表。第二个变量次数，留空则为机器人自取。
+#yj list_skill2 100。不管cmd_study 任何指令，强制 yanjiu list_skill2中的一种技能100次。
+#yj force|dodge 50   yanjiu dodge 50。
+
+20231017
+增加alias #exstudycmd  。快速交换学习指令1和指令2.
+skfull触发 ，增加技能超200后非同凡响的判断. （向四大宗师学习满后的提示暂时没加，哪个是提示给所有人都额。）
+增加todo命令。 #todo num 备忘。 在统计条上显示几分钟后，该干什么事。老年人专用。暂时只支持文本显示。后面考虑加入执行命令
+#todo 30 更改学习指令 . 在status上提示30分钟后显示“更改学习指令”。 第一个参数不大于0. 取消显示。
+2023 1020
+丐帮地图土地庙旁边增加蛇园兽舍。减少gb跑进去发呆的几率
+2023 1024 
+alias 增加 #dis(同zmud)， #con（自动重新连接，会自动输入id，passwd） 
+20231028
+增加吃天心解毒丹。中毒后，身上带着天心解毒丹的话，会自动吃天心解毒丹。eat tianxin dan;yun dispel
+自动买药功能增加生生造化丹和天心解毒丹
+20231030
+增加吃牛黄解毒丸。中毒后，身上带着牛黄解毒丸的话，会自动吃牛黄解毒丸。eat tianxin dan;eat jiedu wan;yun dispel
+list_qask 为空时，身上有cash会自动存起来
+20231031
+张翠山哪里 unwield weapon2
+
+20231124
+加入保护任务。 list_boss 增加 protect （完成度95%，还有一些问题。不过不影响运行）
+			/*
+			保护任务机器人
+			1、此机器人是在mq机器人的基础上增加修改的。难免有些冲突。最近比较忙，没时间细化，大家先用着，熟悉一下。
+			2、挂了几天，id强度够得话，稳定性还是可以的，挂机几天没出现大问题。但是没做错误纠正功能。所以请自行保证能日翻杀手。
+			3、quest npc已经全部找全。几天也没有发现新的npc了。
+			4、做保护，由于有玄冥神掌的存在，九阳豆浆机是必须的，如果自身没有九阳，请搞个九阳大米陪着解毒。
+			5、变量id_pass 增加gm1和th1,th2。
+			6、my_name 设置成自己的名字，其他设置和mq机器人都一样。
+			7、资源点很少，只做保护奖励不如mq。不建议大家挂太多保护消大米耗服务器资源，日all。
+			*/
+
+加入mq 获得exp 和pot 统计。
+20231126
+桃花门派路径调整  th 坐雕  ;th1 嘉兴坐船 ;th2 ask huang yaoshi about 离岛(给非桃花id使用)
+变量设置增加了分类。便于观察和修改变量。
+20231128
+20231201
+gift 去掉 赏善罚恶令
+修复 爬泰山摔下来的bug。
+
+20231201
+
+send 函数里面增加 #set 和 #to 功能。
+#setvar 更改变量后增加note提示功能
+alias 增加#set 更改data变量。
+20231204
+现在可以找350 李博源  学习400的literate了
+应对六和塔陆菲青哪里自动定位问题。把自动定位搜索半径扩大到13。不知道是否会有其他问题。
+2023/12/14
+增加居住小区，灵感塔地图
+add_room_cmd 在1928时候不会执行。
+买干粮的时候多买点，别这么小家子气了。
+
+2023/12/17
+增加hud功能。实时更新hp，quest，以及需要重点关注的几个信息。此功能需要bao大人的新hc版本支持。
+
+2023/12/23
+增加爬塔灵感塔 。 list_boss 增加lgt。
+
+2023/12/24
+im-gift 增加 飞刀灵符和 阉贼地图 。item_all 增加 “幅”
+2023/12/25 
+过大海坐船时候，增加cmd_mache命令。
+画了一只小狐狸。
+爬塔前修武器
+2024/01/08
+盘龙居push，n后增加判断。
+把脚本里面的eat jiuhua wan。全部改成mdan0,mdan1,mdan2,mdan3
+2024/01/09
+自动使用包裹里的勋章，
+自动丢包裹里面的第二本九阴真经3
+去掉gzhen alias。直接get yufeng zhen from npcid
+2024/01/20
+增加秦陵副本。
+	相关变量 list_boss 里面判断 qinling 时候且exp大于100万会自动下秦陵副本
+	增加三个变量 ql_cmd_pre ， ql_cmd_killing，ql_cmd_pfm 。字面意思。
+2024/01/31
+增加五毒自动练毒功能
+	id_pass有五毒门派wud，并且 bool_wudusuck变量设置为true。则自动每个quest间隙去练毒。
+2024/05/06
+	增加自动富康狐狸功能（还没写代码。请手动fk）。
+2024/05/19
+	满体会后，如果pot>min_pot的话，改为去学习.	
+	学习过程中，th小于100，pot<max_pot的时候，有10分之一的几率重新do_prepare.
+	bool_accept调整， both的话，th大于2000则修改为接信.
+2024/05/29 
+	kill npc的时候，打开 gkl 组。待仔细测试。
+	#yj 继续优化，必须cmd_study或者sttudy2是yanjiu时候才会默认list_skill和list_skill2.
+	
+2024/06/04	
+	增加hp -m的四个变量，极限精力，内力，潜能，体会。"limit_jingli" : 1, "limit_neilili" : 1, "limit_pot" : 100, "limit_th" : 100,
+	同时支持变量 max_pot,max_th,max_exp 设置为max。或者max_pot,max_th,设置为false
+	
+	cmd命令集重新整理
+		去掉cmd_mache。修改为执行 cmd_wait。减少没必要的变量。
+		cmd_bquest 修改为 cmd_quest_go 更直观理解。
+		cmd_aquest 修改为 cmd_quest_back 更直观理解。
+		删除cmd_ttg，cmd_3boss，bool_3boss_recon，cmd_jxz，cmd_digong，cmd_xm，cmd_cheapshot,bool_smartmode
+	var no_cmd = ",1928,2309,2312,2315,2340,2343,26,2046,";以下地点将不再执行room/cmd
+	不再战斗情况下，关闭pfm。
+	稍微优化以下san武器的速度。速度还有待提高。
+	
+2024/06/06
+	新增脚本变量 connect/time记录重连时间。30秒不能重连时候小优化。
+	
+	优化爬塔:
+		增加变量lgt_cmd_pfm
+		增加碰到武痴后自动重新连接功能（测试中）
+2024/06/22
+	san武器功能优化。自动获取极限内力。
+2024/06/25
+	get_path 增加显示path路径
+	修正副本内时候，不接信
+	修正副本内被打，不会自动打开pfm。
+2024/06/29
+	秦陵副本要求5000万exp。
+
+
+
+一些常用快捷设置
+
+神龙岛胖头陀   洪安通学
+#setvar id_master pang toutuo;#setvar id_pass sld;#setvar loc_dazuo 1927;#setvar loc_master 41;#setvar loc_sleep 2572
+
+桃花岛黄药师
+#setvar id_master huang yaoshi;#setvar id_pass th1;#setvar loc_dazuo 1994,177,179;#setvar loc_master 1990;#setvar loc_sleep 1995,179
+#setvar id_master huang rong;#setvar id_pass th;#setvar loc_dazuo 177;#setvar loc_master 178;#setvar loc_sleep 179
+古墓门派
+#setvar id_master long nv;#setvar id_pass gm;#setvar loc_dazuo 1955;#setvar loc_master 1956;#setvar loc_sleep 1960
+
+胡家
+#setvar id_master hu fei;#setvar id_pass hu1;#setvar loc_dazuo 2356;#setvar loc_master 2355;#setvar loc_sleep 2713
+
+剑宗门派
+#setvar id_master feng buping;#setvar loc_dazuo 2225;#setvar loc_master 2226;#setvar loc_sleep 2227
+华山门派
+#setvar id_master yue buqun;#setvar loc_dazuo 2178,2182,1927;#setvar loc_master 2185;#setvar loc_sleep 2680,179,2393
+#setvar id_master yue wife;#setvar loc_master 2192
+逍遥派
+#setvar id_master su xinghe;#setvar id_pass xy;#setvar loc_dazuo 1721;#setvar loc_master 1720;#setvar loc_sleep 1732
+#setvar id_master bai shijing;#setvar loc_master 1932
+丐帮门派
+#setvar id_master hong qigong;#setvar id_pass gb;#setvar loc_master 1929;#setvar loc_dazuo 1931;#setvar loc_sleep 1928
+
+将军府门派
+#setvar id_master wu qian;#setvar id_pass jjf;#setvar loc_dazuo 2849;#setvar loc_master 2850;#setvar loc_sleep 2865
+
+雪山派
+#setvar id_master jiumo zhi;#setvar id_pass xs;#setvar loc_dazuo 2142;#setvar loc_master 2139;#setvar loc_sleep 2747
+
+五毒教
+#setvar id_master he tieshou;#setvar id_pass wud;#setvar loc_dazuo 2920;#setvar loc_master 2921;#setvar loc_sleep 2928
+
+学互博
+#setvar loc_study 779;#setvar list_skill zuoyou-hubo;#setvar cmd_study xue zhou botong;
+#setvar max_pot 600;#setvar min_pot 500
+
+
+段氏皇族
+#setvar id_master duan zhengchun;#setvar loc_dazuo 2383;#setvar loc_master 2384;#setvar loc_sleep 2393
+
+武当门派1 
+#setvar id_master song yuanqiao;#setvar loc_dazuo 2158;#setvar loc_master 1514;#setvar loc_sleep 2152
+
+
+dodge:shexing-lifan,feiyan-huixiang,huashan-shenfa,feiyan-zoubi,xiaoyaoyou,shenxing-baibian|sword:huashan-sword,jinshe-jian,liuyue-jianwu,shenghuo-ling:j:jifa sword kuangfeng-jian|sword::j|unarmed:huashan-quanfa,jueming-tui,changquan,kongming-quan:uj:j
+
+
+
+初始化设置;
+#setvar bool_accept t;#setvar bool_miss f;#setvar bool_echo t;#setvar max_exp 106000;#setvar max_pot 10000;#setvar min_pot 100;#setvar max_th 500;#setvar min_jingli 0;#setvar num_dazuo 50;#setvar min_gold 33;#setvar num_tuna 10;#setvar num_fangqi 100;#setvar min_neili 10;#setvar cmd_kill j;#unsetvar loc_jiuhua;#setvar num_cmds 46;#setvar num_step 6;#setvar list_control guanjia;#unsetvar list_qask;#setvar loc_gift 2046;#setvar cmd_bquest yun regenerate;#setvar cmd_npcdie #lian\;er\;hp;#setvar list_lian dodge;#setvar cmd_wait yun heal\;er\;re\;mjq\;dazuo 50;#setvar cmd_mache yun heal\;er\;re\;mjq\;dazuo 50;#setvar cmd_studying er\;re\;mjq\;dazuo 50
+
+射箭;
+#setvar id_weapon long sword;#setvar id_weapon2 long sword;#setvar cmd_pfm shot;#setvar cmd_backstab shot;
+
+剑宗门派;
+#setvar id_master feng buping;#setvar loc_dazuo 2225;#setvar loc_master 2226;#setvar loc_sleep 2227;
+
+#setvar id_master cong buqi;#setvar loc_dazuo 2223;#setvar loc_master 2224;#setvar loc_sleep 2227;
+学习封不平;
+#setvar cmd_study xue feng buping;#setvar loc_study 2226;#setvar list_skill force,huashan-xinfa,literate;#setvar cmd_study2 xue feng buping;#setvar loc_study2 2226;#setvar list_skill2 force,huashan-xinfa,dodge,parry,sword,huashan-sword,kuangfeng-jian,literate;#setvar list_lian dodge;
+学习苏星河
+#setvar cmd_study xue su xinghe;#setvar loc_study 1720;#setvar list_skill force,xiaoyao-xinfa,xiaoyao-xinfa;#setvar cmd_study2 xue feng buping;#setvar loc_study2 2226;#setvar list_skill2 force,huashan-xinfa,dodge,parry,sword,huashan-sword,kuangfeng-jian,literate;#setvar list_lian dodge;
+
+
+初换狂风
+#setvar id_weapon csd;#setvar id_weapon2 csd;#setvar max_exp 200000;#setvar min_neili 300;#setvar bool_accept t;
+alias j wield csd;alias uj unwield csd;alias mtc touch csd;alias p yong kuang;alias mpf yong kuang;jifa sword kuangfeng-jian;jiali 1;#setvar cmd_pfm er\;p;#setvar cmd_backstab er\;p;#setvar cmd_bquest yun regenerate;#setvar max_pot 21000
+
+古墓用剑
+#setvar id_weapon csa;#setvar id_weapon2 csa;#setvar max_exp 200000;#setvar min_neili 300;#setvar bool_accept t;
+alias j wield csa;alias uj unwield csa;alias mtc touch csa;alias p yong lian;alias mpf yong lian;jifa sword yunv-jian;jiali 1;#setvar cmd_pfm er\;p;#setvar cmd_backstab er\;p;#setvar cmd_bquest yun regenerate;#setvar max_pot 21000
+
+
+#setvar id_weapon fire;#setvar id_weapon2 fire;#setvar max_exp 200000;#setvar min_neili 300;#setvar bool_accept t;alias j wield fire;alias uj unwield fire;alias mtc touch fire;alias p yong kuang;alias mpf yong kuang;jifa sword kuangfeng-jian;jiali 1;#setvar cmd_pfm er\;p;#setvar cmd_backstab er\;p;#setvar cmd_bquest yun regenerate;#setvar max_pot 21000
+
+。
+沙千里
+#setvar cmd_study xue sha qianli;#setvar loc_study 2931;#setvar list_skill wudu-xinfa,wudu-qishu;
+#setvar cmd_study xue cen qisi;#setvar loc_study 2926;#setvar list_skill wudu-xinfa
+#setvar cmd_study xue qi yunao;#setvar loc_study 2926;#setvar list_skill wudu-xinfa
+#setvar cmd_study xue he tieshou;#setvar loc_study 2921;#setvar list_skill force,wudu-xinfa,ruanhong-zhusuo,xiuluo-yinshagong,whip
+set auto_regenerate yes;
+set brief yes;
+set careful BRIEF;
+set combatd brief;
+unset map_prompt;
+set no_more yes;
+unset prompt;
+set wimpy 0;
+alias j wield swordg;
+alias uj unwield swordg;
+alias mtc touch swordg;
+alias er yun recover;
+alias mjq jiqu;
+alias re yun regenerate;
+alias dan0 0精气1精力2气血3内力其他full;
+alias mdan0 eat jiuhua wan;
+alias mdan1 eat jiuhua wan;
+alias mdan2 do eat jiuhua wan,eat shengsheng dan;
+alias mdan3 eat heishi dan;
+alias mdan4 eat jiuhua wan;
+alias mdan5 eat shengsheng dan;
+alias gdan0 take 20 jiuhua wan;
+alias mjq jiqu;
+alias mjq1 jiqu;
+alias gzhen get yufeng zhen from $*;
+alias tl take 1 yingxiong ling;
+alias ll lian dodge 50;
+alias yp yun powerup;
+alias ys yun shield;
+alias xx xue zuo force 20;
+alias xxx xue zuo jiaohua-neigong 20;
+alias menter0 enter guanjia;
+alias dh fmstore exchange $1 $2;
+alias zz donate transfer 1 to guanjia
+
+
+│  基本内功                │force                     │【略知一二】│ 191 / 85   │
+│□修罗阴煞功              │xiuluo-yinshagong         │【普普通通】│ 202 / 79   │
+│  吸星大法                │xixing-dafa               │【初出茅庐】│ 169 / 65   │
+│  五毒心法                │wudu-xinfa                │【略知一二】│ 185 / 44   │
+#add lian_no 1;dd;
+#if @lian_no>9999999 {#var lian_no 1};
+#case @lian_no {jifa unarmed taixuan-gong;
+lian unarmed 50;
+jifa unarmed none} {jifa unarmed sad-strike;
+lian unarmed 50;
+jifa unarmed none} {jifa unarmed kongming-quan;
+lian unarmed 50;
+jifa unarmed none};
+er;
+re
+
+alias j wield whipa;alias uj unwield whipa;alias mtc touch whipa

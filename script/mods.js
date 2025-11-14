@@ -52,7 +52,7 @@ Mods.StopModule=function(modulename){
 }
 
 function OnModCommand(name, output, wildcards){
-    var wcs = VBArray(wildcards).toArray();
+    var wcs = wildcards;
     var cmd=Mods.Commands[wcs[0]]
     if (cmd){
         cmd()
@@ -90,10 +90,14 @@ CallbackPromptLian=function(name,id,code,data){
 
 CallbackSanIntro=function(name,id,code,data){
     if (code==0){
-        Userinput.prompt("CallbackPromptSanNeiliMax","请设置你的最大内力","如8000。请hp -m查看 将准确的数据填入。错误轻则浪费magic water，重则掉基本内功。","")
+			send("hp;hp -m;i");
+			Userinput.prompt("CallbackPromptSan","请选择要San的武器id","如baihongjian","")
+		
+		//Userinput.prompt("CallbackPromptSanNeiliMax","请设置你的最大内力","如8000。请hp -m查看 将准确的数据填入。错误轻则浪费magic water，重则掉基本内功。","")
     } 
 }
 CallbackPromptSanNeiliMax=function(name,id,code,data){
+
     if (code==0 && data){
         if (isNaN(data)||(data-0)<8000){
             Userinput.alert("","最大内力无效",data+"不是有效的最大内力，注意，设置错误会掉基本内功")

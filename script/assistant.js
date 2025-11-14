@@ -144,8 +144,8 @@ function quick_start_fam(fam){
             var cmd_fuben=f.nopowerup?"yun recover;wp2off;wp1on":"wp2off;yun powerup;yun shield;wp1on"
     
             var initdata={
-                "cmd_aquest":(f.nopowerup?"":"yun powerup;yun shield"),
-                "cmd_bquest":(f.nopowerup?"":"yun powerup;yun shield"),
+                "cmd_quest_back":(f.nopowerup?"":"yun powerup;yun shield"),
+                "cmd_quest_go":(f.nopowerup?"":"yun powerup;yun shield"),
                 "id_pass":f.id_family,
                 "id_master":f.masterid,
                 "loc_master":f.masterloc,
@@ -254,7 +254,7 @@ function quick_start(){
 
         }
         list.append("ShowMods","扩展模块")
-        list.append('android_notify','设置安卓客户端通知(试验）')
+        
     }
     list.publish("do_script_assist")
    }
@@ -315,9 +315,6 @@ function quick_start(){
             break;
         case "prompt_list_assist":
             prompt_list_assist()
-            break
-        case 'android_notify':
-            push.TPush.setup()
             break
     }
    }
@@ -426,8 +423,8 @@ function callback_weapon1(name,id,code,data){
             SetVariable("id_weapon2",cmd[1])
         }
 
-        send("alias wp1on "+wieldcmd+cmd[1])
-        send("alias wp1off "+unwieldcmd+cmd[1])
+        send("alias j "+wieldcmd+cmd[1])
+        send("alias uj "+unwieldcmd+cmd[1])
         if (w2){
             send("alias wp2on "+wieldcmd+cmd[1])
             send("alias wp2off "+unwieldcmd+cmd[1])
@@ -542,12 +539,16 @@ function callback_shoud_reload(name,id,code,data){
 function prompt_boss(){
     var list=Userinput.newlist("请选择你要打的副本","副本",false)
     list.setmutli(true)
-    list.append("seadragon","镇海神龙(seadragon)")
-    list.append("jiangshi","僵尸道长(jiangshi)")
-    list.append("dongfang","黑木崖东方不败(dongfang)")
-    list.append("juxianzhuang","血战聚贤庄(juxianzhuang)")
-    list.append("digong","秦皇陵墓(digong)")
-    list.append("xuemo","诡异墓园(xuemo)")
+//    list.append("seadragon","镇海神龙(seadragon)")
+//    list.append("jiangshi","僵尸道长(jiangshi)")
+//    list.append("dongfang","黑木崖东方不败(dongfang)")
+//    list.append("juxianzhuang","血战聚贤庄(juxianzhuang)")
+//    list.append("digong","秦皇陵墓(digong)")
+//    list.append("xuemo","诡异墓园(xuemo)")
+	list.append("qinling","秦皇陵墓(qinling)")
+	list.append("doctor","看护模式-准备完成后去loc_dazuo发呆")
+    list.append("protect","汪剑通保护(protect)")
+    list.append("lgt","灵感塔(lgt)")	
     list.setvalues(get_var("list_boss").split(","))
     list.publish("callback_boss")
 }

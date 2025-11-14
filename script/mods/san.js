@@ -6,7 +6,8 @@
     san.NeiliMax=0
     san.NeiliMaxRepeat=0
     san.WeaponName=""
-    san.Helpers=["huang shang","nanhai shenni","kuihua taijian","dugu qiubai"]
+//    san.Helpers=["huang shang","nanhai shenni","kuihua taijian","dugu qiubai"]
+    san.Helpers=["wen zhengming","wang xu","puzhi dashi","zhang junfang"]
     san.ImbueList=["jiuzhuan jindan","feicui lan","magic water","xisui dan","xian dan","puti zi"]
     san.ImbueOffset=6
     san.ModuleCheckStop=function(){
@@ -18,19 +19,20 @@
     san.ModuleCheck=function(){
         world.Note(query("hp/max_neili"))
         world.Note(query("hp/max_jingli"))
-        if (san.NeiliMax<8000){
-            world.Note("最大内力设置无效")
+        san.NeiliMax = query("hp/limit_neilili");
+		if (san.NeiliMax<8000){
+            world.Note("最大内力设置无效"+san.NeiliMax)
             return
         }
-        if ((san.NeiliMax-query("hp/max_neili"))>200){
+        if ((san.NeiliMax-query("hp/max_neili"))>180){
             world.Note("内力不足")
             Mods.GoDoCommand(get_var("loc_gift"),"san.neiliitem")
         }else if(query("hp/max_jingli")<1000){
             world.Note("精力不足")
             Mods.GoDoCommand(get_var("loc_gift"),"san.jingliitem")
-        }else if(query("hp/jingli")<query("hp/max_jingli")){
+        }else if(query("hp/jingli")<query("hp/max_jingli")* 0.9){
             Mods.GoDoCommand(get_var("loc_dazuo"),"san.tuna")
-        }else if(query("hp/neili")<query("hp/max_neili")){
+        }else if(query("hp/neili")<query("hp/max_neili")* 0.9){
             Mods.GoDoCommand(get_var("loc_dazuo"),"san.dazuo")
 
         }else{
@@ -39,20 +41,20 @@
         return true
     }
     san.CmdTuna=function(){
-        send("yun regenerate;tuna 100")
+        send("yun regenerate;tuna 200")
         BusyTest(get_var("loc_dazuo"),"hp;set no_teach prepare")
     }
     san.CmdDazuo=function(){
-        send("yun regenerate;yun recover;dazuo 200")
+        send("yun regenerate;yun recover;dazuo 500")
         BusyTest(get_var("loc_dazuo"),"hp;set no_teach prepare")
     }
     san.CmdJingliItem=function(){
-        send("take 1 renshen wan;i")
+        send("take 3 renshen wan;i")
         BusyTest(get_var("loc_dazuo"),Mods.GetCommand("san.eatwan"))
     }
     san.CmdEatWan=function(){
         if (query("allitem/renshen wan",true)){
-            send("eat renshen wan;hp;i;set no_teach prepare")
+            send("eat renshen wan;eat renshen wan;eat renshen wan;hp;i;set no_teach prepare")
         }else{
             san.Report("资源不足","renshen wan 不足")
         }
@@ -102,7 +104,7 @@
             san.Report("资源不足",id+" 不足")
             return
         }
-        BusyTest(get_var("loc_gift"),"imbue "+id +" in "+san.WeaponID+";hp;"+Mods.GetCommand("san.imbued"))
+        BusyTest(get_var("loc_gift"),"imbue "+id +" in "+san.WeaponID+";l "+san.WeaponID+";hp;"+Mods.GetCommand("san.imbued"))
         
     }
     san.CmdImbued=function(){

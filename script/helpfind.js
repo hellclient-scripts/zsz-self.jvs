@@ -130,15 +130,15 @@ function OnRadar(name,id,loc){
     }
 }
 function on_radar(name, output, wildcards){
-	var wcs = VBArray(wildcards).toArray();
+	var wcs = wildcards;
     OnRadar(wcs[0],wcs[1].toLocaleLowerCase(),query("room/id"))
 }
 function on_npc(name, output, wildcards){
-	var wcs = VBArray(wildcards).toArray();
+	var wcs = wildcards;
     OnNPC(wcs[0],wcs[1],query("room/id"))
 }
 function on_npcheal(name, output, wildcards){
-	var wcs = VBArray(wildcards).toArray();
+	var wcs = wildcards;
     OnNPC(wcs[0],"",query("room/id"))
 }
 function on_gc(name){
