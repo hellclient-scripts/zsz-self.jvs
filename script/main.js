@@ -66,10 +66,13 @@ var npc_id = new Array();
 var cmd_count = new Array();
 var step_walk = new MyArray();
 var auto_search = new MySearch(3);
+function Dump(obj) {
+	Note(JSON.stringify(obj, null, 4));
+}
 //var mapper       = new ActiveXObject("mapper.path");
 eval(Include("mapper.js"), "mapper.js")
-mapper.open("rooms.h")
-mapper.setmissloc(get_var("list_mloc"))
+mapper.open("hell.hmm")
+// mapper.setmissloc(get_var("list_mloc"))
 mapper.addhouse(get_var("house"))
 var m_FAIL = "-333";
 

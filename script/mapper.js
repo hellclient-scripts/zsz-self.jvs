@@ -1,6 +1,24 @@
 var mapper = {
     result: "",
 }
+mapper.HMM = eval(Include("hmm/hmm.js"), "hmm/hmm.js");
+mapper.Database = new mapper.HMM.MapDatabase()
+mapper.Context = new mapper.HMM.Context()
+mapper.HomeRooms=[]
+mapper.NewRoom = function (key, name, exits = []) {
+    let model = mapper.HMM.Room.New()
+    model.Key = key
+    model.Name = name
+    model.Exits = exits
+    return model
+}
+mapper.NewExit = function (command, to, cost = 1) {
+    let model = mapper.HMM.Exit.New()
+    model.Command = command
+    model.To = to
+    model.Cost = cost
+    return model
+}
 mapper.sh = {
     "east": "e", "south": "s", "west": "w", "north": "n", "southeast": "se", "southwest": "sw",
     "northeast": "ne", "northwest": "nw", "eastup": "eu", "eastdown": "ed", "southup": "su",
@@ -13,12 +31,22 @@ mapper.re = {
     "eu": "wd", "ed": "wu", "su": "nd", "sd": "nu", "wu": "ed", "wd": "eu", "nu": "sd",
     "nd": "su", "u": "d", "d": "u", "enter": "out", "out": "enter"
 };
+// mapper.getroom = function (id) {
+//     var result = Mapper.getexits(id)
+//     var data = []
+//     var self = this;
+//     result.forEach(function (exit) {
+//         data.push(self.filterdir(exit.command) + ":" + exit.to)
+//     })
+//     this.result = data.join(",")
+// }
 mapper.getroom = function (id) {
-    var result = Mapper.getexits(id)
+
+    var result = mapper.Database.APIGetRoomExits(id, mapper.Context, mapper.HMM.MapperOptions.New())
     var data = []
     var self = this;
     result.forEach(function (exit) {
-        data.push(self.filterdir(exit.command) + ":" + exit.to)
+        data.push(self.filterdir(exit.Command) + ":" + exit.To)
     })
     this.result = data.join(",")
 }
@@ -32,13 +60,33 @@ mapper.filterdir = function (dir) {
     }
     return dir
 }
+// mapper.newFind = function (rid, max) {
+//     var exits = Mapper.getexits(rid)
+//     var todo = []
+//     exits.forEach(function (exit) {
+//         todo.push({
+//             command: exit.command,
+//             to: exit.to,
+//         })
+//     })
+//     return {
+//         rid: rid,
+//         max: max,
+//         todo: [todo],
+//         re: [],
+//         walked: {
+//             rid: true
+//         },
+//         result: []
+//     }
+// }
 mapper.newFind = function (rid, max) {
-    var exits = Mapper.getexits(rid)
+    var exits = mapper.Database.APIGetRoomExits(rid, mapper.Context, mapper.HMM.MapperOptions.New())
     var todo = []
     exits.forEach(function (exit) {
         todo.push({
-            command: exit.command,
-            to: exit.to,
+            command: exit.Command,
+            to: exit.To,
         })
     })
     return {
@@ -63,18 +111,18 @@ mapper.nextFind = function (find) {
             return
         }
         var todo = []
-        var exits = Mapper.getexits(path.to)
+        var exits = mapper.Database.APIGetRoomExits(path.to, mapper.Context, mapper.HMM.MapperOptions.New())
 
         var re
         exits.forEach(function (exit) {
             todo.push({
-                command: exit.command,
-                to: exit.to,
+                command: exit.Command,
+                to: exit.To,
             })
-            if (exit.command == recmd && exit.to == find.rid) {
+            if (exit.Command == recmd && exit.To == find.rid) {
                 re = {
-                    command: exit.command,
-                    to: exit.to,
+                    command: exit.Command,
+                    to: exit.To,
                 }
             }
         })
@@ -92,33 +140,67 @@ mapper.nextFind = function (find) {
         find.result.push(re.command)
     }
 }
+// mapper.getareapath = function name(start, depth) {
+//     var find = this.newFind(start, depth)
+//     while (find.todo.length != 1 || find.todo[0].length != 0) {
+//         this.nextFind(find)
+//     }
+//     this.result = find.result.join(";")
+// },
+//     mapper.getrmid = function (data) {
+//         this.result = ""
+//         var name = data.split("|", 1)
+//         var result = Mapper.getroomid(name)
+//         this.result = result.join(";")
+//         if (this.result == "") {
+//             this.result = "null"
+//         }
+//     },
+//     mapper.getroomexitssorted = function (id) {
+//         var result = Mapper.getexits(id)
+//         var exits = [];
+//         var self = this;
+//         result.forEach(function (exit) {
+//             if (self.re[exit.command]) {
+//                 exits.push(exit.command)
+//             }
+//         })
+//         return exits.sort().join(",")
+//     }
 mapper.getareapath = function name(start, depth) {
     var find = this.newFind(start, depth)
     while (find.todo.length != 1 || find.todo[0].length != 0) {
         this.nextFind(find)
     }
     this.result = find.result.join(";")
-},
-    mapper.getrmid = function (data) {
-        this.result = ""
-        var name = data.split("|", 1)
-        var result = Mapper.getroomid(name)
-        this.result = result.join(";")
-        if (this.result == "") {
-            this.result = "null"
+}
+mapper.getrmid = function (data) {
+    this.result = ""
+    var name = data.split("|", 1)
+    var result = []
+    var opt = mapper.HMM.APIListOption.New()
+    mapper.Database.APIListRooms(opt).forEach(function (room) {
+        if (room.Name === name[0]) {
+            result.push(room.Key)
         }
-    },
-    mapper.getroomexitssorted = function (id) {
-        var result = Mapper.getexits(id)
-        var exits = [];
-        var self = this;
-        result.forEach(function (exit) {
-            if (self.re[exit.command]) {
-                exits.push(exit.command)
-            }
-        })
-        return exits.sort().join(",")
+    })
+    this.result = result.join(";")
+    if (this.result == "") {
+        this.result = "null"
     }
+}
+mapper.getroomexitssorted = function (id) {
+    var result = mapper.Database.APIGetRoomExits(id, mapper.Context, mapper.HMM.MapperOptions.New())
+    var exits = [];
+    var self = this;
+    result.forEach(function (exit) {
+        if (self.re[exit.Command]) {
+            exits.push(exit.Command)
+        }
+    })
+    return exits.sort().join(",")
+}
+
 mapper.filterexitsorted = function (e) {
     var result = e.split(",")
     var exits = [];
@@ -134,7 +216,13 @@ mapper.filterexitsorted = function (e) {
 mapper.execgetrmid = function (data) {
     this.result = ""
     var name = SplitN(data, "=", 2)
-    var result = Mapper.getroomid(name[0])
+    var result = []
+    var opt = mapper.HMM.APIListOption.New()
+    mapper.Database.APIListRooms(opt).forEach(function (room) {
+        if (room.Name === name[0]) {
+            result.push(room.Key)
+        }
+    })
     if (name.length == 1) {
         this.result = result.join(",")
     } else {
@@ -153,137 +241,159 @@ mapper.execgetrmid = function (data) {
     if (this.result == "") {
         this.result = "null"
     }
-},
-    mapper.getidfrname = function (name) {
-        var result = Mapper.getroomid(name)
-        this.result = result.join(";")
-        if (this.result == "") {
-            this.result = "null"
-        }
-    },
-    mapper.search = function (fl, tl, fm) {
-        var tags = fm.split(",")
-        Mapper.flashtags()
-        Mapper.settags(tags)
-        var result = Mapper.getpath(fl, 1, tl.split(","))
-        var steps = []
-        if (result) {
-            result.forEach(function (data) {
-                if (data.command != "#skip") {
-                    steps.push(data.command)
-                }
-            })
-            this.result = steps.join(";")
-        } else {
-            this.result = "null"
-        }
-
-    },
-    mapper.searchlist = function (fl, tl, fm) {
-        Mapper.settags([fm])
-        var result = Mapper.getpath(fl, 1, tl.split(","))
-        var steps = []
-        if (result) {
-            result.forEach(function (data) {
-                if (data.command != "#skip") {
-                    steps.push(data.command)
-                }
-            })
-            this.result = result.join(";")
-        } else {
-            this.result = "null"
-        }
-    }
-mapper.split2 = function (v, sep) {
-    var s = SplitN(v, sep, 2)
-    if (s.length < 2) {
-        s.push("")
-    }
-    return s
 }
-
-mapper.parsepath = function (fr, str) {
-    var tag
-    var tags
-    var ex
-    var etags
-    var p = Mapper.newpath()
-    var s
-    var str
-    p.from = fr
-    s = this.split2(str, "%")
-    str = s[0]
-    delay = s[1]
-    if (delay) {
-        p.delay = delay - 0
-    }
-    s = this.split2(str, ":")
-    str = s[0]
-    var to = s[1]
-    if (to) {
-        p.to = to
-    }
-    s = this.split2(str, ">")
-    tag = s[0]
-    str = s[1]
-    tags = []
-    while (str) {
-        tags.push(tag)
-        s = this.split2(str, ">")
-        tag = s[0]
-        str = s[1]
-    }
-
-    p.tags = tags
-    str = tag
-    etags = []
-    s = this.split2(str, "<")
-    ex = s[0]
-    str = s[1]
-    while (str) {
-        etags.push(ex)
-        s = this.split2(str, "<")
-        ex = s[0]
-        str = s[1]
-    }
-    p.excludetags = etags
-    str = ex
-    p.command = str
-    if (p.command.indexOf("goto") != -1) {
-        p.delay = 5
-    }
-    Mapper.addpath(fr, p)
-}
-mapper.loadline = function (line) {
-    mapper.lines.push(line)
-    var result = SplitN(line, "=", 2)
-    var id = result[0]
-    var data = ""
-    if (result.length > 1) {
-        data = result[1]
-    }
-    Mapper.clearroom(id)
-    result = SplitN(data, "|", 2)
-    var name = result[0]
-    var v = ""
-    if (result.length > 1) {
-        v = result[1]
-    }
-    Mapper.setroomname(id, name)
-    var exitlist = SplitN(v, ",", -1)
-    exitlist.forEach(function (data) {
-        if (data) {
-            mapper.parsepath(id, data)
+mapper.getidfrname = function (name) {
+    var result = []
+    var opt = mapper.HMM.APIListOption.New()
+    mapper.Database.APIListRooms(opt).forEach(function (room) {
+        if (room.Name === name[0]) {
+            result.push(room.Key)
         }
     })
+    this.result = result.join(";")
+    if (this.result == "") {
+        this.result = "null"
+    }
 }
+mapper.settags = function (tags) {
+    for (var key in tags) {
+        this.Context.WithTags([mapper.HMM.ValueTag.New(key, 1)])
+    }
+}
+mapper.getpath = function (fl, fly, to) {
+    let result = mapper.Database.APIQueryPathAny([fl], to, this.Context, mapper.HMM.MapperOptions.New())
+    if (result == null) {
+        return null
+    }
+    let path = []
+    result.Steps.forEach(step => {
+        path.push(step)
+    })
+    return path
+}
+mapper.search = function (fl, tl, fm) {
+    var tags = fm.split(",")
+    mapper.initTags()
+    mapper.settags(tags)
+    var result = mapper.getpath(fl, 1, tl.split(","))
+    var steps = []
+    if (result) {
+        result.forEach(function (data) {
+            if (data.command != "#skip") {
+                steps.push(data.Command)
+            }
+        })
+        this.result = steps.join(";")
+    } else {
+        this.result = "null"
+    }
+
+}
+mapper.searchlist = function (fl, tl, fm) {
+    mapper.settags([fm])
+    var result = mapper.getpath(fl, 1, tl.split(","))
+    var steps = []
+    if (result) {
+        result.forEach(function (data) {
+            if (data.command != "#skip") {
+                steps.push(data.Command)
+            }
+        })
+        this.result = result.join(";")
+    } else {
+        this.result = "null"
+    }
+}
+// mapper.split2 = function (v, sep) {
+//     var s = SplitN(v, sep, 2)
+//     if (s.length < 2) {
+//         s.push("")
+//     }
+//     return s
+// }
+
+// mapper.parsepath = function (fr, str) {
+//     var tag
+//     var tags
+//     var ex
+//     var etags
+//     var p = Mapper.newpath()
+//     var s
+//     var str
+//     p.from = fr
+//     s = this.split2(str, "%")
+//     str = s[0]
+//     delay = s[1]
+//     if (delay) {
+//         p.delay = delay - 0
+//     }
+//     s = this.split2(str, ":")
+//     str = s[0]
+//     var to = s[1]
+//     if (to) {
+//         p.to = to
+//     }
+//     s = this.split2(str, ">")
+//     tag = s[0]
+//     str = s[1]
+//     tags = []
+//     while (str) {
+//         tags.push(tag)
+//         s = this.split2(str, ">")
+//         tag = s[0]
+//         str = s[1]
+//     }
+
+//     p.tags = tags
+//     str = tag
+//     etags = []
+//     s = this.split2(str, "<")
+//     ex = s[0]
+//     str = s[1]
+//     while (str) {
+//         etags.push(ex)
+//         s = this.split2(str, "<")
+//         ex = s[0]
+//         str = s[1]
+//     }
+//     p.excludetags = etags
+//     str = ex
+//     p.command = str
+//     if (p.command.indexOf("goto") != -1) {
+//         p.delay = 5
+//     }
+//     Mapper.addpath(fr, p)
+// }
+// mapper.loadline = function (line) {
+//     mapper.lines.push(line)
+//     var result = SplitN(line, "=", 2)
+//     var id = result[0]
+//     var data = ""
+//     if (result.length > 1) {
+//         data = result[1]
+//     }
+//     Mapper.clearroom(id)
+//     result = SplitN(data, "|", 2)
+//     var name = result[0]
+//     var v = ""
+//     if (result.length > 1) {
+//         v = result[1]
+//     }
+//     Mapper.setroomname(id, name)
+//     var exitlist = SplitN(v, ",", -1)
+//     exitlist.forEach(function (data) {
+//         if (data) {
+//             mapper.parsepath(id, data)
+//         }
+//     })
+// }
 mapper.exitid = function (rid, dir) {
-    var flylist = Mapper.flylist()
-    var exits = Mapper.getexits(rid)
+    var flylist = []
+    var exits = mapper.Database.APIGetRoomExits(rid, mapper.Context, mapper.HMM.MapperOptions.New())
     var result = "null"
     flylist.concat(exits).forEach(function (path) {
-        if (mapper.filterdir(path.command) == mapper.filterdir(dir)) {
-            result = path.to + ""
+        if (mapper.filterdir(path.Command) == mapper.filterdir(dir)) {
+            result = path.To + ""
         }
     })
     this.result = result
@@ -318,28 +428,25 @@ mapper.exec = function (cmd) {
         }
     }
 }
-mapper.setmissloc = function (mloc) {
-    if (mloc) {
-        var list = mloc.split(",")
-        var flylist = []
-        list.forEach(function (data) {
-            if (data) {
-                var msg = SplitN(data, ":", 2)
-                var p = Mapper.newpath()
-                world.Note("添加Miss指令 miss " + msg[0] + " to " + msg[1])
-                p.to = msg[1]
-                p.tags = [get_var("id")]
-                p.command = "miss " + msg[0]
-                flylist.push(p)
-            }
-        })
-        Mapper.setflylist(flylist)
-    }
-}
-mapper.addhouseroom = function (line) {
-    world.Note(line)
-    mapper.loadline(line)
-}
+// mapper.setmissloc = function (mloc) {
+//     if (mloc) {
+//         var list = mloc.split(",")
+//         var flylist = []
+//         list.forEach(function (data) {
+//             if (data) {
+//                 var msg = SplitN(data, ":", 2)
+//                 var p = Mapper.newpath()
+//                 world.Note("添加Miss指令 miss " + msg[0] + " to " + msg[1])
+//                 p.to = msg[1]
+//                 p.tags = [get_var("id")]
+//                 p.command = "miss " + msg[0]
+//                 flylist.push(p)
+//             }
+//         })
+//         Mapper.setflylist(flylist)
+//     }
+// }
+
 mapper.addhouse = function (line) {
     if (line) {
         var data = line.split(" ")
@@ -350,41 +457,93 @@ mapper.addhouse = function (line) {
         var hosuename = data[0]
         var houesid = data[1]
         var houseloc = data[2]
-        mapper.addhouseroom("1933=" + hosuename + "大院|n:1934,out:" + houseloc + ",")
-        mapper.addhouseroom("1934=" + hosuename + "前庭|e:1936,push、n。:1937,s:1933,w:1935,")
-        mapper.addhouseroom("1935=右卫舍|e:1934,")
-        mapper.addhouseroom("1936=左卫舍|w:1934,")
-        mapper.addhouseroom("1937=走道|n:1938,push、s。:1934,")
-        mapper.addhouseroom("1938=" + hosuename + "迎客厅|n:1939,s:1937,open door、e:2533,")
-        mapper.addhouseroom("1939=议事厅|e:1941,n:1942,s:1938,w:1940,")
-        mapper.addhouseroom("1940=" + hosuename + "武厅|e:1939,")
-        mapper.addhouseroom("1941=" + hosuename + "武厅|w:1939,")
-        mapper.addhouseroom("1942=" + hosuename + "中庭|open west、w:1943,n:1944,s:1939,")
-        mapper.addhouseroom("1943=左厢房|e:1942,")
-        mapper.addhouseroom("1944=后院|e:-1,n:1947,s:1942,w:1945,")
-        mapper.addhouseroom("1945=厨房|e:1944,")
-        mapper.addhouseroom("1946=备用|e。:1949,")
-        mapper.addhouseroom("1947=后花园|e:1948,s:1944,open door、w、close door:2681,")
-        mapper.addhouseroom("1948=竹林|e:1949,w:1947,")
-        mapper.addhouseroom("1949=听涛阁|#yanjiu、w:1948,")
-        var p = Mapper.newpath()
+        mapper.HomeRooms = [
+            mapper.NewRoom("1933", `${hosuename}大院`, [
+                mapper.NewExit("n", "1934"),
+                mapper.NewExit("out", houseloc),
+            ]),
+            mapper.NewRoom("1934", `${hosuename}前庭`, [
+                mapper.NewExit("e", "1936"),
+                mapper.NewExit("push、n。", "1937"),
+                mapper.NewExit("s", "1933"),
+                mapper.NewExit("w", "1935"),
+            ]),
+            mapper.NewRoom("1935", `右卫舍`, [
+                mapper.NewExit("e", "1934"),
+            ]),
+            mapper.NewRoom("1936", `左卫舍`, [
+                mapper.NewExit("w", "1934"),
+            ]),
+            mapper.NewRoom("1937", `走道`, [
+                mapper.NewExit("n", "1938"),
+                mapper.NewExit("push、s。", "1934"),
+            ]),
+            mapper.NewRoom("1938", `${hosuename}迎客厅`, [
+                mapper.NewExit("n", "1939"),
+                mapper.NewExit("s", "1937"),
+                mapper.NewExit("open door、e", "2533"),
+            ]),
+            mapper.NewRoom("1939", `议事厅`, [
+                mapper.NewExit("e", "1941"),
+                mapper.NewExit("n", "1942"),
+                mapper.NewExit("s", "1938"),
+                mapper.NewExit("w", "1940"),
+            ]),
+            mapper.NewRoom("1940", `${hosuename}武厅`, [
+                mapper.NewExit("e", "1939"),
+            ]),
+            mapper.NewRoom("1941", `${hosuename}武厅`, [
+                mapper.NewExit("w", "1939"),
+            ]),
+            mapper.NewRoom("1942", `${hosuename}中庭`, [
+                mapper.NewExit("open west、w", "1943"),
+                mapper.NewExit("n", "1944"),
+                mapper.NewExit("s", "1939"),
+            ]),
+            mapper.NewRoom("1943", `左厢房`, [
+                mapper.NewExit("e", "1942"),
+            ]),
+            mapper.NewRoom("1944", `后院`, [
+                mapper.NewExit("e", "-1"),
+                mapper.NewExit("n", "1947"),
+                mapper.NewExit("s", "1942"),
+                mapper.NewExit("w", "1945"),
+            ]),
+            mapper.NewRoom("1945", `厨房`, [
+                mapper.NewExit("e", "1944"),
+            ]),
+            mapper.NewRoom("1946", `备用`, [
+                mapper.NewExit("e。", "1949"),
+            ]),
+            mapper.NewRoom("1947", `后花园`, [
+                mapper.NewExit("e", "1948"),
+                mapper.NewExit("s", "1944"),
+                mapper.NewExit("open door、w、close door", "2681"),
+            ]),
+            mapper.NewRoom("1948", `竹林`, [
+                mapper.NewExit("e", "1949"),
+                mapper.NewExit("w", "1947"),
+            ]),
+            mapper.NewRoom("1949", `听涛阁`, [
+                mapper.NewExit("w", "1948"),
+            ]),
+        ]
         world.Note("在位置 " + houseloc + " 添加房屋" + hosuename + "入口[" + houesid + "]")
-        p.from = houseloc
-        p.to = "1933"
-        p.command = houesid
-        Mapper.addpath(houseloc, p)
+        mapper.HouseID = houesid
+        mapper.HouseLoc = houseloc
+
     } else {
         world.Note("变量 house 未设置")
     }
 }
+mapper.addhouse(GetVariable("house"))
+mapper.initTags = function () {
+    mapper.Context = mapper.HMM.Context.New();
+    mapper.Context.WithRooms(mapper.HomeRooms)
+
+}
 mapper.open = function (filename) {
     world.Note("Open map file " + filename)
-    Mapper.reset()
-    var lines = world.ReadLines(filename)
-    lines.forEach(function (data) {
-        if (data) {
-            mapper.loadline(data)
-        }
-    })
-
+    mapper.Database.Import(ReadFile(filename))
+    return
 }

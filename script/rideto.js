@@ -1,33 +1,32 @@
 var rideto = {}
 rideto.mode = 0
 rideto.lastTry = 0
-Mapper.setroomname("ride-pet", "飞行坐骑")
-rideto.load = function () {
-    var lines = world.ReadLines("rideto.h")
-    lines.forEach(function (data) {
-        data = data.trim()
-        if (data && !data.startsWith("//")) {
-            mapper.parsepath("ride-pet", data)
-        }
-    })
-    rideto.loadRideable("ridable.h")
-    rideto.loadRideable("ridable2.h")
-}
-rideto.loadRideable = function (name) {
-    var lines = world.ReadLines(name)
-    lines.forEach(function (data) {
-        data = data.trim()
-        if (data && !data.startsWith("//")) {
-            let path = Mapper.newpath()
-            path.from = data
-            path.to = "ride-pet"
-            path.tags = ["ride"]
-            path.command = "#skip"
-            Mapper.addpath(data, path)
-        }
-    })
-
-}
+// Mapper.setroomname("ride-pet", "飞行坐骑")
+// rideto.load = function () {
+//     var lines = world.ReadLines("rideto.h")
+//     lines.forEach(function (data) {
+//         data = data.trim()
+//         if (data && !data.startsWith("//")) {
+//             mapper.parsepath("ride-pet", data)
+//         }
+//     })
+//     rideto.loadRideable("ridable.h")
+//     rideto.loadRideable("ridable2.h")
+// }
+// rideto.loadRideable = function (name) {
+//     var lines = world.ReadLines(name)
+//     lines.forEach(function (data) {
+//         data = data.trim()
+//         if (data && !data.startsWith("//")) {
+//             let path = Mapper.newpath()
+//             path.from = data
+//             path.to = "ride-pet"
+//             path.tags = ["ride"]
+//             path.command = "#skip"
+//             Mapper.addpath(data, path)
+//         }
+//     })
+// }
 world.AddTriggerEx("rideto.noHorse", "^你还没有座骑！$", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.noHorse", 0, 100);
 world.AddTriggerEx("rideto.onUnride", "^你骑着马没法上灵感塔去！$", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.onUnride", 0, 100);
 world.AddTriggerEx("rideto.onRide", "^你骑在马上，大喝一声“走喽”，飞奔而去。。。", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.onRide", 0, 100);
@@ -76,4 +75,4 @@ rideto.getTag = function () {
     return ""
 }
 
-rideto.load()
+// rideto.load()
