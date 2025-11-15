@@ -706,7 +706,6 @@ function number(str) {
 
 	return result;
 }
-
 function step_trace(dir) {
 	if (dir == "" || dir == null) return;
 	if (query("qinling/flag"))
