@@ -29,13 +29,13 @@ rideto.lastTry = 0
 // }
 world.AddTriggerEx("rideto.noHorse", "^你还没有座骑！$", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.noHorse", 0, 100);
 world.AddTriggerEx("rideto.onUnride", "^你骑着马没法上灵感塔去！$", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.onUnride", 0, 100);
-world.AddTriggerEx("rideto.onRide", "^你骑在马上，大喝一声“走喽”，飞奔而去。。。", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.onRide", 0, 100);
+// world.AddTriggerEx("rideto.onRide", "^你骑在马上，大喝一声“走喽”，飞奔而去。。。", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.onRide", 0, 100);
 world.AddTriggerEx("rideto.onRideLater", "^你现在正在和人家动手， 哪能骑马走人呀。", "", 1 | 8 | 32 | 1024 | 16384, -1, 0, "", "rideto.onRideLater", 0, 100);
 
 
 rideto.onRide = function () {
-    world.EnableTriggerGroup("gsm", 0);
-    world.EnableTrigger("step", true);
+    // world.EnableTriggerGroup("gsm", 0);
+    // world.EnableTrigger("step", true);
 }
 rideto.onUnride = function () {
     rideto.mode = 0

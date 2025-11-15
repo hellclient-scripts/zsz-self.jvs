@@ -257,10 +257,11 @@ mapper.getidfrname = function (name) {
 }
 mapper.settags = function (tags) {
     for (var key in tags) {
-        this.Context.WithTags([mapper.HMM.ValueTag.New(key, 1)])
+        this.Context.WithTags([mapper.HMM.ValueTag.New(tags[key], 1)])
     }
 }
 mapper.getpath = function (fl, fly, to) {
+    
     let result = mapper.Database.APIQueryPathAny([fl], to, this.Context, mapper.HMM.MapperOptions.New())
     if (result == null) {
         return null

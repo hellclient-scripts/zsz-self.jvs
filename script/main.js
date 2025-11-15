@@ -356,10 +356,6 @@ function get_room(str) {
 }
 
 function get_exit_id(id, dir) {
-	//因为为了节约内存，加入了ride-pet的虚拟房间，所以获取出口时需要从ride-pet获取实际出口
-	if (dir.startsWith("rideto ")) {
-		id = "ride-pet"
-	}
 	mapper.exec("mush exitid " + id + ":" + dir);
 	var res = mapper.result;
 
