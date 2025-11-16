@@ -179,10 +179,10 @@ mapper.getrmid = function (data) {
     var name = data.split("|", 1)
     var result = []
     var opt = mapper.HMM.APIListOption.New()
-    mapper.Database.APIListRooms(opt).forEach(function (room) {
-        if (room.Name === name[0]) {
-            result.push(room.Key)
-        }
+    var filter=mapper.HMM.RoomFilter.New()
+    filter.HasAnyName=[name[0]]
+    mapper.Database.APISearchRooms(filter, opt).forEach(function (room) {
+        result.push(room.Key)
     })
     this.result = result.join(";")
     if (this.result == "") {
