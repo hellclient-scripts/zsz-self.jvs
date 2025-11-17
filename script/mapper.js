@@ -5,6 +5,7 @@ mapper.HMM = eval(Include("hmm/hmm.js"), "hmm/hmm.js");
 mapper.Database = new mapper.HMM.MapDatabase()
 mapper.Context = new mapper.HMM.Context()
 mapper.HomeRooms=[]
+mapper.Paths=[]
 mapper.NewRoom = function (key, name, exits = []) {
     let model = mapper.HMM.Room.New()
     model.Key = key
@@ -31,15 +32,6 @@ mapper.re = {
     "eu": "wd", "ed": "wu", "su": "nd", "sd": "nu", "wu": "ed", "wd": "eu", "nu": "sd",
     "nd": "su", "u": "d", "d": "u", "enter": "out", "out": "enter"
 };
-// mapper.getroom = function (id) {
-//     var result = Mapper.getexits(id)
-//     var data = []
-//     var self = this;
-//     result.forEach(function (exit) {
-//         data.push(self.filterdir(exit.command) + ":" + exit.to)
-//     })
-//     this.result = data.join(",")
-// }
 mapper.getroom = function (id) {
 
     var result = mapper.Database.APIGetRoomExits(id, mapper.Context, mapper.HMM.MapperOptions.New())
@@ -60,26 +52,6 @@ mapper.filterdir = function (dir) {
     }
     return dir
 }
-// mapper.newFind = function (rid, max) {
-//     var exits = Mapper.getexits(rid)
-//     var todo = []
-//     exits.forEach(function (exit) {
-//         todo.push({
-//             command: exit.command,
-//             to: exit.to,
-//         })
-//     })
-//     return {
-//         rid: rid,
-//         max: max,
-//         todo: [todo],
-//         re: [],
-//         walked: {
-//             rid: true
-//         },
-//         result: []
-//     }
-// }
 mapper.newFind = function (rid, max) {
     var exits = mapper.Database.APIGetRoomExits(rid, mapper.Context, mapper.HMM.MapperOptions.New())
     var todo = []
@@ -140,33 +112,6 @@ mapper.nextFind = function (find) {
         find.result.push(re.command)
     }
 }
-// mapper.getareapath = function name(start, depth) {
-//     var find = this.newFind(start, depth)
-//     while (find.todo.length != 1 || find.todo[0].length != 0) {
-//         this.nextFind(find)
-//     }
-//     this.result = find.result.join(";")
-// },
-//     mapper.getrmid = function (data) {
-//         this.result = ""
-//         var name = data.split("|", 1)
-//         var result = Mapper.getroomid(name)
-//         this.result = result.join(";")
-//         if (this.result == "") {
-//             this.result = "null"
-//         }
-//     },
-//     mapper.getroomexitssorted = function (id) {
-//         var result = Mapper.getexits(id)
-//         var exits = [];
-//         var self = this;
-//         result.forEach(function (exit) {
-//             if (self.re[exit.command]) {
-//                 exits.push(exit.command)
-//             }
-//         })
-//         return exits.sort().join(",")
-//     }
 mapper.getareapath = function name(start, depth) {
     var find = this.newFind(start, depth)
     while (find.todo.length != 1 || find.todo[0].length != 0) {
@@ -305,89 +250,7 @@ mapper.searchlist = function (fl, tl, fm) {
         this.result = "null"
     }
 }
-// mapper.split2 = function (v, sep) {
-//     var s = SplitN(v, sep, 2)
-//     if (s.length < 2) {
-//         s.push("")
-//     }
-//     return s
-// }
 
-// mapper.parsepath = function (fr, str) {
-//     var tag
-//     var tags
-//     var ex
-//     var etags
-//     var p = Mapper.newpath()
-//     var s
-//     var str
-//     p.from = fr
-//     s = this.split2(str, "%")
-//     str = s[0]
-//     delay = s[1]
-//     if (delay) {
-//         p.delay = delay - 0
-//     }
-//     s = this.split2(str, ":")
-//     str = s[0]
-//     var to = s[1]
-//     if (to) {
-//         p.to = to
-//     }
-//     s = this.split2(str, ">")
-//     tag = s[0]
-//     str = s[1]
-//     tags = []
-//     while (str) {
-//         tags.push(tag)
-//         s = this.split2(str, ">")
-//         tag = s[0]
-//         str = s[1]
-//     }
-
-//     p.tags = tags
-//     str = tag
-//     etags = []
-//     s = this.split2(str, "<")
-//     ex = s[0]
-//     str = s[1]
-//     while (str) {
-//         etags.push(ex)
-//         s = this.split2(str, "<")
-//         ex = s[0]
-//         str = s[1]
-//     }
-//     p.excludetags = etags
-//     str = ex
-//     p.command = str
-//     if (p.command.indexOf("goto") != -1) {
-//         p.delay = 5
-//     }
-//     Mapper.addpath(fr, p)
-// }
-// mapper.loadline = function (line) {
-//     mapper.lines.push(line)
-//     var result = SplitN(line, "=", 2)
-//     var id = result[0]
-//     var data = ""
-//     if (result.length > 1) {
-//         data = result[1]
-//     }
-//     Mapper.clearroom(id)
-//     result = SplitN(data, "|", 2)
-//     var name = result[0]
-//     var v = ""
-//     if (result.length > 1) {
-//         v = result[1]
-//     }
-//     Mapper.setroomname(id, name)
-//     var exitlist = SplitN(v, ",", -1)
-//     exitlist.forEach(function (data) {
-//         if (data) {
-//             mapper.parsepath(id, data)
-//         }
-//     })
-// }
 mapper.exitid = function (rid, dir) {
     var flylist = []
     var exits = mapper.Database.APIGetRoomExits(rid, mapper.Context, mapper.HMM.MapperOptions.New())
@@ -429,24 +292,6 @@ mapper.exec = function (cmd) {
         }
     }
 }
-// mapper.setmissloc = function (mloc) {
-//     if (mloc) {
-//         var list = mloc.split(",")
-//         var flylist = []
-//         list.forEach(function (data) {
-//             if (data) {
-//                 var msg = SplitN(data, ":", 2)
-//                 var p = Mapper.newpath()
-//                 world.Note("添加Miss指令 miss " + msg[0] + " to " + msg[1])
-//                 p.to = msg[1]
-//                 p.tags = [get_var("id")]
-//                 p.command = "miss " + msg[0]
-//                 flylist.push(p)
-//             }
-//         })
-//         Mapper.setflylist(flylist)
-//     }
-// }
 
 mapper.addhouse = function (line) {
     if (line) {
@@ -529,6 +374,13 @@ mapper.addhouse = function (line) {
                 mapper.NewExit("w", "1948"),
             ]),
         ]
+        let path=mapper.HMM.Path.New();
+        path.From=houseloc;
+        path.To="1933";
+        path.Command=houesid
+        mapper.Paths.push(
+            path
+        )
         world.Note("在位置 " + houseloc + " 添加房屋" + hosuename + "入口[" + houesid + "]")
         mapper.HouseID = houesid
         mapper.HouseLoc = houseloc
@@ -541,6 +393,7 @@ mapper.addhouse(GetVariable("house"))
 mapper.initTags = function () {
     mapper.Context = mapper.HMM.Context.New();
     mapper.Context.WithRooms(mapper.HomeRooms)
+    mapper.Context.WithPaths(mapper.Paths)
 
 }
 mapper.open = function (filename) {
