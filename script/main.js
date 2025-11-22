@@ -2356,8 +2356,8 @@ function on_walk(name, output, wildcards) {
 			break;
 		case "wk_ride":		// ^(> )*这里没有这样东西可骑。
 			if (output.indexOf("可骑")) {
-				set("room/id", -1);
-				goto(query("nextstep/loc"));
+				// set("room/id", -1);
+				// goto(query("nextstep/loc"));
 			} else
 				open_timer1(1, "busy", "ride diao");
 			break;
